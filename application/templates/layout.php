@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <base href="<?php echo $this->baseUrl;  ?>" />
     <title>Gentallela Alela! | </title>
 
     <!-- Bootstrap core CSS -->
@@ -25,6 +25,7 @@
 
     <script src="<?php echo $this->assetsUrl ?>/js/jquery.min.js"></script>
     <script src="<?php echo $this->assetsUrl ?>/js/nprogress.js"></script>
+    <script src="<?php echo $this->assetsUrl ?>/js/home.js"></script>
     <script>
         NProgress.start();
     </script>

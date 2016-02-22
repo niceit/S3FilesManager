@@ -3,6 +3,7 @@
 class Controller {
 
     public $layout = 'layout';
+    public $enableLayout = true;
     public $view;
     private $siteConfig;
     private $baseUrl;
@@ -14,11 +15,14 @@ class Controller {
     }
 
     private function renderLayout() {
-        ob_start();
-        include $this->siteConfig->params('AppRootDir') . 'templates/' . $this->layout . '.php';
-        $layout = ob_get_contents();
-        ob_end_clean();
-
+        if ($this->enableLayout) {
+            ob_start();
+            include $this->siteConfig->params('AppRootDir') . 'templates/' . $this->layout . '.php';
+            $layout = ob_get_contents();
+            ob_end_clean();
+        } else{
+            $layout = '[[Content]]';
+        }
         return $layout;
     }
 

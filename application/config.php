@@ -9,10 +9,12 @@ class AppConfig {
     private $AppRootDir = '';
 
     //S3 configuration
-    private $s3AppKey = ''; //Application ID Key
+    private $s3AppKey = 'AKIAJIZTTG3KIQZCKILQ'; //Application ID Key
     private $s3AppScr = ''; //Application Secret Key
     private $s3DefaultBucket = ''; //Default Bucket
     private $s3Region = ''; //Main Region
+    private $s3Scheme = ''; //Main Scheme
+    private $s3Version = ''; //Main Version
 
     //Automatic route control
     private $controller;
@@ -29,6 +31,8 @@ class AppConfig {
         $this->s3AppScr = $config['s3']['appSecret'];
         $this->s3DefaultBucket = $config['s3']['bucket'];
         $this->s3Region = $config['s3']['region'];
+        $this->s3Scheme = $config['s3']['scheme'];
+        $this->s3Version = $config['s3']['version'];
         $this->AppRootDir = dirname(__FILE__) . '/';
 
         if (isset($_GET['route'])) {
