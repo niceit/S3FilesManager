@@ -16,7 +16,8 @@
 
     <link href="<?php echo $this->assetsUrl ?>/fonts/css/font-awesome.min.css" rel="stylesheet">
     <link href="<?php echo $this->assetsUrl ?>/css/animate.min.css" rel="stylesheet">
-
+    <!-- select2 -->
+    <link href="<?php echo $this->assetsUrl ?>/css/select/select2.min.css" rel="stylesheet">
     <!-- Custom styling plus plugins -->
     <link href="<?php echo $this->assetsUrl ?>/css/custom.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="<?php echo $this->assetsUrl ?>/css/maps/jquery-jvectormap-2.0.1.css" />
@@ -25,7 +26,12 @@
 
     <script src="<?php echo $this->assetsUrl ?>/js/jquery.min.js"></script>
     <script src="<?php echo $this->assetsUrl ?>/js/nprogress.js"></script>
+    <!-- select2 -->
+    <script src="<?php echo $this->assetsUrl ?>/js/select/select2.full.js"></script>
+
     <script src="<?php echo $this->assetsUrl ?>/js/home.js"></script>
+    <script src="<?php echo $this->assetsUrl ?>/js/upload.js"></script>
+
     <script>
         NProgress.start();
     </script>
