@@ -1,8 +1,4 @@
 $(document).ready(function () {
-    $(".select_butket").select2({
-        placeholder: "Choose Bucket",
-        allowClear: true
-    });
 
     $(".add-folder-btn").click(function(){
         var object = '#modal-add-folder';

@@ -4,31 +4,10 @@ class Home extends Controller {
     private  $bucket = 'crgtesting';
 
     public function index() {
-
-        $test = '123123';
         $s3 = AppS3::S3();
-        $result = $s3->listObjects(array('Bucket' => $this->bucket,  'Prefix' => 'products/' , 'Delimiter' => '/'));
-        $aryBucket = array();
-        if (!empty($result['Contents'])) {
-            foreach ($result['Contents'] as $object) {
-                $filename = $object['Key'];
-                $image_name_arr = explode('/', $filename);
-                $image_name = end($image_name_arr);
-                $format_arr = explode('.', $image_name);
-                $aryBucket[] = array(
-                    'key' => $object['Key'],
-                    'date' => strtotime($object['LastModified']),
-                    'name' => $image_name,
-                    'format' => "." . end($format_arr),
-                    'url' => $s3->getObjectUrl($this->bucket, $object['Key']),
-                    'size' => AppS3::formatBytes($object['Size'], 0)
-                );
-            }
-        }
-        return $this->render('index', array(
-            'files' => $aryBucket,
-            'test' => $test
-        ));
+        $buckets = $s3->listBuckets();
+        $app = new AppConfig();
+        return $this->render('index', ['buckets' => $buckets, 'region' => $app->params('s3Region')]);
     }
 
     /*
@@ -134,10 +113,69 @@ class Home extends Controller {
                 'old_fix' => $old_fix,
                 'frefix' => $frefix,
                 'sst' => $page*$limit + 1,
-                 'load_more' => $load_more
+                 'load_more' => $load_more,
+                'search' => 0
                 )
             );
         }
+        die();
+    }
+
+    /*
+     * Search-----
+     */
+    public function ajaxloadsearchobjects(){
+        $this->enableLayout = false;
+        if ($_POST) {
+            $page = $_POST['page'];
+            $key = $_POST['name'];
+            $limit =  50;
+
+            $s3 = AppS3::S3();
+            $result = $s3->listObjects(array('Bucket' => $this->bucket));
+            $aryBucket = array();
+
+            foreach ($result['Contents'] as $object) {
+                $filename = $object['Key'];
+                $image_name_arr = explode('/', $filename);
+                $image_name = end($image_name_arr);
+
+                if (preg_match('#^.*'.$key.'.*$#', $image_name)) {
+                    $format_arr = explode('.', $image_name);
+                    $url = $s3->getObjectUrl($this->bucket, $object['Key']);
+
+                    $aryBucket[] = array(
+                        'key' => $object['Key'],
+                        'date' => strtotime($object['LastModified']),
+                        'name' => $image_name,
+                        'format' => "." . end($format_arr),
+                        'url' => $url,
+                        'size' => AppS3::formatBytes($object['Size'], 0),
+                        'is_file' => AppS3::isFileImage($image_name, $url),
+                        'icon' => AppS3::getFileSmallIcon(end($format_arr))
+                    );
+                }
+            }
+            $total = (int)round(count($aryBucket) / $limit);
+            $aryBucket = array_slice($aryBucket, $page*$limit  , $limit);
+        }
+
+        if ($page < $total){
+            $load_more = $page + 1;
+        } else  {
+            $load_more = 0;
+        }
+        if ($page == 0)
+            $file = 'ajaxloadfrefix';
+        else
+            $file = 'ajaxloadmorefrefix';
+        echo $this->render($file , array('listObjects' => $aryBucket ,
+                'sst' => $page*$limit + 1,
+                'load_more' => $load_more,
+                'text' => $key,
+                'search' => 1
+            )
+        );
         die();
     }
 
@@ -154,11 +192,11 @@ class Home extends Controller {
     /*
     * Create new folder
     * */
-    public function actionCreateFolder() {
+    public function createfolder() {
         $this->enableLayout = false;
         header("Content-Type: application/json");
         if ($_POST) {
-            $bucket = $_POST['bucket'];
+            $bucket = $this->bucket;
             $path = $_POST['path'];
             $name = $_POST['name'];
 
@@ -195,8 +233,8 @@ class Home extends Controller {
         $this->enableLayout = false;
         header("Content-Type: application/html");
         if ($_POST) {
-            $bucket = $_POST['bucket'];
-            $root = $_POST['path'];
+            $bucket = $this->bucket; //$_POST['bucket'];
+            $root = $_POST['frefix'];
             $add_folder_option = $_POST['add-folder'];
             if (empty($add_folder_option)) {
                 $add_folder_option = 0;
@@ -236,7 +274,7 @@ class Home extends Controller {
                 die('There is no folder in this bucket');
             }
 
-            echo $this->render('load-bucket-folders', array( 'files' => $arrForder, 'add_folder_option' => $add_folder_option));
+            echo $this->render('load-bucket-folders', array( 'files' => $arrForder, 'add_folder_option' => $add_folder_option, 'path'=> $root ));
             die();
         }
         else {
@@ -338,6 +376,32 @@ class Home extends Controller {
     }
 
 
+    public function fix() {
 
+        $test = '123123';
+        $s3 = AppS3::S3();
+        $result = $s3->listObjects(array('Bucket' => $this->bucket,  'Prefix' => 'products/' , 'Delimiter' => '/'));
+        $aryBucket = array();
+        if (!empty($result['Contents'])) {
+            foreach ($result['Contents'] as $object) {
+                $filename = $object['Key'];
+                $image_name_arr = explode('/', $filename);
+                $image_name = end($image_name_arr);
+                $format_arr = explode('.', $image_name);
+                $aryBucket[] = array(
+                    'key' => $object['Key'],
+                    'date' => strtotime($object['LastModified']),
+                    'name' => $image_name,
+                    'format' => "." . end($format_arr),
+                    'url' => $s3->getObjectUrl($this->bucket, $object['Key']),
+                    'size' => AppS3::formatBytes($object['Size'], 0)
+                );
+            }
+        }
+        return $this->render('index', array(
+            'files' => $aryBucket,
+            'test' => $test
+        ));
+    }
 
 }

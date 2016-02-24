@@ -5304,7 +5304,7 @@ ul.project_files li a i {
     right: 0;
     bottom: 0;
     left: 0;
-    background: #fff url("../img/loading.gif") no-repeat center center;
+    background: #fff url("../images/loaders/1.gif") no-repeat center center;
     opacity: .75;
     filter: alpha(opacity=75);
     z-index: 20140628;
@@ -6342,4 +6342,66 @@ ul.notifications {
     color: #E9EDEF;
     float: right;
     opacity: 1;
+}
+
+img.img-file {
+    width: 29px;
+    border: 1px solid #ddd;
+    padding: 1px;
+    max-height: 30px;
+}
+.contentFolder {
+    position: relative;
+    min-height: 200px;
+}
+.loading{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity:0.6;
+}
+ul.tree-file {
+    padding: 0px;
+}
+
+.tree-file li {
+    list-style: none;
+    padding: 3px 0px;
+    position: relative;
+}
+ul.tree-file li ul{
+    padding-left: 10px;
+}
+span.no-sub {
+    padding: 5px;
+}
+a.create-sub-folder {
+    position: absolute;
+    right: 0px;
+    display: none;
+    top:0px;
+}
+span.item {
+    display: block;
+}
+.tree-file li .item:hover{
+    background: rgb(247, 247, 247);
+}
+span.name-prefix.active {
+    color: #1A82C3;
+    font-weight: bold;
+}
+.action-file .dropdown-menu{
+    left: -70px;
+}
+.search{
+    margin-bottom: -5px;
+}
+.name-prefix {
+    cursor: pointer;
+}
+.contentfrefix{
+    min-height: 200px;
+    position: relative;
 }

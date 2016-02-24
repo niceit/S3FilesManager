@@ -4,17 +4,17 @@
             foreach ($files as $file):
                 ?>
                 <li class="sub-<?php echo md5($file['prefix']); ?>">
-                    <div class="tree-file-row" onclick="<?php if (!$add_folder_option) : ?>setSelectedPath('<?php echo $file['prefix'] ?>');<?php else : ?>setFolderSelectedPath('<?php echo $file['prefix'] ?>');<?php endif ?>">
+                    <div class="tree-file-row" onclick="setFolderSelectedPath('<?php echo $file['prefix'] ?>');">
                         <?php if($file['isSub'] == 1) : ?>
-                            <span onclick="loadBucketSubFolder($(this).parents('li:eq(0)'), '<?php echo $file['prefix']; ?>', this, <?php echo $add_folder_option ?>)" class="arrow" data-id="<?php echo md5($file['prefix']); ?>" data-prefix="<?php echo ($file['prefix']); ?>"></span>
+                            <a href="javascript:;" class="arrow-item" data-id="<?php echo md5($file['prefix']); ?>" data-prefix="<?php echo ($file['prefix']); ?>"><span><i class="fa fa-caret-right"></i></span></a>
                         <?php else : ?>
                             <span class="no-sub" ></span>
                         <?php endif; ?>
-                        <span class="icos-folder"></span>
+                        <i class="fa fa-folder-open-o"></i>
                         <span class="name-prefix"><?php echo $file['name']; ?></span>
-                        <span class="sub"></span>
                     </div>
-        </li>
+                    <span class="sub"></span>
+                 </li>
                 <?php
             endforeach;
         endif;
