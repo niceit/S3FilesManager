@@ -266,7 +266,7 @@
 <script id="template-upload" type="text/x-tmpl">
 
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-upload fade">
+    <tr class="template-upload fade  row-{%=htmlspecialchars(file.name)%}">
         <td>
             <span class="preview"></span>
         </td>

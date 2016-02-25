@@ -11,6 +11,7 @@ jQuery(function(){
         loadFolderNew('/');
     });
     $('#upload-file').click(function(){
+        $(".template-upload").remove();
         var bucket = $("select[name=bucket]").val();
         if (bucket == '') {
             alert('Please select bucket first');

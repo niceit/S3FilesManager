@@ -425,4 +425,11 @@ class Home extends Controller {
         }
     }
 
+    public function basecode(){
+        if ($_POST) {
+            echo json_encode(array("key" => base64_encode($_POST['key']), "id" => $_POST['id']));
+            die();
+        }
+    }
+
 }

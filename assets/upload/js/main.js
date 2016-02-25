@@ -28,7 +28,22 @@ $(function () {
                 destination_path = destination_path.substr(1, destination_path.length);
             }
              $('.processing-' + htmlspecialchars(data.files[0].name)).html( "<input class='form-control' type='text' readonly='' disabled='' value='" + $(this).attr('action') + data.files[0].name + "' />");
-            $('.action-' + htmlspecialchars(data.files[0].name)).html('');
+            var element = $('.action-' + htmlspecialchars(data.files[0].name));
+            element.removeClass("td-action");
+            var URL = $('base').attr('href') + '/index.php?route=home/basecode';
+            $.ajax({
+                type: "post",
+                url: URL,
+                data: {'key': data.files[0].name , 'id' :  htmlspecialchars(data.files[0].name)},
+                dataType: "json",
+                success: function (data) {
+                    var element = $('.action-' + data['id']);
+                    var link = "'"+ data['key'] + "','"+ data['id'] +"'";
+                    element.html('<button onclick="delete_file(' + link +')" class="btn btn-danger delete" ><i class="glyphicon glyphicon-trash"></i> <span>Delete</span> </button> ');
+                }
+
+            });
+
         },
     });
 
