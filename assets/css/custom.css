@@ -6405,3 +6405,35 @@ span.name-prefix.active {
     min-height: 200px;
     position: relative;
 }
+.td-action {
+    padding-top: 27px !important;
+}
+a.load-more  {
+    display: block;
+    background: #5bc0de;
+    color: #fff;
+    padding: 7px;
+    border-radius: 2px;
+    text-align: center;
+}
+a.load-more:hover{
+    text-decoration: none;
+
+}
+.modal-backdrop.fade.in {
+    width: 100%;
+    height: 1000% !important;
+}
+.content-image img {
+    float: none;
+    margin: 0 auto;
+}
+.tree-file-content{
+    padding: 0px;
+    margin: 0px;
+}
+.tree-file-content li{
+    list-style: none;
+    margin-bottom: 9px;
+    cursor: pointer;
+}

@@ -4,14 +4,14 @@ if ($listObjects):
     <?php
     foreach ($listObjects as $object):
         ?>
-        <tr >
-            <td><?php echo $sst++; ?></td>
+        <tr class="row-<?php echo $sst; ?>">
+            <td><?php echo $sst; ?></td>
             <td class="a-center ">
                 <input type="checkbox" class="flat" name="table_records">
             </td>
             <td>
                 <?php if ($object['is_file']): ?>
-                    <img class="img-file" src="<?php echo $object['url'] ?>" />
+                    <a href="javascript:;" class="img-popup" onclick="click_popup('<?php echo $object['url'] ?>');" data-toggle="modal" data-target="#popup-image"><img class="img-file" src="<?php echo $object['url'] ?>" /></a>
                 <?php  endif; ?>
             </td>
             <td class=" "><?php echo $object['icon'] ?> <a href="#" title=""><?php echo  $object['name'] ?></a></td>
@@ -28,13 +28,14 @@ if ($listObjects):
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="<?php echo $object['url'];  ?>"><i class="fa fa-cloud-download"></i> Download</a></li>
-                        <li><a href="#"><i class="fa fa-cloud-download"></i> View</a></li>
-                        <li><a href="#"><i class="fa fa-cloud-download"></i> Delete</a></li>
+                        <li><a href="#"><i class="fa fa-eye"></i> View</a></li>
+                        <li><a onclick="delete_file('<?php echo base64_encode($object['key']); ?>', <?php echo $i; ?>);" href="javascript:;"  ><i class="fa fa-remove"></i> Delete</a></li>
                     </ul>
                 </div>
             </td>
         </tr>
         <?php
+        $sst++;
     endforeach;
     ?>
 

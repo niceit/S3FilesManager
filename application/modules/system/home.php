@@ -128,7 +128,7 @@ class Home extends Controller {
         $this->enableLayout = false;
         if ($_POST) {
             $page = $_POST['page'];
-            $key = $_POST['name'];
+            $key = trim($_POST['name']);
             $limit =  50;
 
             $s3 = AppS3::S3();
@@ -213,7 +213,7 @@ class Home extends Controller {
                     'ACL'    => 'public-read',
                     'ContentLength' => 0
                 ));
-                $response = ['status' => 1];
+                $response = ['status' => 1, 'key' => md5($path)];
             }
             catch (\Aws\S3\Exception\S3Exception $e) {
                 $response = ['status' => 0, 'message' => 'There is an error while creating new folder, please try with a different name'];
@@ -287,10 +287,11 @@ class Home extends Controller {
    * */
     public function generateS3Signature(){
         header("Content-Type: application/json");
-        if (BaseYii::$app->request->isPost) {
-            $bucket = BaseYii::$app->request->post('bucket');
-            $s3_app_id = BaseYii::$app->params['S3']['key'];
-            $s3_app_secret = BaseYii::$app->params['S3']['secret'];
+        if ($_POST) {
+            $app = new AppConfig();
+            $bucket = $_POST['bucket'];
+            $s3_app_id = $app->params('s3AppKey');
+            $s3_app_secret = $app->params("s3AppScr");
 
             $policy = $this->getS3Policy($bucket);
             $hmac = $this->hmacsha1($s3_app_secret, $policy);
@@ -305,7 +306,8 @@ class Home extends Controller {
             $response = ['status' => 0, 'message' => 'Invalid request'];
         }
 
-        BaseYii::$app->end(json_encode($response));
+        echo json_encode($response);
+        die();
     }
 
     private function getS3Policy($bucket)
@@ -402,6 +404,25 @@ class Home extends Controller {
             'files' => $aryBucket,
             'test' => $test
         ));
+    }
+
+
+    public function deletefile(){
+        if ($_POST) {
+            $key = base64_decode($_POST['key']);
+            try{
+            $s3 = AppS3::S3();
+             $result = $s3->deleteObject(array(
+                 'Bucket' => $this->bucket,
+                 'Key'    => $key
+             ));
+            } catch(Aws\S3\Exception\S3Exception $e){
+                echo $e->getAwsErrorCode();
+                die();
+            }
+            echo "0";
+            die();
+        }
     }
 
 }

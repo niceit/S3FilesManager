@@ -1,25 +1,54 @@
+var instance_files = [];
 jQuery(function(){
     loadFolder('/');
     $('#btn-search').click(function(){
         loadSearchFrefix(0);
     });
     $('#btn-create-new-folder').click(function(){
+        $('.content-create-folder').slideDown();
+        $('.content-upload-file').hide();
+        $('.title-popup').html('Add new bucket folder');
         loadFolderNew('/');
     });
+    $('#upload-file').click(function(){
+        var bucket = $("select[name=bucket]").val();
+        if (bucket == '') {
+            alert('Please select bucket first');
+        } else {
+            $('.content-create-folder').hide();
+            $('.content-upload-file').slideDown();
+            $('.title-popup').html('Upload file');
+            loadFolderNew('/');
+        }
+
+    });
+
     $('#save-folders').click(function(){
         saveCreateFolder();
     });
     $(".select_butket").select2();
 
-    $('#btn-locate-path').click(function(){
-       alert();
+
+    $("select[name=bucket]").change(function(){
+        //Generate S3 Signature and Policy
+        var bucket = $(this).val();
+        if (bucket != '') {
+            var region = $("input[name=region]").val();
+            Application.generateFormS3Signature(".cloud-upload-form", bucket, region);
+        }
     });
+
+
 
 });
 
 function loadFolderNewLeft(frefix){
     setFolderSelectedPath(frefix);
     loadFolderNew(frefix);
+    $('.content-create-folder').slideDown();
+    $('.content-upload-file').hide();
+    $('.title-popup').html('Add new bucket folder');
+
 }
 
 function loadFolderNew(frefix) {
@@ -63,6 +92,10 @@ function clickFonderNew(){
     $('li .arrow-item').click(function(){
         var prefix = $(this).data('prefix');
         var id = $(this).data('id');
+
+        var key = prefix  + '${filename}';
+        $('#fileupload').find('input[name=key]').val(key);
+
         loadSubFolderNew(prefix, id);
     });
 }
@@ -86,7 +119,13 @@ function saveCreateFolder(){
                 dataType: "json",
                 success: function (response) {
                     if (response['status'] == 1) {
+                        new PNotify({
+                            title: 'Success',
+                            text: 'Create folder ' + folder_name +' successfully!',
+                            type: 'success'
+                        });
                         $('#create-folder').modal('hide');
+                        $(".sub-" + response['key'] + " .arrow").trigger( "click" );
                     }
                 }
 
@@ -101,6 +140,9 @@ function setSelectedPath(path) {
 }
 //For add folder select folder path
 function setFolderSelectedPath(path) {
+    var key = path  + '${filename}';
+    $('#fileupload').find('input[name=key]').val(key);
+
     $('input[name=select_folder_path]').val(path);
     $("span.selected-folder").html('<b>/'+ path + '</b>');
 }
@@ -220,7 +262,6 @@ function loadSearchFrefix(page){
                 $('#contentfrefix').html(data);
             else
                 $('.content-file').append(data);
-
             $('input.flat').iCheck({
                 checkboxClass: 'icheckbox_flat-green',
                 radioClass: 'iradio_flat-green'
@@ -230,4 +271,62 @@ function loadSearchFrefix(page){
     });
 }
 
+function delete_file(key, row) {
+    var confirmBox = confirm('Are you sure you want to delete this file?');
+    if (!confirmBox) return false;
+    var URL = $('base').attr('href') + '/index.php?route=home/deletefile';
+    $.ajax({
+        type: "post",
+        url: URL,
+        data: {'key': key },
+        dataType: "html",
+        success: function (data) {
+            if (data == "0"){
+                $(".row-" + row).remove();
+                new PNotify({
+                    title: 'Success',
+                    text: 'You deleted successfully!',
+                    type: 'success'
+                });
+            } else {
+                new PNotify({
+                    title: 'Error',
+                    text: data,
+                    type: 'error'
+                });
+            }
 
+        }
+
+    });
+}
+
+function click_popup(src){
+    $(".content-image").html("<img class='img-responsive' src='"+ src +"' />")
+}
+
+function htmlspecialchars(str) {
+    if (typeof(str) == "string") {
+        str = str.replace(".", "-");
+        str = str.replace("&", "-");
+        str = str.replace(" ", "-");
+        str = str.replace("  ", "-");
+        str = str.replace("   ", "-");
+        str = str.replace("$", "-");
+        str = str.replace("+", "-");
+        str = str.replace("! ", "-");
+        str = str.replace("@", "-");
+        str = str.replace("#", "-");
+        str = str.replace("$", "-");
+        str = str.replace("%", "-");
+        str = str.replace("^", "-");
+        str = str.replace("&", "-");
+        str = str.replace("*", "-");
+        str = str.replace("(", "-");
+        str = str.replace(")", "-");
+        str = str.replace("/", "-");
+        str = str.replace("+", "-");
+
+    }
+    return str;
+}

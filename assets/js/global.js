@@ -45,14 +45,13 @@ Application = function() {
 
     /*For form upload stuffs and elements*/
     this.generateFormS3Signature = function (element, bucket, region) {
-        $.post('/application/generate-s3-signature', {bucket:bucket}, function(response){
-            response = JSON.parse(response);
-            if (response.status) {
+        $.post('/index.php?route=home/generateS3Signature', {bucket:bucket}, function(response){
+            if (response['status']) {
                 $(element).each(function(){
                     $(this).attr('action', 'https://' + bucket + '.s3-' + region + '.amazonaws.com/')
-                    $(this).find('input[name=AWSAccessKeyId]').val(response.accessKey);
-                    $(this).find('input[name=policy]').val(response.policy);
-                    $(this).find('input[name=signature]').val(response.signature);
+                    $(this).find('input[name=AWSAccessKeyId]').val(response['accessKey']);
+                    $(this).find('input[name=policy]').val(response['policy']);
+                    $(this).find('input[name=signature]').val(response['signature']);
                 });
             }
         });
