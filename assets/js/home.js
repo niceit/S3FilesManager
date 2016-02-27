@@ -40,7 +40,6 @@ jQuery(function(){
     });
 
 
-
 });
 
 function loadFolderNewLeft(frefix){
@@ -227,6 +226,12 @@ function loadFrefix(frefix, page) {
             else
                 $('.content-file').append(data);
 
+            $(".tree-file-content li .li-custom").hover(function(){
+                $(this).find(".act").show();
+            }, function(){
+                $(this).find(".act").hide();
+            });
+
             $('input.flat').iCheck({
                 checkboxClass: 'icheckbox_flat-green',
                 radioClass: 'iradio_flat-green'
@@ -305,6 +310,96 @@ function delete_file(key, row) {
 function click_popup(src){
     $(".content-image").html("<img class='img-responsive' src='"+ src +"' />")
 }
+
+function popup_detail(key, url){
+    $('#content-detail').prepend('<span class="loading"></span>');
+    $('#detail-file').modal('show');
+    var URL = $('base').attr('href') + '/index.php?route=home/ajax_detail_file';
+    $.ajax({
+        type: "post",
+        url: URL,
+        data: {'key': key , 'url' : url},
+        dataType: "html",
+        success: function (data) {
+            $("#content-detail").html(data);
+            $('input.flat').iCheck({
+                checkboxClass: 'icheckbox_flat-green',
+                radioClass: 'iradio_flat-green'
+            });
+
+            $("#grant_content input").next().click(function(){
+                var grant = '';
+                $( ".iCheck-helper" ).each(function( index ) {
+                    if ($(this).parent().hasClass("checked")) {
+                        grant += $(this).parent().find("input").val() + ",";
+                    }
+                });
+
+                var URL = $('base').attr('href') + '/index.php?route=home/update_permissions';
+                $.ajax({
+                    type: "post",
+                    url: URL,
+                    data: {'key': $("#key").val(), 'grant': grant},
+                    dataType: "html",
+                    success: function (data) {
+                        new PNotify({
+                            title: 'Success',
+                            text: 'Update Permissions successfully!',
+                            type: 'success'
+                        });
+                    }
+                });
+            });
+
+        }
+    });
+}
+function edit_header(){
+    $(".name-contenttype").hide();
+    $(".edit-type").hide();
+    $(".row-type").append("<span class='action-type'><input value='" +  $(".name-contenttype").text() + "' id='txt-content-type' type='text' style='width: 40%' class='form-control pull-left' /><a style='margin-left: 10px;' class='btn btn-primary pull-left save-type' href='javascript:;'><i class='fa fa-save'></i> Save</a><a class='btn btn-danger pull-left cancel-type' href='javascript:;'><i class='fa fa-remove'></i> Cancel</a></span>");
+    $(".cancel-type").click(function(){
+        $(".name-contenttype").show();
+        $(".edit-type").show();
+        $(".action-type").remove();
+    });
+    $(".save-type").click(function(){
+        var URL = $('base').attr('href') + '/index.php?route=home/update_header_content_type';
+        $.ajax({
+            type: "post",
+            url: URL,
+            data: {'key': $("#key").val(), 'contentType': $('#txt-content-type').val()},
+            dataType: "html",
+            success: function (data) {
+                $(".name-contenttype").html(data);
+                $(".name-contenttype").show();
+                $(".edit-type").show();
+                $(".action-type").remove();
+
+                new PNotify({
+                    title: 'Success',
+                    text: 'Update Content Type successfully!',
+                    type: 'success'
+                });
+            }
+        });
+
+    });
+
+
+}
+
+
+
+
+
+function icheck_grant(grant){
+    alert(grant);
+}
+
+
+
+
 
 function htmlspecialchars(str) {
     if (typeof(str) == "string") {

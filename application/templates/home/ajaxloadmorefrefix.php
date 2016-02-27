@@ -14,7 +14,7 @@ if ($listObjects):
                     <a href="javascript:;" class="img-popup" onclick="click_popup('<?php echo $object['url'] ?>');" data-toggle="modal" data-target="#popup-image"><img class="img-file" src="<?php echo $object['url'] ?>" /></a>
                 <?php  endif; ?>
             </td>
-            <td class=" "><?php echo $object['icon'] ?> <a href="#" title=""><?php echo  $object['name'] ?></a></td>
+            <td class=" "><?php echo $object['icon'] ?> <a href="#" onclick="popup_detail('<?php echo base64_encode($object['key']); ?>', '<?php echo $object['url'] ?>')"  title=""><?php echo  $object['name'] ?></a></td>
             <td class=" "><?php echo date('M m,Y. H:m',$object['date']); ?></td>
             <td class=" ">
                 <span><?php echo  $object['size'] ?> Kb</span>
@@ -28,7 +28,7 @@ if ($listObjects):
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="<?php echo $object['url'];  ?>"><i class="fa fa-cloud-download"></i> Download</a></li>
-                        <li><a href="#"><i class="fa fa-eye"></i> View</a></li>
+                        <li><a href="#" onclick="popup_detail('<?php echo base64_encode($object['key']); ?>', '<?php echo $object['url'] ?>')" ><i class="fa fa-eye"></i> View</a></li>
                         <li><a onclick="delete_file('<?php echo base64_encode($object['key']); ?>', <?php echo $i; ?>);" href="javascript:;"  ><i class="fa fa-remove"></i> Delete</a></li>
                     </ul>
                 </div>

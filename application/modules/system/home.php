@@ -425,11 +425,164 @@ class Home extends Controller {
         }
     }
 
+    public function ajax_detail_file(){
+        $this->enableLayout = false;
+        header("Content-Type: application/html");
+        if ($_POST) {
+            $key = base64_decode($_POST['key']);
+            $url = $_POST['url'];
+            $s3 = AppS3::S3();
+
+            $result = $s3->getObjectAcl(array(
+                'Bucket' => $this->bucket,
+                'Key' => $key
+            ));
+            $result_http = $s3->getObject(array(
+                'Bucket' => $this->bucket,
+                'Key' => $key
+            ));
+
+            echo $this->render('ajax_detail_file', array(
+                "grants" => $result['Grants'] ,
+                "header" => $result_http['@metadata']['headers'] ,
+                'key' => $key, 'url' => $url));
+            die();
+        }
+    }
+
+    public function update_permissions(){
+        $this->enableLayout = false;
+        header("Content-Type: application/html");
+        if ($_POST) {
+            // (string: private | public-read | public-read-write | authenticated-read | bucket-owner-read | bucket-owner-full-control )
+            $s3 = AppS3::S3();
+            $key = base64_decode($_POST['key']);
+            $grant  = $_POST['grant'];
+            $arr = explode(",", $grant);
+            sort($arr);
+            if (!empty($arr)){
+                foreach ($arr as $row){
+                    if ($row != ''){
+                        $s3->putObjectAcl(array(
+                            'Bucket' => $this->bucket,
+                            'Key' => $key,
+                            'ACL' => $row
+                        ));
+                    }
+                }
+            }
+            echo "1";
+        }
+        die();
+    }
+
+    public function update_header_content_type(){
+        $this->enableLayout = false;
+        header("Content-Type: application/html");
+        if ($_POST) {
+            $key = base64_decode($_POST['key']);
+            $contentType  = $_POST['contentType'];
+            $s3 = AppS3::S3();
+            $s3->putObject(array(
+                'Bucket' => $this->bucket,
+                'Key'    => $key,
+                'ContentType' => $contentType
+            ));
+            echo $contentType;
+        }
+        die();
+    }
+
     public function basecode(){
         if ($_POST) {
             echo json_encode(array("key" => base64_encode($_POST['key']), "id" => $_POST['id']));
             die();
         }
+    }
+
+    public function TEST() {
+        // (string: private | public-read | public-read-write | authenticated-read | bucket-owner-read | bucket-owner-full-control )
+        $s3 = AppS3::S3();
+
+        $result = $s3->putObject(array(
+            'Bucket' => $this->bucket,
+            'Key'    => "test1/Chrysanthemum.jpg",
+            'AcceptRanges' => 'mega',
+            'ContentType' => 'stdsfsgring'
+        ));
+
+
+
+        $result = $s3->headObject(array(
+            'Bucket' => $this->bucket,
+            'Key'    => "test1/Chrysanthemum.jpg"
+        ));
+
+        echo '<pre>';
+        print_r($result);
+        die();
+
+
+        $result = $s3->putObjectAcl(array(
+            'ACL' => "authenticated-read",
+            'Bucket' => $this->bucket,
+            'Key'    => "test1/Chrysanthemum.jpg"
+        ));
+
+
+        $result = $s3->putObjectAcl(array(
+            'ACL' => "private",
+            'Bucket' => $this->bucket,
+            'Key'    => "test1/Chrysanthemum.jpg"
+        ));
+
+
+
+
+
+
+        die();
+        // Type is required
+      //  'Type' => 'string',
+       //                 'URI' => 'string',
+//
+        $result = $s3->getObjectAcl(array(
+            // Bucket is required
+            'Bucket' => $this->bucket,
+            'Key' => "test1/"
+        ));
+        echo '<pre>';
+        print_r($result);
+        print_r($result['Grants']);
+        die();
+
+
+        $result = $s3->putObjectAcl(array(
+            'ACL' => "private",
+            'Grants' => array(
+                array(
+                    'Grantee' => array(
+                        // Type is required
+                        'Type' => 'Group',
+                        'URI' => 'http://acs.amazonaws.com/groups/global/AllUsers',
+                    ),
+                    'Permission' => 'WRITE',
+                ),
+                // ... repeated
+            ),
+            'Owner' => array(
+                'DisplayName' => 'rr',
+                'ID' => '5c84fc713145a6e5cec39a353a739cef5649caa3d77d092c4385ac7a4b8ff95f',
+            ),
+            // Key is required
+            'Bucket' => $this->bucket,
+            'Key'    => "test1/Chrysanthemum.jpg"
+        ));
+
+        die();
+
+
+
     }
 
 }

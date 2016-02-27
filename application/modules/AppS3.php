@@ -37,19 +37,25 @@ class AppS3{
                 $is_value = true ;
                 break;
         }
-        if (!$is_value){
-            $getimage =  getimagesize($url_image);
-            switch ($getimage['mime']) {
-                //Image files
-                case 'image/jpeg' :
-                case 'image/pjpeg' :
-                case 'image/bmp' :
-                case 'image/x-windows-bmp' :
-                case 'image/gif' :
-                case 'image/png' :
-                    $is_value =  true ;
-                    break;
+        try {
+            ini_set('display_errors', 0);
+            ini_set('display_startup_errors', 0);
+            if (!$is_value) {
+                $getimage = getimagesize($url_image);
+                switch ($getimage['mime']) {
+                    //Image files
+                    case 'image/jpeg' :
+                    case 'image/pjpeg' :
+                    case 'image/bmp' :
+                    case 'image/x-windows-bmp' :
+                    case 'image/gif' :
+                    case 'image/png' :
+                        $is_value = true;
+                        break;
+                }
             }
+        } catch(Exception $e){
+
         }
         return $is_value;
 

@@ -6376,7 +6376,7 @@ ul.tree-file li ul{
 span.no-sub {
     padding: 5px;
 }
-a.create-sub-folder {
+.create-sub-folder {
     position: absolute;
     right: 0px;
     display: none;
@@ -6401,7 +6401,7 @@ span.name-prefix.active {
 .name-prefix {
     cursor: pointer;
 }
-.contentfrefix{
+.contentfrefix, div#content-detail{
     min-height: 200px;
     position: relative;
 }
@@ -6436,4 +6436,25 @@ a.load-more:hover{
     list-style: none;
     margin-bottom: 9px;
     cursor: pointer;
+}
+.header-file td a{
+    padding: 3px 11px;
+    margin: 0px 5px;
+}
+.header-file td input{
+    width: 40%;
+    height: 28px;
+    padding: 0px 10px;
+    line-height: 20px;
+}
+.li-custom{
+    position: relative;
+    padding-right: 60px;
+}
+span.act {
+    position: absolute;
+    right: 0px;
+    font-size: 12px;
+    top: 0px;
+    display: none;
 }

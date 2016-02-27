@@ -185,6 +185,34 @@
     </div>
 </div>
 
+<div id="detail-file"data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+    <div style="width: 80%" class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title title-popup"  id="myModalLabel2">Detail file</h4>
+            </div>
+            <div class="modal-body" id="content-detail">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="edit-header"data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+    <div style="width: 80%" class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title title-popup"  id="myModalLabel2">Update Content Type</h4>
+            </div>
+            <div class="modal-body" id="content-detail">
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="create-folder"data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
