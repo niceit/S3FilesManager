@@ -1,5 +1,10 @@
 var instance_files = [];
 jQuery(function(){
+
+    var region = $("input[name=region]").val();
+    var bucket = $("input[name=bucket]").val();
+    Application.generateFormS3Signature(".cloud-upload-form", bucket, region);
+
     loadFolder('/');
     $('#btn-search').click(function(){
         loadSearchFrefix(0);
@@ -12,7 +17,7 @@ jQuery(function(){
     });
     $('#upload-file').click(function(){
         $(".template-upload").remove();
-        var bucket = $("select[name=bucket]").val();
+        var bucket = $("input[name=bucket]").val();
         if (bucket == '') {
             alert('Please select bucket first');
         } else {

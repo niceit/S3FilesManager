@@ -1,6 +1,6 @@
 
 <div class="clearfix"></div>
-<!-- top tiles -->
+<!-- top tiles
 <div class="row tile_count">
     <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
         <div class="left"></div>
@@ -52,7 +52,7 @@
     </div>
 
 </div>
-<!-- /top tiles -->
+ /top tiles -->
 <div class="row">
 
     <input type="hidden" name="region" value="<?php echo $region ?>">
@@ -70,7 +70,8 @@
             </div>
             <div class="x_content">
                 <div class="dashboard-widget-content">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="hidden" value="<?php echo $bucket_default; ?>" name="bucket" />
+                   <!-- <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="form-group">
                             <label class="control-label col-md-5 col-sm-5 col-xs-12">Choose available Buckets</label>
                             <div class="col-md-7 col-sm-7 col-xs-12">
@@ -84,7 +85,7 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <button id="btn-create-new-folder" type="button" class="btn btn-primary"><i class="fa fa-folder-open-o"></i> Create new folder</button>
                         <button id="upload-file" type="button" class="btn btn-primary"><i class="fa fa-cloud-upload"></i> Upload file</button>

@@ -1,13 +1,133 @@
 <?php
 
 class Home extends Controller {
-    private  $bucket = 'crgtesting';
     private $array = array();
+
+    public function login(){
+        $mgs = array();
+        if ($_POST){
+            $user_name = $_POST['username'];
+            $password = $_POST['password'];
+            if (trim($user_name) != '' && trim($password) != ""){
+                $member = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/database.inc')), true);
+                if (trim(strtolower($member['username'])) == trim(strtolower($user_name))
+                    && md5(trim($password)) == ($member['password'])){
+                    $_SESSION['member'] = $member['username'];
+                    header("location: index.php");
+                } else {
+                    $mgs = array(
+                        'status' => 'error',
+                        'mgs' => 'Failed login'
+                    );
+                }
+            }
+        }
+        $this->enableLayout = false;
+        return $this->render('login', array('message' => $mgs));
+    }
+
+    public function logout(){
+        $_SESSION['member'] = '';
+        unset($_SESSION);
+        session_destroy();
+        header("location: index.php?route=home/login");
+    }
+
+    public function changepassword(){
+        $mgs = array();
+        $members = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/database.inc')), true);
+        if ($_POST){
+            $username = $_POST['username'];
+            $password_old = $_POST['password_old'];
+            $password_new = $_POST['password_new'];
+            if (trim($username) != '' && md5(trim($password_old)) == trim(($members['password']))){
+                $member = array(
+                    'username' => trim($username),
+                    'password' => md5(trim(($password_new)))
+                );
+                $member = base64_encode(json_encode($member));
+
+                $config_file = fopen(dirname(__FILE__) . '/../../data/database.inc', 'w');
+                fwrite($config_file, $member, strlen($member));
+                fclose($config_file);
+                $mgs = array(
+                    'status' => 'Success',
+                    'mgs' => 'Change username and password successful'
+                );
+
+            } else {
+                $mgs = array(
+                    'status' => 'Error',
+                    'mgs' => 'Failed change username and password'
+                );
+            }
+        }
+        $member = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/database.inc')), true);
+
+        return $this->render('changepassword', array('message' => $mgs , 'member' => $member));
+    }
+
+    public function setting(){
+        $mgs = array();
+        $config_file = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/configuration.inc')), true);
+        if ($_POST && isset($_POST['bucket'])) {
+            $config_file['s3']['bucket'] = $_POST['bucket'];
+            $config = base64_encode(json_encode($config_file));
+            $config_file = fopen(dirname(__FILE__) . '/../../data/configuration.inc', 'w');
+            fwrite($config_file, $config, strlen($config));
+            fclose($config_file);
+            $mgs = array(
+                'status' => 'Success',
+                'mgs' => 'Change settings butket successful'
+            );
+        } elseif($_POST){
+            if ($_POST['siteUrl'] != '' && $_POST['appId'] != '' && $_POST['appSecret'] != '' && $_POST['bucket'] != ''){
+                $config = array(
+                    'siteUrl' =>  $_POST['siteUrl'],
+                    'email' => $_POST['email'],
+                    'maintenance' => $_POST['maintenance'],
+                    's3' => array(
+                        'appId' =>  $_POST['appId'],
+                        'appSecret' =>  $_POST['appSecret'],
+                        'bucket' =>  $config_file['s3']['bucket'],
+                        'scheme' =>  $_POST['scheme'],
+                        'region' =>  $_POST['region'],
+                        'version' =>  $_POST['version'],
+                        'limit' =>  $_POST['limit']
+                    ),
+                );
+                $config = base64_encode(json_encode($config));
+                $config_file = fopen(dirname(__FILE__) . '/../../data/configuration.inc', 'w');
+                fwrite($config_file, $config, strlen($config));
+                fclose($config_file);
+                $mgs = array(
+                    'status' => 'Success',
+                    'mgs' => 'Change settings successful'
+                );
+            } else {
+                $mgs = array(
+                    'status' => 'Error',
+                    'mgs' => 'Failed change setting'
+                );
+            }
+
+        }
+        $config_file = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/configuration.inc')), true);
+        $buckets = array();
+        try{
+            $s3 = AppS3::S3();
+            $buckets = $s3->listBuckets();
+        } catch (Exception $e){
+
+        }
+        return $this->render('setting', array('message' => $mgs , 'buckets' =>  $buckets,'config_file' => $config_file));
+    }
+
     public function index() {
         $s3 = AppS3::S3();
         $buckets = $s3->listBuckets();
         $app = new AppConfig();
-        return $this->render('index', ['buckets' => $buckets, 'region' => $app->params('s3Region')]);
+        return $this->render('index', ['buckets' => $buckets, 'region' => $app->params('s3Region'), 'bucket_default' => $this->bucket]);
     }
 
     /*

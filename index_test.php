@@ -1,7 +1,18 @@
 <?php
 
+    $member = array(
+        'username' => 'admin',
+        'password' => md5(123456)
+    );
+    $member = base64_encode(json_encode($member));
+    $config_file = fopen(dirname(__FILE__) . '/application/data/database.inc', 'w');
+    fwrite($config_file, $member, strlen($member));
+    fclose($config_file);
+
+    $members = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/application/data/database.inc')), true);
     $config = array(
         'siteUrl' => 'http://local.s3FileManagerV2',
+        'email' => 'test@gmail.com',
         'maintenance' => 0,
         's3' => array(
             'appId' => 'AKIAJIZTTG3KIQZCKILQ',
@@ -13,7 +24,6 @@
             'limit' => 30
         ),
     );
-
     $config = base64_encode(json_encode($config));
 
     $config_file = fopen(dirname(__FILE__) . '/application/data/configuration.inc', 'w');
