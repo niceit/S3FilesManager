@@ -39,8 +39,49 @@ jQuery(function(){
         }
     });
 
-
 });
+
+function is_check(){
+    var is_check = true;
+    $( ".icheckbox_flat-green" ).each(function( index ) {
+        if ($(this).hasClass("checked")) {
+            is_check = false;
+        }
+    });
+    return is_check;
+}
+
+function multiple_delete(){
+    if (is_check()){
+        alert("Please check file to remove!");
+        return false;
+    }
+    var confirmBox = confirm('Are you sure you want to delete this multiple file?');
+    if (!confirmBox) return false;
+    $( ".icheckbox_flat-green" ).each(function( index ) {
+
+        var row = $(this).find("input").data("id");
+        if ($(this).hasClass("checked")) {
+            var URL = $('base').attr('href') + '/index.php?route=home/deletefile';
+            $.ajax({
+                type: "post",
+                url: URL,
+                data: {'key': $(this).find("input").val() },
+                dataType: "html",
+                success: function (data) {
+                    $(".row-" + row).remove();
+                }
+
+            });
+        }
+    });
+    new PNotify({
+        title: 'Success',
+        text: 'You deleted successfully!',
+        type: 'success'
+    });
+
+}
 
 function loadFolderNewLeft(frefix){
     setFolderSelectedPath(frefix);
@@ -388,8 +429,6 @@ function edit_header(){
 
 
 }
-
-
 
 
 

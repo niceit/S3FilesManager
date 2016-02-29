@@ -6458,3 +6458,10 @@ span.act {
     top: 0px;
     display: none;
 }
+
+.nav-tabs>li.active a, .nav-tabs>li.active a:hover {
+    background: #EEE !important;
+}
+#content-detail ul.nav {
+    margin-left: 10px;
+}

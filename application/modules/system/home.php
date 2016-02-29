@@ -2,7 +2,7 @@
 
 class Home extends Controller {
     private  $bucket = 'crgtesting';
-
+    private $array = array();
     public function index() {
         $s3 = AppS3::S3();
         $buckets = $s3->listBuckets();
@@ -444,11 +444,63 @@ class Home extends Controller {
 
             echo $this->render('ajax_detail_file', array(
                 "grants" => $result['Grants'] ,
+                "owner" => $result['Owner'] ,
                 "header" => $result_http['@metadata']['headers'] ,
-                'key' => $key, 'url' => $url));
+                "property" => $result_http ,
+                'key' => $key, 'url' => $url ));
             die();
         }
     }
+
+
+    function recursiveObject($array, $s3, $Prefix){
+        $object = $s3->getObject(array(
+            'Bucket' => $this->bucket,
+            'Key'    => $Prefix
+        ));
+        $owner = $s3->getObjectAcl(array(
+            'Bucket' => $this->bucket,
+            'Key' => $Prefix
+        ));
+        $this->array[] = array(
+            'ETag' => $object['ETag'],
+            'Size' => 0,
+            'StorageClass' => $object['StorageClass'],
+            'Key' => $Prefix,
+            'VersionId' => $object['VersionId'],
+            'IsLatest' => 1,
+            'LastModified' => date_format(date_create($object['@metadata']['headers']['last-modified']), "Y-m-d H:i:s"),
+            'Owner' => $owner['Owner']
+        );
+        $result_verssion = $s3->listObjectVersions(array(
+            // Bucket is required
+            'Bucket' => $this->bucket,
+            'Delimiter' => '/',
+            'MaxKeys' => 1000,
+            'Prefix' => $Prefix
+        ));
+        if (!empty($result_verssion['Versions'])){
+            foreach ($result_verssion['Versions'] as $row){
+                $this->array[] = array(
+                    'ETag' => $row['ETag'],
+                    'Size' => $row['Size'],
+                    'StorageClass' => $row['StorageClass'],
+                    'Key' => $row['Key'],
+                    'VersionId' => $row['VersionId'],
+                    'IsLatest' => $row['IsLatest'],
+                    'LastModified' => date_format(date_create($row['LastModified']->date), "Y-m-d H:i:s"),
+                    'Owner' => $row['Owner'],
+                );
+            }
+        }
+        if (!empty($result_verssion['CommonPrefixes'])) {
+            foreach ($result_verssion['CommonPrefixes'] as $row) {
+                $this->recursiveObject($array, $s3, $row['Prefix']);
+            }
+        }
+        return $array;
+    }
+
 
     public function update_permissions(){
         $this->enableLayout = false;
@@ -501,8 +553,116 @@ class Home extends Controller {
     }
 
     public function TEST() {
+
         // (string: private | public-read | public-read-write | authenticated-read | bucket-owner-read | bucket-owner-full-control )
         $s3 = AppS3::S3();
+        // Getverssion
+        $result_verssion = $s3->listObjectVersions(array(
+            // Bucket is required
+            'Bucket' => $this->bucket,
+            'Delimiter' => '/',
+            'MaxKeys' => 1000,
+            'Prefix' => "test1/"
+        ));
+
+        // Getverssion
+        $result_verssion = $s3->listObjectVersions(array(
+            // Bucket is required
+            'Bucket' => $this->bucket,
+            'Delimiter' => '/',
+            'MaxKeys' => 1000,
+            'Prefix' => "test1/"
+        ));
+        $array = array();
+        $array[] = array(
+            'ETag' => $result_http['ETag'],
+            'Size' => 0,
+            'StorageClass' => $result_http['StorageClass'],
+            'Key' => $key,
+            'VersionId' => $result_http['VersionId'],
+            'IsLatest' => 1,
+            'LastModified' => date_format(date_create($result_http['@metadata']['headers']['last-modified']), "Y-m-d H:i:s"),
+            'Owner' => $result['Owner']
+        );
+        foreach ($result_verssion['Versions'] as $row){
+            $array[] = array(
+                'ETag' => $row['ETag'],
+                'Size' => $row['Size'],
+                'StorageClass' => $row['StorageClass'],
+                'Key' => $row['Key'],
+                'VersionId' => $row['VersionId'],
+                'IsLatest' => $row['IsLatest'],
+                'LastModified' => date_format(date_create($row['LastModified']->date), "Y-m-d H:i:s"),
+                'Owner' => $row['Owner'],
+            );
+        }
+
+        foreach ($result_verssion['CommonPrefixes'] as $row){
+            $array =  $this->recursiveObject($array, $s3, $row['Prefix']);
+        }
+
+
+        foreach ($result_verssion['Versions'] as $row){
+            $this->array[] = array(
+                'ETag' => $row['ETag'],
+                'Size' => $row['Size'],
+                'StorageClass' => $row['StorageClass'],
+                'Key' => $row['Key'],
+                'VersionId' => $row['VersionId'],
+                'IsLatest' => $row['IsLatest'],
+                'LastModified' => date_format(date_create($row['LastModified']->date), "Y-m-d H:i:s"),
+                'Owner' => $row['Owner'],
+            );
+        }
+
+        foreach ($result_verssion['CommonPrefixes'] as $row){
+            $this->recursiveObject($array, $s3, $row['Prefix']);
+        }
+
+        echo '<pre>';
+        print_r($array);
+        die();
+
+        $result = $s3->getObject(array(
+            'Bucket' => $this->bucket,
+            'Key'    => "test1/123/"
+        ));
+
+
+        echo '<pre>';
+        print_r($result);
+
+        $result = $s3->listObjectVersions(array(
+            // Bucket is required
+            'Bucket' => $this->bucket,
+            'Delimiter' => '/',
+            'MaxKeys' => 1000,
+            'Prefix' => "test1/"
+        ));
+        echo '<pre>';
+        print_r($result);
+        die();
+
+
+        $result = $s3->getObjectAcl(array(
+            // Bucket is required
+            'Bucket' => $this->bucket,
+            'Key' => "test1/"
+        ));
+        echo '<pre>';
+        print_r($result);
+        print_r($result['Grants']);
+
+
+
+        $result = $s3->getObject(array(
+            'Bucket' => $this->bucket,
+            'Key'    => "test1/Chrysanthemum.jpg"
+        ));
+
+        echo '<pre>';
+        print_r($result);
+        die();
 
         $result = $s3->putObject(array(
             'Bucket' => $this->bucket,
@@ -512,15 +672,6 @@ class Home extends Controller {
         ));
 
 
-
-        $result = $s3->headObject(array(
-            'Bucket' => $this->bucket,
-            'Key'    => "test1/Chrysanthemum.jpg"
-        ));
-
-        echo '<pre>';
-        print_r($result);
-        die();
 
 
         $result = $s3->putObjectAcl(array(
@@ -546,15 +697,7 @@ class Home extends Controller {
       //  'Type' => 'string',
        //                 'URI' => 'string',
 //
-        $result = $s3->getObjectAcl(array(
-            // Bucket is required
-            'Bucket' => $this->bucket,
-            'Key' => "test1/"
-        ));
-        echo '<pre>';
-        print_r($result);
-        print_r($result['Grants']);
-        die();
+
 
 
         $result = $s3->putObjectAcl(array(

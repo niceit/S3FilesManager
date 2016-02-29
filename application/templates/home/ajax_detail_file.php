@@ -4,8 +4,8 @@
     <li><a data-toggle="tab" href="#http-headers">Http Headers</a></li>
     <li><a data-toggle="tab" href="#properties">Properties</a></li>
     <li><a data-toggle="tab" href="#preview">Preview</a></li>
-    <li><a data-toggle="tab" href="#versions">Versions</a></li>
-    <li><a data-toggle="tab" href="#eventLog">EventLog</a></li>
+    <!--<li><a data-toggle="tab" href="#versions">Versions</a></li>
+    <li><a data-toggle="tab" href="#eventLog">EventLog</a></li>-->
 </ul>
 
 <div style="min-height: 400px" class="tab-content">
@@ -183,7 +183,79 @@
         <div class="clearfix"></div>
     </div>
     <div id="properties" class="tab-pane fade">
-        properties
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2><?php echo $key; ?></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Settings 1</a>
+                                </li>
+                                <li><a href="#">Settings 2</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div style="margin-bottom: 20px" class="form-group">
+                        <label style="margin-top: 10px" class="pull-left">URL: </label>
+                        <div class="col-md-11 col-sm-11 col-xs-11">
+                            <input type="text" class="form-control" value="<?php echo $url; ?>" disabled="disabled" placeholder="url...">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <table class="table table-striped header-file">
+                        <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Value</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ETag</td>
+                                <td><?php echo $header['etag']; ?></td>
+                            </tr>
+                            <tr>
+                                <td>Key</td>
+                                <td><?php echo $key; ?></td>
+                            </tr>
+                            <tr>
+                                <td>Server-side modified</td>
+                                <td><?php echo $header['last-modified']; ?></td>
+                            </tr>
+                            <tr>
+                                <td>Owner</td>
+                                <td><?php echo $owner['DisplayName']."(" . $owner['ID'] . ")"; ?></td>
+                            </tr>
+                            <tr>
+                                <td>Size</td>
+                                <td><?php echo $header['content-length']; ?></td>
+                            </tr>
+                            <tr>
+                                <td>Storage class</td>
+                                <td><?php if ( $property['StorageClass'] != '') echo $property['StorageClass']; ?></td>
+                            </tr>
+                            <tr>
+                                <td>Server-side encrypted</td>
+                                <td><?php if ( $property['ServerSideEncryption'] != '') echo $property['StorageClass'];?></td>
+                            </tr>
+
+                        </tbody>
+                     </table>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
     </div>
     <div id="preview" class="tab-pane fade">
         <div class="col-md-12 col-sm-12 col-xs-12">
@@ -223,10 +295,11 @@
         </div>
         <div class="clearfix"></div>
     </div>
+    <!--
     <div id="versions" class="tab-pane fade">
         versions
     </div>
     <div id="eventLog" class="tab-pane fade">
         eventLog
-    </div>
+    </div> -->
 </div>

@@ -25,7 +25,7 @@
                 <tr class="headings">
                     <th></th>
                     <th>
-                        <input type="checkbox" id="check-all" class="flat">
+                        <a class="btn btn-danger" onclick="multiple_delete()" id="delete-multiple" href="javascript:;">Delete</a>
                     </th>
                     <th class="column-title"> </th>
                     <th class="column-title">Name</th>
@@ -41,7 +41,7 @@
                      <tr class="row-<?php echo $i; ?>">
                          <td><?php echo $i; ?></td>
                          <td class="a-center ">
-                             <input type="checkbox" class="flat" name="table_records">
+                             <input data-id="<?php echo $i; ?>" value="<?php echo base64_encode($object['key']); ?>" type="checkbox" class="flat" name="table_records">
                          </td>
                          <td>
                              <?php if ($object['is_file']): ?>

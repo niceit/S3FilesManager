@@ -7,7 +7,7 @@ if ($listObjects):
         <tr class="row-<?php echo $sst; ?>">
             <td><?php echo $sst; ?></td>
             <td class="a-center ">
-                <input type="checkbox" class="flat" name="table_records">
+                <input data-id="<?php echo $sst; ?>" value="<?php echo base64_encode($object['key']); ?>" type="checkbox" class="flat" name="table_records">
             </td>
             <td>
                 <?php if ($object['is_file']): ?>
