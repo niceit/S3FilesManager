@@ -1,5 +1,5 @@
 <?php
-
+use Aws\S3;
 class Home extends Controller {
     private $array = array();
 
@@ -676,6 +676,23 @@ class Home extends Controller {
 
         // (string: private | public-read | public-read-write | authenticated-read | bucket-owner-read | bucket-owner-full-control )
         $s3 = AppS3::S3();
+
+        echo '<pre>';
+        $result = $s3->getBucketCors(array('Bucket' => $this->bucket));
+
+        print_r($result);
+        die();
+
+
+        try {
+            $result = $s3->listObjects(array('Bucket' => "crgtestingbucket2", 'Prefix' => "/", 'Delimiter' => '/'));
+        }catch (  \Aws\S3\Exception $e ){
+
+            print_r($e->getMessage());
+        }
+
+
+
         // Getverssion
         $result_verssion = $s3->listObjectVersions(array(
             // Bucket is required

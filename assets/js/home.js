@@ -2,9 +2,9 @@ var instance_files = [];
 jQuery(function(){
 
     var region = $("input[name=region]").val();
-    var bucket = $("input[name=bucket]").val();
+    var bucket = $("select[name=bucket]").val();
     Application.generateFormS3Signature(".cloud-upload-form", bucket, region);
-
+    loadFrefix("/", 0);
     loadFolder('/');
     $('#btn-search').click(function(){
         loadSearchFrefix(0);
@@ -17,7 +17,7 @@ jQuery(function(){
     });
     $('#upload-file').click(function(){
         $(".template-upload").remove();
-        var bucket = $("input[name=bucket]").val();
+        var bucket = $("select[name=bucket]").val();
         if (bucket == '') {
             alert('Please select bucket first');
         } else {
@@ -41,6 +41,8 @@ jQuery(function(){
         if (bucket != '') {
             var region = $("input[name=region]").val();
             Application.generateFormS3Signature(".cloud-upload-form", bucket, region);
+            loadFolder('/');
+            loadFrefix("/", 0);
         }
     });
 
@@ -48,7 +50,7 @@ jQuery(function(){
 
 function is_check(){
     var is_check = true;
-    $( ".icheckbox_flat-green" ).each(function( index ) {
+    $( ".content-file .icheckbox_flat-green" ).each(function( index ) {
         if ($(this).hasClass("checked")) {
             is_check = false;
         }
@@ -63,7 +65,9 @@ function multiple_delete(){
     }
     var confirmBox = confirm('Are you sure you want to delete this multiple file?');
     if (!confirmBox) return false;
-    $( ".icheckbox_flat-green" ).each(function( index ) {
+
+    var bucket = $("select[name=bucket]").val();
+    $( ".content-file .icheckbox_flat-green" ).each(function( index ) {
 
         var row = $(this).find("input").data("id");
         if ($(this).hasClass("checked")) {
@@ -71,7 +75,7 @@ function multiple_delete(){
             $.ajax({
                 type: "post",
                 url: URL,
-                data: {'key': $(this).find("input").val() },
+                data: {'key': $(this).find("input").val() , 'bucket': bucket},
                 dataType: "html",
                 success: function (data) {
                     $(".row-" + row).remove();
@@ -101,11 +105,12 @@ function loadFolderNew(frefix) {
     $('#create-folder').modal('show');
     $("input[name=folder_name]").val('');
     $('#list-folder').prepend('<span class="loading"></span>');
+    var bucket = $("select[name=bucket]").val();
     var URL = $('base').attr('href') + '/index.php?route=home/listbucketfolders';
     $.ajax({
         type: "post",
         url: URL,
-        data: {'frefix': frefix},
+        data: {'frefix': frefix , 'bucket' : bucket},
         dataType: "html",
         success: function (data) {
             $('#list-folder .loading').remove();
@@ -118,11 +123,12 @@ function loadFolderNew(frefix) {
 
 function loadSubFolderNew(frefix, id) {
     $('#list-folder').prepend('<span class="loading"></span>');
+    var bucket = $("select[name=bucket]").val();
     var URL = $('base').attr('href') + '/index.php?route=home/listbucketfolders';
     $.ajax({
         type: "post",
         url: URL,
-        data: {'frefix': frefix},
+        data: {'frefix': frefix , 'bucket': bucket},
         dataType: "html",
         success: function (data) {
             $('#list-folder .loading').remove();
@@ -157,11 +163,12 @@ function saveCreateFolder(){
             alert('Folder name can not contain /');
         }
         else{
+            var bucket = $("select[name=bucket]").val();
             var URL = $('base').attr('href') + '/index.php?route=home/createfolder';
             $.ajax({
                 type: "post",
                 url: URL,
-                data: {path:$('input[name=select_folder_path]').val(),name:folder_name},
+                data: {path:$('input[name=select_folder_path]').val(),name:folder_name , 'bucket': bucket},
                 dataType: "json",
                 success: function (response) {
                     if (response['status'] == 1) {
@@ -182,7 +189,7 @@ function saveCreateFolder(){
 
 //For list bucket folder path
 function setSelectedPath(path) {
-    $('input[name=bucket_path]').val(path);
+    $('select[name=bucket_path]').val(path);
 }
 //For add folder select folder path
 function setFolderSelectedPath(path) {
@@ -195,11 +202,12 @@ function setFolderSelectedPath(path) {
 
 function loadFolder(frefix) {
     $('#contentFolder').prepend('<span class="loading"></span>');
+    var bucket = $("select[name=bucket]").val();
     var URL = $('base').attr('href') + '/index.php?route=home/ajaxloadfolder';
     $.ajax({
         type: "post",
         url: URL,
-        data: {'frefix': frefix},
+        data: {'frefix': frefix , 'bucket' : bucket},
         dataType: "html",
         success: function (data) {
             $('.contentFolder .loading').remove();
@@ -236,10 +244,11 @@ function loadSubFolder(frefix, id) {
 
     $('#contentFolder').prepend('<span class="loading"></span>');
     var URL = $('base').attr('href') + '/index.php?route=home/ajaxloadfolder';
+    var bucket = $("select[name=bucket]").val();
     $.ajax({
         type: "post",
         url: URL,
-        data: {'frefix': frefix},
+        data: {'frefix': frefix , 'bucket' : bucket},
         dataType: "html",
         success: function (data) {
             $('.contentFolder .loading').remove();
@@ -259,10 +268,11 @@ function loadFrefix(frefix, page) {
     load.removeAttr( "onclick" );
     load.html('Loading...');
     var URL = $('base').attr('href') + '/index.php?route=home/ajaxloadfrefix';
+    var bucket = $("select[name=bucket]").val();
     $.ajax({
         type: "post",
         url: URL,
-        data: {'frefix': frefix , 'page' : page},
+        data: {'frefix': frefix , 'page' : page , 'bucket' : bucket},
         dataType: "html",
         success: function (data) {
             load.parent().parent().remove();
@@ -302,10 +312,11 @@ function loadSearchFrefix(page){
     load.removeAttr( "onclick" );
     load.html('Loading...');
     var URL = $('base').attr('href') + '/index.php?route=home/ajaxloadsearchobjects';
+    var bucket = $("select[name=bucket]").val();
     $.ajax({
         type: "post",
         url: URL,
-        data: {'name': object.val() , 'page' : page},
+        data: {'name': object.val() , 'page' : page , 'bucket': bucket},
         dataType: "html",
         success: function (data) {
             $('#contentfrefix .loading').remove();
@@ -327,10 +338,11 @@ function delete_file(key, row) {
     var confirmBox = confirm('Are you sure you want to delete this file?');
     if (!confirmBox) return false;
     var URL = $('base').attr('href') + '/index.php?route=home/deletefile';
+    var bucket = $("select[name=bucket]").val();
     $.ajax({
         type: "post",
         url: URL,
-        data: {'key': key },
+        data: {'key': key , 'bucket' : bucket},
         dataType: "html",
         success: function (data) {
             if (data == "0"){
@@ -360,11 +372,12 @@ function click_popup(src){
 function popup_detail(key, url){
     $('#content-detail').prepend('<span class="loading"></span>');
     $('#detail-file').modal('show');
+    var bucket = $("select[name=bucket]").val();
     var URL = $('base').attr('href') + '/index.php?route=home/ajax_detail_file';
     $.ajax({
         type: "post",
         url: URL,
-        data: {'key': key , 'url' : url},
+        data: {'key': key , 'url' : url , 'bucket' : bucket},
         dataType: "html",
         success: function (data) {
             $("#content-detail").html(data);
@@ -410,11 +423,12 @@ function edit_header(){
         $(".action-type").remove();
     });
     $(".save-type").click(function(){
+        var bucket = $("select[name=bucket]").val();
         var URL = $('base').attr('href') + '/index.php?route=home/update_header_content_type';
         $.ajax({
             type: "post",
             url: URL,
-            data: {'key': $("#key").val(), 'contentType': $('#txt-content-type').val()},
+            data: {'key': $("#key").val(), 'contentType': $('#txt-content-type').val() , 'bucket' :  bucket},
             dataType: "html",
             success: function (data) {
                 $(".name-contenttype").html(data);

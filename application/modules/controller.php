@@ -20,6 +20,10 @@ class Controller {
         $member = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../data/database.inc')), true);
         $this->username = $member['username'];
         $this->siteConfig = $AppConfig;
+        if ($_POST){
+            $this->bucket = $_POST['bucket'];
+        }
+
         if (!isset($_SESSION) || !isset($_SESSION['member']) || $_SESSION['member'] == ''){
             if ($_GET['route'] != "home/login")
             header("location: index.php?route=home/login");
