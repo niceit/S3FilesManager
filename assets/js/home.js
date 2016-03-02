@@ -11,11 +11,11 @@ jQuery(function(){
     });
 
     $('#btn-create-new-butket').click(function(){
+        $("input[name=name-bucket]").removeAttr("disabled").val('');
+        $("#save-bucket").removeAttr("disabled");
         $('#create-new-folder').modal('show');
     });
     $('#save-bucket').click(function(){
-      //  $(this).
-
         var element =  $("input[name=name-bucket]");
         element.css("border", "1px solid #DDE2E8");
         var bucket = element.val().trim();
@@ -23,6 +23,8 @@ jQuery(function(){
             element.css("border", "1px solid red");
             return false;
         } else {
+            element.attr("disabled","disabled");
+            $(this).attr("disabled","disabled");
             var URL = $('base').attr('href') + '/index.php?route=home/createbucket';
             $.ajax({
                 type: "post",
