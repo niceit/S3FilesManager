@@ -213,7 +213,7 @@
 </div>
 
 <div id="create-folder"data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div style="width: 85%" class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
@@ -221,8 +221,9 @@
                 <h4 class="modal-title title-popup"  id="myModalLabel2"></h4>
             </div>
             <div class="modal-body">
-                <div id="list-folder"></div>
-                <div class="content-create-folder" >
+                <div class="col-md-4" id="list-folder"></div>
+
+                <div class="content-create-folder col-md-8" >
                     <div  class="input-group">
                         <span>Upload directory: </span><span class="selected-folder">/</span>
                     </div>
@@ -234,12 +235,9 @@
                         <button type="button" id="save-folders" class="btn btn-primary">Save</button>
                     </div>
                     <div class="clearfix"></div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
                 </div>
 
-                <div class="content-upload-file" >
+                <div class="content-upload-file col-md-8" >
                     <div class="input-group">
                         <span>Upload directory: </span><span class="selected-folder">/</span>
                     </div>
@@ -277,10 +275,12 @@
                         <!-- The table listing the files available for upload/download -->
                         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
                     </form>
-
                 </div>
 
                 <div class="clearfix"></div>
+                <div class="modal-footer ">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -305,7 +305,7 @@
             <p class="size">Processing...</p>
             <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
         </td>
-        <td class="td-action action-{%=htmlspecialchars(file.name)%}">
+        <td  class="td-action action-{%=htmlspecialchars(file.name)%}">
             {% if (!i && !o.options.autoUpload) { %}
                 <button class="btn btn-primary start" disabled>
                     <i class="glyphicon glyphicon-upload"></i>

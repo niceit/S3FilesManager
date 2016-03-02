@@ -6465,3 +6465,19 @@ span.act {
 #content-detail ul.nav {
     margin-left: 10px;
 }
+.subloading{
+    background-size: 14px;
+}
+#list-folder{
+    min-height: 75px;
+    border-right: 1px solid #ddd;
+}
+.td-action{
+    padding-top: 9px !important;
+    width: 95px;
+    text-align: center;
+}
+.active_new .name-prefix{
+    color: #1A82C3;
+    font-weight: bold;
+}

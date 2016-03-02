@@ -13,6 +13,7 @@ jQuery(function(){
         $('.content-create-folder').slideDown();
         $('.content-upload-file').hide();
         $('.title-popup').html('Add new bucket folder');
+     //   $("#list-folder").css("border-right", '1px solid #fff');
         loadFolderNew('/');
     });
     $('#upload-file').click(function(){
@@ -24,6 +25,7 @@ jQuery(function(){
             $('.content-create-folder').hide();
             $('.content-upload-file').slideDown();
             $('.title-popup').html('Upload file');
+          //  $("#list-folder").css("border-right", '1px solid #ddd');
             loadFolderNew('/');
         }
 
@@ -120,7 +122,6 @@ function loadFolderNew(frefix) {
 
     });
 }
-
 function loadSubFolderNew(frefix, id) {
     $('#list-folder').prepend('<span class="loading"></span>');
     var bucket = $("select[name=bucket]").val();
@@ -147,8 +148,12 @@ function clickFonderNew(){
 
         var key = prefix  + '${filename}';
         $('#fileupload').find('input[name=key]').val(key);
-
         loadSubFolderNew(prefix, id);
+    });
+
+    $(".tree-file-row").click(function(){
+        $(".tree-file-row").removeClass("active_new");
+        $(this ).addClass("active_new");
     });
 }
 
@@ -241,8 +246,10 @@ function loadSubFolder(frefix, id) {
     item.find('.fa-caret-right')
         .removeClass('fa-caret-right')
         .addClass('fa-caret-down');
-
-    $('#contentFolder').prepend('<span class="loading"></span>');
+    if (frefix == "/")
+        $('#contentFolder').prepend('<span class="loading"></span>');
+    else
+        $(sub).html('<span class="loading subloading"></span>');
     var URL = $('base').attr('href') + '/index.php?route=home/ajaxloadfolder';
     var bucket = $("select[name=bucket]").val();
     $.ajax({
@@ -264,6 +271,12 @@ function loadFrefix(frefix, page) {
     if (page == 0)
     $('#contentfrefix').prepend('<span class="loading"></span>');
 
+    $( ".item .arrow" ).each(function( index ) {
+        if ( $(this).data("prefix") == frefix ){
+            $(this).trigger("click");
+        }
+    });
+
     var load = $('.load-more');
     load.removeAttr( "onclick" );
     load.html('Loading...');
@@ -275,12 +288,6 @@ function loadFrefix(frefix, page) {
         data: {'frefix': frefix , 'page' : page , 'bucket' : bucket},
         dataType: "html",
         success: function (data) {
-            $( ".item .arrow" ).each(function( index ) {
-                if ( $(this).data("prefix") == frefix ){
-                    $(this).trigger("click");
-                }
-            });
-
             load.parent().parent().remove();
             $('#contentfrefix .loading').remove();
             if (page == 0)
