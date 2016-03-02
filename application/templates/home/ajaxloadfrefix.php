@@ -5,14 +5,14 @@
             <li onclick="loadFrefix('<?php echo $old_fix; ?>', 0);"><i class="fa fa-folder-open-o"></i> ...</li>
         <?php endif;  ?>
 
-        <?php
+        <?php /*
         if ($files):
             foreach ($files as $file):
         ?>
                 <li><span class="li-custom"><i class="fa fa-folder-open-o"></i> <span onclick="loadFrefix('<?php echo $file['Prefix']; ?>', 0)"><?php echo $file['Prefix']; ?></span> <span class="act"><a onclick="popup_detail('<?php echo base64_encode($file['Prefix']); ?>', '<?php echo $file['Prefix']; ?>')" href="#"><i class="fa fa-eye"></i> View</a></span></span></li>
         <?php
             endforeach;
-        endif;
+        endif; */
         ?>
     </ul>
 <?php  endif;  ?>
@@ -87,6 +87,10 @@
             </tbody>
         </table>
         <?php
+    else:
+        ?>
+    <h4>No file in folder</h4>
+<?php
     endif;
     ?>
 

@@ -275,6 +275,12 @@ function loadFrefix(frefix, page) {
         data: {'frefix': frefix , 'page' : page , 'bucket' : bucket},
         dataType: "html",
         success: function (data) {
+            $( ".item .arrow" ).each(function( index ) {
+                if ( $(this).data("prefix") == frefix ){
+                    $(this).trigger("click");
+                }
+            });
+
             load.parent().parent().remove();
             $('#contentfrefix .loading').remove();
             if (page == 0)
