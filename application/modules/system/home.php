@@ -130,6 +130,34 @@ class Home extends Controller {
         return $this->render('index', ['buckets' => $buckets, 'region' => $app->params('s3Region'), 'bucket_default' => $this->bucket]);
     }
 
+    public function createbucket() {
+        header ("Content-Type: application/json");
+        $this->enableLayout = false;
+        if ($_POST) {
+            $name = $_POST['name'];
+
+            if (empty($name)) {
+                $response = ['status' => 0, 'message' => 'Bucket name can not be blank'];
+            }
+            else {
+                $s3 = AppS3::S3();
+                try{
+                    $s3->createBucket(array('Bucket' => $name));
+                    $s3 = AppS3::S3();
+                    $buckets = $s3->listBuckets();
+                    $response = ['status' => 1, 'buckets' => $buckets['Buckets'], 'message' => 'Bucket created successfully'];
+                }
+                catch (\Aws\S3\Exception\S3Exception $e) {
+                    $response = ['status' => 0, 'message' => 'An error while creating new bucket. Please try with a different name!'];
+                }
+            }
+        }
+        else {
+            $response = ['status' => 0, 'message' => 'Invalid request'];
+        }
+        echo json_encode($response);
+        die();
+    }
     /*
     * Load folder on prefix
     */

@@ -9,6 +9,58 @@ jQuery(function(){
     $('#btn-search').click(function(){
         loadSearchFrefix(0);
     });
+
+    $('#btn-create-new-butket').click(function(){
+        $('#create-new-folder').modal('show');
+    });
+    $('#save-bucket').click(function(){
+      //  $(this).
+
+        var element =  $("input[name=name-bucket]");
+        element.css("border", "1px solid #DDE2E8");
+        var bucket = element.val().trim();
+        if (bucket == ""){
+            element.css("border", "1px solid red");
+            return false;
+        } else {
+            var URL = $('base').attr('href') + '/index.php?route=home/createbucket';
+            $.ajax({
+                type: "post",
+                url: URL,
+                data: {'name': bucket},
+                dataType: "json",
+                success: function (data) {
+                    if (data['status'] == 1) {
+                        $('#create-new-folder').modal('hide');
+                        new PNotify({
+                            title: 'Success',
+                            text: data['message'],
+                            type: 'success'
+                        });
+                        var bucket_curent = $("select[name=bucket]").val();
+                        var html = '<select name="bucket" class="select_butket form-control" tabindex="-1">';
+                        $.each(data['buckets'], function( index, value ) {
+                            if (bucket_curent == value['Name'])
+                                html += "<option selected='selected' value='" + value['Name'] + "'>" + value['Name'] + "</option>";
+                            else
+                                html += "<option value='" + value['Name'] + "'>" + value['Name'] + "</option>";
+                        });
+                        html += "</select>";
+                        $(".select_butket_div").html(html);
+                        $(".select_butket").select2();
+                    } else {
+                        new PNotify({
+                            title: 'Error',
+                            text: data['message'],
+                            type: 'Error'
+                        });
+                    }
+                }
+
+            });
+        }
+    });
+
     $('#btn-create-new-folder').click(function(){
         $('.content-create-folder').slideDown();
         $('.content-upload-file').hide();
