@@ -1,4 +1,3 @@
-
 <div class="clearfix"></div>
 
 <div class="row tile_count">
@@ -77,7 +76,7 @@
                                 <select name="bucket" class="select_butket form-control" tabindex="-1">
                                     <?php if (!empty($buckets)) : ?>
                                         <?php foreach ($buckets['Buckets'] as $bucket) : ?>
-                                            <option <?php if($bucket_default == $bucket['Name']) echo 'selected="selected"'; ?> value="<?php echo $bucket['Name'] ?>"><?php echo $bucket['Name'] ?></option>
+                                            <option <?php if ($bucket_default == $bucket['Name']) echo 'selected="selected"'; ?> value="<?php echo $bucket['Name'] ?>"><?php echo $bucket['Name'] ?></option>
                                         <?php endforeach ?>
                                     <?php endif ?>
                                 </select>
@@ -95,11 +94,10 @@
         </div>
     </div>
 
-
     <div class="col-md-3 col-sm-3 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h2>Folder</h2>
+                <h2>Available Folders</h2>
                 <ul class="nav navbar-right panel_toolbox">
                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                     </li>
@@ -131,7 +129,7 @@
                 <div class="x_panel">
                     <div class="x_title">
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h2 style="margin-right: 5px;">File: </h2>
+                            <h2 style="margin-right: 5px;">Search for files: </h2>
                             <div class="input-group search">
                                 <input id="txt-name" type="text" class="form-control">
                                 <span class="input-group-btn">
@@ -317,9 +315,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">

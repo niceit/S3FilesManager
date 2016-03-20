@@ -18,4 +18,4 @@ require_once $AppConfig->params('AppRootDir') . 'modules/system/' . $controller 
 $action = $AppConfig->params('action');
 $route = new $controller();
 
-echo $route->{$action}();
+print $route->{$action}();

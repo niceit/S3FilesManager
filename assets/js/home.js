@@ -25,7 +25,7 @@ jQuery(function(){
         } else {
             element.attr("disabled","disabled");
             $(this).attr("disabled","disabled");
-            var URL = $('base').attr('href') + '/index.php?route=home/createbucket';
+            var URL = $('base').attr('href') + '/index.php?route=home/create-bucket';
             $.ajax({
                 type: "post",
                 url: URL,
@@ -127,7 +127,7 @@ function multiple_delete(){
 
         var row = $(this).find("input").data("id");
         if ($(this).hasClass("checked")) {
-            var URL = $('base').attr('href') + '/index.php?route=home/deletefile';
+            var URL = $('base').attr('href') + '/index.php?route=home/delete-file';
             $.ajax({
                 type: "post",
                 url: URL,
@@ -162,7 +162,7 @@ function loadFolderNew(frefix) {
     $("input[name=folder_name]").val('');
     $('#list-folder').prepend('<span class="loading"></span>');
     var bucket = $("select[name=bucket]").val();
-    var URL = $('base').attr('href') + '/index.php?route=home/listbucketfolders';
+    var URL = $('base').attr('href') + '/index.php?route=home/list-bucket-folders';
     $.ajax({
         type: "post",
         url: URL,
@@ -179,7 +179,7 @@ function loadFolderNew(frefix) {
 function loadSubFolderNew(frefix, id) {
     $('#list-folder').prepend('<span class="loading"></span>');
     var bucket = $("select[name=bucket]").val();
-    var URL = $('base').attr('href') + '/index.php?route=home/listbucketfolders';
+    var URL = $('base').attr('href') + '/index.php?route=home/list-bucket-folders';
     $.ajax({
         type: "post",
         url: URL,
@@ -223,7 +223,7 @@ function saveCreateFolder(){
         }
         else{
             var bucket = $("select[name=bucket]").val();
-            var URL = $('base').attr('href') + '/index.php?route=home/createfolder';
+            var URL = $('base').attr('href') + '/index.php?route=home/create-folder';
             $.ajax({
                 type: "post",
                 url: URL,
@@ -262,7 +262,7 @@ function setFolderSelectedPath(path) {
 function loadFolder(frefix) {
     $('#contentFolder').prepend('<span class="loading"></span>');
     var bucket = $("select[name=bucket]").val();
-    var URL = $('base').attr('href') + '/index.php?route=home/ajaxloadfolder';
+    var URL = $('base').attr('href') + '/index.php?route=home/ajax-load-folder';
     $.ajax({
         type: "post",
         url: URL,
@@ -304,7 +304,7 @@ function loadSubFolder(frefix, id) {
         $('#contentFolder').prepend('<span class="loading"></span>');
     else
         $(sub).html('<span class="loading subloading"></span>');
-    var URL = $('base').attr('href') + '/index.php?route=home/ajaxloadfolder';
+    var URL = $('base').attr('href') + '/index.php?route=home/ajax-load-folder';
     var bucket = $("select[name=bucket]").val();
     $.ajax({
         type: "post",
@@ -334,7 +334,7 @@ function loadFrefix(frefix, page) {
     var load = $('.load-more');
     load.removeAttr( "onclick" );
     load.html('Loading...');
-    var URL = $('base').attr('href') + '/index.php?route=home/ajaxloadfrefix';
+    var URL = $('base').attr('href') + '/index.php?route=home/ajax-load-prefix';
     var bucket = $("select[name=bucket]").val();
     $.ajax({
         type: "post",
@@ -378,7 +378,7 @@ function loadSearchFrefix(page){
     var load = $('.load-more');
     load.removeAttr( "onclick" );
     load.html('Loading...');
-    var URL = $('base').attr('href') + '/index.php?route=home/ajaxloadsearchobjects';
+    var URL = $('base').attr('href') + '/index.php?route=home/ajax-load-search-objects';
     var bucket = $("select[name=bucket]").val();
     $.ajax({
         type: "post",
@@ -404,7 +404,7 @@ function loadSearchFrefix(page){
 function delete_file(key, row) {
     var confirmBox = confirm('Are you sure you want to delete this file?');
     if (!confirmBox) return false;
-    var URL = $('base').attr('href') + '/index.php?route=home/deletefile';
+    var URL = $('base').attr('href') + '/index.php?route=home/delete-file';
     var bucket = $("select[name=bucket]").val();
     $.ajax({
         type: "post",
@@ -440,7 +440,7 @@ function popup_detail(key, url){
     $('#content-detail').prepend('<span class="loading"></span>');
     $('#detail-file').modal('show');
     var bucket = $("select[name=bucket]").val();
-    var URL = $('base').attr('href') + '/index.php?route=home/ajax_detail_file';
+    var URL = $('base').attr('href') + '/index.php?route=home/ajax-detail-file';
     $.ajax({
         type: "post",
         url: URL,
@@ -461,7 +461,7 @@ function popup_detail(key, url){
                     }
                 });
 
-                var URL = $('base').attr('href') + '/index.php?route=home/update_permissions';
+                var URL = $('base').attr('href') + '/index.php?route=home/update-permissions';
                 $.ajax({
                     type: "post",
                     url: URL,
@@ -491,7 +491,7 @@ function edit_header(){
     });
     $(".save-type").click(function(){
         var bucket = $("select[name=bucket]").val();
-        var URL = $('base').attr('href') + '/index.php?route=home/update_header_content_type';
+        var URL = $('base').attr('href') + '/index.php?route=home/update-header-content-type';
         $.ajax({
             type: "post",
             url: URL,

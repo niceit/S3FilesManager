@@ -38,7 +38,21 @@ class AppConfig {
         if (isset($_GET['route'])) {
             $route = explode("/", $_GET['route']);
             $this->controller = $route[0];
-            $this->action = $route[1];
+
+            //Parse uppercase action base on lowercase request
+            $action = $route[1];
+            if (strstr($action, '-')) {
+                $action = explode('-', $action);
+                foreach ($action as $key => $value) {
+                    if ($key > 0) {
+                        $first_letter = substr($value, 0, 1);
+                        $action[0] .= strtoupper($first_letter) . str_replace($first_letter, '', $value);
+                    }
+                }
+                $action = $action[0];
+            }
+
+            $this->action = $action;
         }
         else {
             $this->controller = 'home';
