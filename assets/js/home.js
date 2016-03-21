@@ -453,26 +453,23 @@ function popup_detail(key, url){
                 radioClass: 'iradio_flat-green'
             });
 
-            $("#grant_content input").next().click(function(){
-                var grant = '';
-                $( ".iCheck-helper" ).each(function( index ) {
-                    if ($(this).parent().hasClass("checked")) {
-                        grant += $(this).parent().find("input").val() + ",";
-                    }
-                });
-
+            //Update Permissions
+            $(".btn-save-permissions").click(function(){
+                var data = $("form[name=permission_form]").serialize();
                 var URL = $('base').attr('href') + '/index.php?route=home/update-permissions';
+                data += '&data[bucket]=' + $("select[name=bucket]").val();
                 $.ajax({
-                    type: "post",
+                    type: "POST",
                     url: URL,
-                    data: {'key': $("#key").val(), 'grant': grant},
+                    data: data,
                     dataType: "html",
                     success: function (data) {
-                        new PNotify({
+                        /* new PNotify({
                             title: 'Success',
-                            text: 'Update Permissions successfully!',
+                            text: 'Permissions Updated!',
                             type: 'success'
                         });
+                        */
                     }
                 });
             });

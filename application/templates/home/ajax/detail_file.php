@@ -1,4 +1,3 @@
-<input id="key" value="<?php echo base64_encode($key); ?>" type="hidden" />
 <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#permissions">Permissions</a></li>
     <li><a data-toggle="tab" href="#http-headers">Http Headers</a></li>
@@ -38,39 +37,51 @@
                             <input type="text" class="form-control" value="<?php echo $url; ?>" disabled="disabled" placeholder="url...">
                         </div>
                     </div>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th style="width: 25%">User Name</th>
-                            <th style="width: 25%">Full Control</th>
-                            <th style="width: 25%">Read</th>
-                            <th style="width: 25%">Write</th>
-                            <!--<th style="width: 16%">Read Permissions</th>
-                            <th style="width: 16%">Write Permissions</th>-->
-                        </tr>
-                        </thead>
-                        <tbody id="grant_content" >
+                    <form name="permission_form">
+                        <input id="key" name="data[key]" value="<?php echo base64_encode($key); ?>" type="hidden" />
+                        <table class="table">
+                            <thead>
                             <tr>
-                                <td>Owner(rr)</td>
-                                <td><input value="private" name="full_control[]" <?php if (is_check_grant($permissions, 'owner', "FULL_CONTROL")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
-                                <td><input  value="" name="read[]" <?php if (is_check_grant($permissions, 'owner', "READ")) { echo 'checked="checked"'; } ?>  type="checkbox" class="flat"></td>
-                                <td><input <?php if (is_check_grant($permissions, 'owner', "WRITE")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
+                                <th style="width: 25%">User Name</th>
+                                <th style="width: 25%">Full Control</th>
+                                <th style="width: 25%">Read</th>
+                                <th style="width: 25%">Write</th>
+                                <!--<th style="width: 16%">Read Permissions</th>
+                                <th style="width: 16%">Write Permissions</th>-->
                             </tr>
-                            <tr>
-                                <td>Authenticates Users</td>
-                                <td><input value="" name="full_control[]" <?php if (is_check_grant($permissions, 'authenticated', "FULL_CONTROL")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
-                                <td><input value="authenticated-read" name="read[]" <?php if (is_check_grant($permissions, 'authenticated', "READ")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
-                                <td><input value="authenticated-read-write" <?php if (is_check_grant($permissions, 'authenticated', "WRITE")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
-                            </tr>
-                            <tr>
-                                <td>All Users</td>
-                                <td><input value="" name="full_control[]" <?php if (is_check_grant($permissions, 'all', "FULL_CONTROL")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
-                                <td><input value="public-read" name="read[]" <?php if (is_check_grant($permissions, 'all', "READ")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
-                                <td><input  value="public-read-write" name="write[]" <?php if (is_check_grant($permissions, 'all', "WRITE")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
+                            </thead>
+                            <tbody id="grant_content" >
+                                <tr>
+                                    <td>Owner(rr)</td>
+                                    <td><input type="checkbox" value="1" name="data[permission][owner][full]" <?php if (is_check_grant($permissions, 'owner', "FULL_CONTROL")) { echo 'checked="checked"'; } ?> class="flat"></td>
+                                    <td><input type="checkbox" value="1" name="data[permission][owner][read]" <?php if (is_check_grant($permissions, 'owner', "READ")) { echo 'checked="checked"'; } ?> class="flat"></td>
+                                    <td><input type="checkbox" value="1" name="data[permission][owner][write]" <?php if (is_check_grant($permissions, 'owner', "WRITE")) { echo 'checked="checked"'; } ?> class="flat"></td>
+                                </tr>
+                                <tr>
+                                    <td>Authenticates Users</td>
+                                    <td><input type="checkbox" value="1" name="data[permission][authenticated][full]" <?php if (is_check_grant($permissions, 'authenticated', "FULL_CONTROL")) { echo 'checked="checked"'; } ?> class="flat"></td>
+                                    <td><input type="checkbox" value="1" name="data[permission][authenticated][read]" <?php if (is_check_grant($permissions, 'authenticated', "READ")) { echo 'checked="checked"'; } ?> class="flat"></td>
+                                    <td><input type="checkbox" value="1" name="data[permission][authenticated][write]" <?php if (is_check_grant($permissions, 'authenticated', "WRITE")) { echo 'checked="checked"'; } ?> class="flat"></td>
+                                </tr>
+                                <tr>
+                                    <td>All Users</td>
+                                    <td><input type="checkbox" value="1" name="data[permission][all][full]" <?php if (is_check_grant($permissions, 'all', "FULL_CONTROL")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
+                                    <td><input type="checkbox" value="1" name="data[permission][all][read]" <?php if (is_check_grant($permissions, 'all', "READ")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
+                                    <td><input type="checkbox" value="1" name="data[permission][all][write]" <?php if (is_check_grant($permissions, 'all', "WRITE")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                    <p align="right">
+                        <a href="javascript:;" class="btn btn-primary btn-save-permissions">
+                            <i class="fa fa-check"> </i>
+                            Save Changes
+                        </a>
+                        <a href="" class="btn btn-primary">
+                            <i class="fa fa-refresh"> </i>
+                            Reload
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>

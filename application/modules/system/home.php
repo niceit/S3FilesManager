@@ -650,7 +650,7 @@ class Home extends Controller {
 
             $permission = AppS3::parsePermissions($result);
 
-            $result_http = $s3->getObject(array(
+            $property = $s3->getObject(array(
                 'Bucket' => $this->bucket,
                 'Key' => $key
             ));
@@ -658,8 +658,8 @@ class Home extends Controller {
             return $this->render('ajax/detail_file', array(
                 "permissions" => $permission ,
                 "owner" => $result['Owner'] ,
-                "header" => $result_http['@metadata']['headers'] ,
-                "property" => $result_http ,
+                "header" => $property['@metadata']['headers'] ,
+                "property" => $property ,
                 'key' => $key,
                 'url' => $url
             ));
@@ -725,23 +725,75 @@ class Home extends Controller {
         if (!empty($_POST)) {
             // (string: private | public-read | public-read-write | authenticated-read | bucket-owner-read | bucket-owner-full-control )
             $s3 = AppS3::S3();
-            $key = base64_decode($_POST['key']);
-            $grant  = $_POST['grant'];
-            $arr = explode(",", $grant);
-            sort($arr);
-            if (!empty($arr)){
-                foreach ($arr as $row){
-                    if ($row != ''){
-                        $s3->putObjectAcl(array(
-                            'Bucket' => $this->bucket,
-                            'Key' => $key,
-                            'ACL' => $row
-                        ));
+            $data = $_POST['data'];
+            if (isset($data['permission'])) {
+                $permissions = $data['permission'];
+                $permission_update = array();
+                foreach ($permissions as $grant => $permission) {
+                    switch ($grant) {
+                        case 'owner':
+                            if (array_key_exists('full', $permission)) {
+                                $permission_update[] = 'owner-full-control';
+                            }
+                            if (array_key_exists('read', $permission)) {
+                                $permission_update[] = 'owner-read';
+                            }
+                            if (array_key_exists('write', $permission)) {
+                                $permission_update[] = 'owner-write';
+                            }
+                            break;
+                        case 'authenticated':
+                            if (array_key_exists('full', $permission)) {
+                                $permission_update[] = 'authenticated-full-control';
+                            }
+                            if (array_key_exists('read', $permission)) {
+                                $permission_update[] = 'authenticated-read';
+                            }
+                            if (array_key_exists('write', $permission)) {
+                                $permission_update[] = 'authenticated-write';
+                            }
+                            break;
+                        case 'all':
+                            if (array_key_exists('full', $permission)) {
+                                $permission_update[] = 'public-full-control';
+                            }
+                            if (array_key_exists('read', $permission)) {
+                                $permission_update[] = 'public-read';
+                            }
+                            if (array_key_exists('write', $permission)) {
+                                $permission_update[] = 'public-write';
+                            }
+                            break;
                     }
                 }
+
+                //Update object ACL
+                foreach ($permission_update as $acl) {
+                    try {
+                        $response = $s3->putObjectAcl(array(
+                            'Bucket' => $data['bucket'],
+                            'Key' => base64_decode($data['key']),
+                            'Grants' => array(
+                                array(
+                                    'Grantee' => array(
+                                        'DisplayName' => 'Everyone',
+                                        'Type' => 'Group',
+                                        'URI' => 'http://acs.amazonaws.com/groups/global/AllUsers',
+                                    ),
+                                    'Permission' => 'WRITE'
+                                )
+                            ),
+                            'ACL' => 'string',
+                        ));
+                    }catch (S3\Exception\S3Exception $e) {
+                        echo $e->getMessage();
+                    }
+AppException::debugVar($response);
+                    die();
+                }
             }
-            echo "1";
         }
+        echo "1";
         die();
     }
 

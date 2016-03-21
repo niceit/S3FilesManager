@@ -3,7 +3,7 @@
 class AppConfig {
 
     //Site configurations
-    private $siteUrl = 'http://local.s3FileManagerV2';
+    private $siteUrl = 'http://127.0.1.93';
     private $URL_Root = "/assets/";
     private $maintenance = false; //Will disable site and appear UnderConstruction Mode
     private $AppRootDir = '';
