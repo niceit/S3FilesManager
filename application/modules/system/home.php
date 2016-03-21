@@ -773,22 +773,43 @@ class Home extends Controller {
                         $response = $s3->putObjectAcl(array(
                             'Bucket' => $data['bucket'],
                             'Key' => base64_decode($data['key']),
-                            'Grants' => array(
-                                array(
-                                    'Grantee' => array(
-                                        'DisplayName' => 'Everyone',
-                                        'Type' => 'Group',
-                                        'URI' => 'http://acs.amazonaws.com/groups/global/AllUsers',
+                            /*'AccessControlPolicy' => array(
+                                'Grants' => array(
+                                    array(
+                                        'Grantee' => array(
+                                            'DisplayName' => 'Everyone',
+                                            'Type' => 'Group',
+                                            'URI' => 'http://acs.amazonaws.com/groups/global/AllUsers',
+                                        ),
+                                        'Permission' => 'WRITE'
                                     ),
-                                    'Permission' => 'WRITE'
-                                )
-                            ),
-                            'ACL' => 'string',
+                                ),
+                            ),*/
+                            //'AccessControlPolicy' => [
+                                'Grants' => [
+                                    [
+                                        'Grantee' => [
+                                            'DisplayName' => 'Everyone',
+                                            'Type' => 'Group', // REQUIRED
+                                            'URI' => 'http://acs.amazonaws.com/groups/global/AllUsers',
+                                        ],
+                                        'Permission' => 'WRITE',
+                                    ],
+                                    // ...
+                                ],
+                                'Owner' => [
+                                    'DisplayName' => 'rr',
+                                    'ID' => '5c84fc713145a6e5cec39a353a739cef5649caa3d77d092c4385ac7a4b8ff95f',
+                                ],
+                            //],
+                            //'ACL' => 'private',
+                            'GrantRead' => 'uri="http://acs.amazonaws.com/groups/global/AllUsers", uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"',
+                            'GrantWrite' => 'uri="http://acs.amazonaws.com/groups/global/AllUsers", uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"',
                         ));
                     }catch (S3\Exception\S3Exception $e) {
                         echo $e->getMessage();
                     }
-AppException::debugVar($response);
+//AppException::debugVar($response);
                     die();
                 }
             }
