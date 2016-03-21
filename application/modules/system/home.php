@@ -647,17 +647,21 @@ class Home extends Controller {
                 'Bucket' => $this->bucket,
                 'Key' => $key
             ));
+
+            $permission = AppS3::parsePermissions($result);
+
             $result_http = $s3->getObject(array(
                 'Bucket' => $this->bucket,
                 'Key' => $key
             ));
 
             return $this->render('ajax/detail_file', array(
-                "grants" => $result['Grants'] ,
+                "permissions" => $permission ,
                 "owner" => $result['Owner'] ,
                 "header" => $result_http['@metadata']['headers'] ,
                 "property" => $result_http ,
-                'key' => $key, 'url' => $url
+                'key' => $key,
+                'url' => $url
             ));
         }
     }

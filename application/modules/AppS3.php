@@ -119,5 +119,37 @@ class AppS3{
             default : return '<i class="fa fa-file-o"></i>';
         }
     }
+    
+    /*
+     * Get detail user permission
+     *
+     * @param $response Response permission detail from S3
+     * */
+    public static function parsePermissions($response) {
+        $permissions = array(
+            'owner' => array(),
+            'all' => array(),
+            'authenticated' => array(),
+        );
 
+        foreach ($response['Grants'] as $key => $value) {
+            if (isset($value['Grantee']['DisplayName']) && $value['Grantee']['DisplayName'] == 'rr') {
+                $permissions['owner'][] = $value['Permission'];
+            }
+            else {
+                $permission_explode = explode('/', $value['Grantee']['URI']);
+                $permission_user = $permission_explode[count($permission_explode) - 1];
+                switch ($permission_user) {
+                    case 'AuthenticatedUsers':
+                        $permissions['authenticated'][] = $value['Permission'];
+                        break;
+                    case 'AllUsers':
+                        $permissions['all'][] = $value['Permission'];
+                        break;
+                }
+            }
+        }
+        
+        return $permissions;
+    }
 }

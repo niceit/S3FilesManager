@@ -41,6 +41,7 @@ class Controller {
         } else{
             $layout = '[[Content]]';
         }
+        
         return $layout;
     }
 

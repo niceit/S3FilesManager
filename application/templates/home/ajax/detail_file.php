@@ -52,38 +52,22 @@
                         <tbody id="grant_content" >
                             <tr>
                                 <td>Owner(rr)</td>
-                                <td><input value="private" name="full_control[]"  <?php echo is_check_grant($grants, 'rr', "FULL_CONTROL"); ?> type="checkbox" class="flat"></td>
-                                <td><input  value="" name="read[]" <?php echo is_check_grant($grants, 'rr', "READ"); ?>  type="checkbox" class="flat"></td>
-                                <td><input <?php echo is_check_grant($grants, 'rr', "WRITE"); ?>  type="checkbox" class="flat"></td>
-                                <!--<td><input  <?php echo is_check_grant($grants, 'rr', "READ_ACP"); ?> type="checkbox" class="flat"></td>
-                                <td><input <?php echo is_check_grant($grants, 'rr', "WRITE_ACP"); ?> type="checkbox" class="flat"></td>-->
+                                <td><input value="private" name="full_control[]" <?php if (is_check_grant($permissions, 'owner', "FULL_CONTROL")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
+                                <td><input  value="" name="read[]" <?php if (is_check_grant($permissions, 'owner', "READ")) { echo 'checked="checked"'; } ?>  type="checkbox" class="flat"></td>
+                                <td><input <?php if (is_check_grant($permissions, 'owner', "WRITE")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
                             </tr>
                             <tr>
                                 <td>Authenticates Users</td>
-                                <td><input value="" name="full_control[]"  <?php echo is_check_grant($grants, 'AuthenticatedUsers', "FULL_CONTROL"); ?> type="checkbox" class="flat"></td>
-                                <td><input value="authenticated-read" name="read[]" <?php echo is_check_grant($grants, 'AuthenticatedUsers', "READ"); ?>  type="checkbox" class="flat"></td>
-                                <td><input value="authenticated-read-write"  <?php echo is_check_grant($grants, 'AuthenticatedUsers', "WRITE"); ?>  type="checkbox" class="flat"></td>
-                                <!-- <td><input  <?php echo is_check_grant($grants, 'AuthenticatedUsers', "READ_ACP"); ?> type="checkbox" class="flat"></td>
-                                <td><input  <?php echo is_check_grant($grants, 'AuthenticatedUsers', "WRITE_ACP"); ?> type="checkbox" class="flat"></td>-->
+                                <td><input value="" name="full_control[]" <?php if (is_check_grant($permissions, 'authenticated', "FULL_CONTROL")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
+                                <td><input value="authenticated-read" name="read[]" <?php if (is_check_grant($permissions, 'authenticated', "READ")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
+                                <td><input value="authenticated-read-write" <?php if (is_check_grant($permissions, 'authenticated', "WRITE")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
                             </tr>
                             <tr>
                                 <td>All Users</td>
-                                <td><input value="" name="full_control[]"  <?php echo is_check_grant($grants, 'AllUsers', "FULL_CONTROL"); ?> type="checkbox" class="flat"></td>
-                                <td><input value="public-read" name="read[]" <?php echo is_check_grant($grants, 'AllUsers', "READ"); ?>  type="checkbox" class="flat"></td>
-                                <td><input  value="public-read-write" name="write[]"  <?php echo is_check_grant($grants, 'AllUsers', "WRITE"); ?>  type="checkbox" class="flat"></td>
-                                <!-- <td><input  <?php echo is_check_grant($grants, 'AllUsers', "READ_ACP"); ?> type="checkbox" class="flat"></td>
-                                <td><input <?php echo is_check_grant($grants, 'AllUsers', "WRITE_ACP"); ?> type="checkbox" class="flat"></td>-->
+                                <td><input value="" name="full_control[]" <?php if (is_check_grant($permissions, 'all', "FULL_CONTROL")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
+                                <td><input value="public-read" name="read[]" <?php if (is_check_grant($permissions, 'all', "READ")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
+                                <td><input  value="public-read-write" name="write[]" <?php if (is_check_grant($permissions, 'all', "WRITE")) { echo 'checked="checked"'; } ?> type="checkbox" class="flat"></td>
                             </tr>
-                            <!--
-                            <tr>
-                                <td>Log Delivery Service</td>
-                                <td><input  value="log_full" name="full_control[]" <?php echo is_check_grant($grants, 'LogDelivery', "FULL_CONTROL"); ?> type="checkbox" class="flat"></td>
-                                <td><input <?php echo is_check_grant($grants, 'LogDelivery', "READ"); ?>  type="checkbox" class="flat"></td>
-                                <td><input  <?php echo is_check_grant($grants, 'LogDelivery', "WRITE"); ?>  type="checkbox" class="flat"></td>
-                              <td><input  <?php echo is_check_grant($grants, 'LogDelivery', "READ_ACP"); ?> type="checkbox" class="flat"></td>
-                                <td><input <?php echo is_check_grant($grants, 'LogDelivery', "WRITE_ACP"); ?> type="checkbox" class="flat"></td>
-                            </tr>
-                            -->
                         </tbody>
                     </table>
 
