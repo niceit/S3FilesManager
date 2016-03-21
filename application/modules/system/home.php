@@ -720,7 +720,7 @@ class Home extends Controller {
 
     public function updatePermissions(){
         $this->enableLayout = false;
-        header("Content-Type: application/html");
+        header("Content-Type: application/json");
 
         if (!empty($_POST)) {
             // (string: private | public-read | public-read-write | authenticated-read | bucket-owner-read | bucket-owner-full-control )
@@ -728,94 +728,73 @@ class Home extends Controller {
             $data = $_POST['data'];
             if (isset($data['permission'])) {
                 $permissions = $data['permission'];
-                $permission_update = array();
+
+                $permission_update = array(
+                    'full' => '',
+                    'read' => '',
+                    'write' => '',
+                );
+
                 foreach ($permissions as $grant => $permission) {
                     switch ($grant) {
                         case 'owner':
                             if (array_key_exists('full', $permission)) {
-                                $permission_update[] = 'owner-full-control';
+                                $permission_update['full'] .= 'DisplayName="rr"';
                             }
                             if (array_key_exists('read', $permission)) {
-                                $permission_update[] = 'owner-read';
+                                $permission_update['read'] .= 'DisplayName="rr"';
                             }
                             if (array_key_exists('write', $permission)) {
-                                $permission_update[] = 'owner-write';
+                                $permission_update['write'] .= 'DisplayName="rr"';
                             }
                             break;
                         case 'authenticated':
                             if (array_key_exists('full', $permission)) {
-                                $permission_update[] = 'authenticated-full-control';
+                                $permission_update['full'] .= ', uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"';
                             }
                             if (array_key_exists('read', $permission)) {
-                                $permission_update[] = 'authenticated-read';
+                                $permission_update['read'] .= ', uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"';
                             }
                             if (array_key_exists('write', $permission)) {
-                                $permission_update[] = 'authenticated-write';
+                                $permission_update['write'] .= ', uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"';
                             }
                             break;
                         case 'all':
                             if (array_key_exists('full', $permission)) {
-                                $permission_update[] = 'public-full-control';
+                                $permission_update['full'] .= ', uri="http://acs.amazonaws.com/groups/global/AllUsers"';
                             }
                             if (array_key_exists('read', $permission)) {
-                                $permission_update[] = 'public-read';
+                                $permission_update['read'] .= ', uri="http://acs.amazonaws.com/groups/global/AllUsers"';
                             }
                             if (array_key_exists('write', $permission)) {
-                                $permission_update[] = 'public-write';
+                                $permission_update['write'] = ', uri="http://acs.amazonaws.com/groups/global/AllUsers"';
                             }
                             break;
                     }
                 }
 
                 //Update object ACL
-                foreach ($permission_update as $acl) {
-                    try {
-                        $response = $s3->putObjectAcl(array(
-                            'Bucket' => $data['bucket'],
-                            'Key' => base64_decode($data['key']),
-                            /*'AccessControlPolicy' => array(
-                                'Grants' => array(
-                                    array(
-                                        'Grantee' => array(
-                                            'DisplayName' => 'Everyone',
-                                            'Type' => 'Group',
-                                            'URI' => 'http://acs.amazonaws.com/groups/global/AllUsers',
-                                        ),
-                                        'Permission' => 'WRITE'
-                                    ),
-                                ),
-                            ),*/
-                            //'AccessControlPolicy' => [
-                                'Grants' => [
-                                    [
-                                        'Grantee' => [
-                                            'DisplayName' => 'Everyone',
-                                            'Type' => 'Group', // REQUIRED
-                                            'URI' => 'http://acs.amazonaws.com/groups/global/AllUsers',
-                                        ],
-                                        'Permission' => 'WRITE',
-                                    ],
-                                    // ...
-                                ],
-                                'Owner' => [
-                                    'DisplayName' => 'rr',
-                                    'ID' => '5c84fc713145a6e5cec39a353a739cef5649caa3d77d092c4385ac7a4b8ff95f',
-                                ],
-                            //],
-                            //'ACL' => 'private',
-                            'GrantRead' => 'uri="http://acs.amazonaws.com/groups/global/AllUsers", uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"',
-                            'GrantWrite' => 'uri="http://acs.amazonaws.com/groups/global/AllUsers", uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"',
-                        ));
-                    }catch (S3\Exception\S3Exception $e) {
-                        echo $e->getMessage();
-                    }
-//AppException::debugVar($response);
-                    die();
+                $return = array('status' => 1);
+                AppException::debugVar($permission_update);
+                try {
+                    $s3->putObjectAcl(array(
+                        'Bucket' => $data['bucket'],
+                        'Key' => base64_decode($data['key']),
+                        'GrantFullControl' => $permission_update['full'],
+                        'GrantRead' => $permission_update['read'],
+                        'GrantWrite' => $permission_update['write'],
+                    ));
+                }catch (S3\Exception\S3Exception $e) {
+                    $message = $e->getMessage();
+                    $return = array(
+                        'status' => 0,
+                        'message' => $message,
+                    );
                 }
             }
         }
-        echo "1";
-        die();
+
+        echo json_encode($return);
     }
 
     public function updateHeaderContentType(){
