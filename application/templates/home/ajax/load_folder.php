@@ -1,4 +1,12 @@
 <ul class="tree-file">
+    <?php if($prefix == "/"): ?>
+        <li class="sub-<?php echo md5("/"); ?>">
+            <span class="item">
+                <span class="no-sub" ></span>
+                <i class="fa fa-folder-open-o"></i>  <a href="javascript:;" onclick="loadFrefix('<?php echo "/"; ?>', 0)" ><span class="name-prefix" >/</span></a>
+            </span>
+        </li>
+    <?php endif; ?>
     <?php
     if ($files):
         foreach ($files as $file):

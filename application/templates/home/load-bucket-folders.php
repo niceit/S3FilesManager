@@ -1,5 +1,5 @@
 <ul class="tree-file choose-folders">
-    <?php if($frefix == ''): ?>
+    <?php if($path == ''): ?>
     <li class="sub-<?php echo md5("/"); ?>">
         <div class="tree-file-row" onclick="setFolderSelectedPath('/');">
             <i class="fa fa-folder-open-o"></i>

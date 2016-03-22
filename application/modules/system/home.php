@@ -230,7 +230,7 @@ class Home extends Controller {
 
             return $this->render('ajax/load_folder', array(
                 'files' => $arrFolder,
-                'prefix' => $prefix
+                'prefix' => $_POST['frefix']
             ));
         }
     }
