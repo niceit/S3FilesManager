@@ -6468,7 +6468,7 @@ span.act {
 .subloading{
     background-size: 14px;
 }
-#list-folder{
+#list-folder, .list-folder-upload-file{
     min-height: 75px;
     border-right: 1px solid #ddd;
 }

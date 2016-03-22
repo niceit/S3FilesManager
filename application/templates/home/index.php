@@ -123,7 +123,7 @@
                     <div class="x_content">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="col-md-2 search-files">
-                                <a href="javascript:;" class="btn btn-info">
+                                <a id="clear-search" href="javascript:;" class="btn btn-info">
                                     <i class="fa fa-eraser"> </i>
                                     Clear search
                                 </a>
@@ -308,18 +308,18 @@
 <!-- END CREATE FOLDER POPUP -->
 
 <!-- UPLOAD FILE POPUP -->
-<div id="upload-file" data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+<div id="upload-file-modal" data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div style="width: 85%" class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 <h4 class="modal-title title-popup" id="myModalLabel2">
                     <i class="fa fa-bars"> </i>
-                    <?php echo Languages::Text('HEADER_CREATE_FOLDER_POPUP') ?>
+                    <?php echo Languages::Text('HEADER_UPLOAD_POPUP') ?>
                 </h4>
             </div>
             <div class="modal-body">
-                <div class="col-md-4" id="list-folder"></div>
+                <div class="col-md-4 list-folder-upload-file" ></div>
                 <div class="content-upload-file col-md-8" >
                     <div class="input-group">
                         <span>Upload directory: </span><span class="selected-folder">/</span>

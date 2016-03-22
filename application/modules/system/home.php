@@ -190,13 +190,14 @@ class Home extends Controller {
 
         if (!empty($_POST)) {
             $prefix = $_POST['frefix'];
+            $bucket = $_POST['bucket'];
 
             if ($prefix == '/') {
                 $prefix = '';
             }
 
             $s3 = AppS3::S3();
-            $result = $s3->listObjects(array('Bucket' => $this->bucket, 'Prefix' => $prefix, 'Delimiter' => '/'));
+            $result = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $prefix, 'Delimiter' => '/'));
 
             if ($prefix == '') {
                 unset($result['CommonPrefixes'][0]);
@@ -205,7 +206,7 @@ class Home extends Controller {
             $arrFolder = array();
             if (!empty($result['CommonPrefixes'])) {
                 foreach ($result['CommonPrefixes'] as $file) {
-                    $result_sub = $s3->listObjects(array('Bucket' => $this->bucket, 'Prefix' => $file['Prefix'], 'Delimiter' => '/'));
+                    $result_sub = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $file['Prefix'], 'Delimiter' => '/'));
                     if (!empty($result_sub['CommonPrefixes'])) {
                         $sub = true;
                     } else {

@@ -1,4 +1,11 @@
 <ul class="tree-file choose-folders">
+    <li class="sub-<?php echo md5("/"); ?>">
+        <div class="tree-file-row" onclick="setFolderSelectedPath('/');">
+            <i class="fa fa-folder-open-o"></i>
+            <span class="name-prefix">/</span>
+        </div>
+        <span class="sub"></span>
+    </li>
     <?php
         if ($files):
             foreach ($files as $file):

@@ -75,11 +75,10 @@ jQuery(function(){
         if (bucket == '') {
             alert('Please select bucket first');
         } else {
-            $('.content-create-folder').hide();
             $('.content-upload-file').slideDown();
-            $('.title-popup').html('Upload file');
+           // $('.title-popup').html('Upload file');
           //  $("#list-folder").css("border-right", '1px solid #ddd');
-            loadFolderNew('/');
+            loadFolderUpload('/');
         }
 
     });
@@ -101,7 +100,24 @@ jQuery(function(){
         }
     });
 
+
+    $("#clear-search").click(function(){
+        $('#txt-name').val('');
+        if (typeof  $(".name-prefix.active").html() == "undefined" )
+             loadFrefix("/", 0);
+        else{
+            var frefix = $(".name-prefix.active").html();
+            loadFrefix(frefix+"/", 0);
+        }
+    });
+
 });
+
+function refresh_butket(){
+    $('#txt-name').val('');
+    loadFolder('/');
+    loadFrefix("/", 0);
+}
 
 function is_check(){
     var is_check = true;
@@ -156,6 +172,26 @@ function loadFolderNewLeft(frefix){
 
 }
 
+function loadFolderUpload(frefix) {
+    $('#upload-file-modal').modal('show');
+    $("input[name=folder_name]").val('');
+    $('.list-folder-upload-file').prepend('<span class="loading"></span>');
+    var bucket = $("select[name=bucket]").val();
+    var URL = $('base').attr('href') + '/index.php?route=home/list-bucket-folders';
+    $.ajax({
+        type: "post",
+        url: URL,
+        data: {'frefix': frefix , 'bucket' : bucket},
+        dataType: "html",
+        success: function (data) {
+            $('.list-folder-upload-file .loading').remove();
+            $('.list-folder-upload-file').html(data);
+            clickFonderNew();
+        }
+
+    });
+}
+
 function loadFolderNew(frefix) {
     $('#create-folder').modal('show');
     $("input[name=folder_name]").val('');
@@ -175,6 +211,7 @@ function loadFolderNew(frefix) {
 
     });
 }
+
 function loadSubFolderNew(frefix, id) {
     $('#list-folder').prepend('<span class="loading"></span>');
     var bucket = $("select[name=bucket]").val();
@@ -255,7 +292,10 @@ function setFolderSelectedPath(path) {
     $('#fileupload').find('input[name=key]').val(key);
 
     $('input[name=select_folder_path]').val(path);
-    $("span.selected-folder").html('<b>/'+ path + '</b>');
+    if (path != "/")
+        $("span.selected-folder").html('<b>/'+ path + '</b>');
+    else
+        $("span.selected-folder").html('<b>/</b>');
 }
 
 function loadFolder(frefix) {

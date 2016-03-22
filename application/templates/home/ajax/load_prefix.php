@@ -76,14 +76,7 @@
                          $i++;
                     endforeach;
                 ?>
-                <tr>
-                    <td colspan="7">
-                        <a class="btn btn-danger" onclick="multiple_delete()" id="delete-multiple" href="javascript:;">
-                            <i class="fa fa-trash"> </i>
-                            Delete
-                        </a>
-                    </td>
-                </tr>
+
             <?php if ($load_more != 0):  ?>
                 <tr><td colspan="8">
                         <a class="load-more"
@@ -97,6 +90,22 @@
                 </tr>
             <?php endif; ?>
             </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="3">
+                    <a onclick="refresh_butket();"  href="javascript:;" class="btn btn-info">
+                        <i class="fa fa-refresh"> </i>
+                        Refresh
+                    </a>
+                </td>
+                <td colspan="4">
+                    <a class="btn btn-danger" onclick="multiple_delete()" id="delete-multiple" href="javascript:;">
+                        <i class="fa fa-trash"> </i>
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            </tfoot>
         </table>
         <?php
     else:
