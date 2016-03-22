@@ -229,7 +229,8 @@ class Home extends Controller {
             }
 
             return $this->render('ajax/load_folder', array(
-                'files' => $arrFolder
+                'files' => $arrFolder,
+                'prefix' => $prefix
             ));
         }
     }

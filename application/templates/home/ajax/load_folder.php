@@ -1,10 +1,4 @@
 <ul class="tree-file">
-    <li class="sub-<?php echo md5("/"); ?>">
-        <span class="item">
-            <i class="fa fa-folder-open-o"></i>  <a href="javascript:;" onclick="loadFrefix('/', 0)" ><span class="name-prefix" >/</span></a>
-          <span class="create-sub-folder" >&nbsp;&nbsp;<a onclick="loadFolderNewLeft('/');" title="Create sub folder"  href="javascript:;"><i class="fa fa-plus-circle"></i></a></span>
-        </span>
-    </li>
     <?php
     if ($files):
         foreach ($files as $file):
