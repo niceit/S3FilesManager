@@ -18,8 +18,14 @@ class AppS3{
 
     public static function formatBytes($size, $precision = 2)
     {
-        $base = log($size) / log(1024);
-        return round(pow(1024, $base - floor($base)), $precision);
+        $size_in_mb = log($size) / log(1024) / log(2014);
+        if ($size_in_mb > 1) {
+            return round(pow(1024, $size_in_mb - floor($size_in_mb)), $precision) . ' Mb';
+        }
+        else {
+            $base = log($size) / log(1024);
+            return round(pow(1024, $base - floor($base)), $precision) . ' Kb';
+        }
     }
 
     public static function isFileImage($filename, $url_image){

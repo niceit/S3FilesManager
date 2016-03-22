@@ -52,7 +52,7 @@
                              <td class=" "><?php echo $object['icon'] ?> <a onclick="popup_detail('<?php echo base64_encode($object['key']); ?>', '<?php echo $object['url'] ?>')" href="javascript:;" title=""><?php echo  $object['name'] ?></a></td>
                              <td class=" "><?php echo date('M m,Y. H:m',$object['date']); ?></td>
                              <td class=" ">
-                                 <span><?php echo  $object['size'] ?> Kb</span>
+                                 <span><?php echo $object['size'] ?></span>
                              </td>
                              <td class=" last">
                                  <div class="btn-group action-file">
