@@ -440,7 +440,7 @@ class Home extends Controller {
         header("Content-Type: application/html");
 
         if (!empty($_POST)) {
-            $bucket = $this->bucket; //$_POST['bucket'];
+            $bucket = $_POST['bucket'];
             $root = $_POST['frefix'];
             $add_folder_option = isset($_POST['add-folder']) ? $_POST['add-folder'] : '';
             if (empty($add_folder_option)) {

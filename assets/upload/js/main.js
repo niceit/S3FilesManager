@@ -27,7 +27,7 @@ $(function () {
             } else {
                 destination_path = destination_path.substr(1, destination_path.length);
             }
-             $('.processing-' + htmlspecialchars(data.files[0].name)).html( "<input class='form-control' type='text' readonly='' disabled='' value='" + $(this).attr('action') + data.files[0].name + "' />");
+             $('.processing-' + htmlspecialchars(data.files[0].name)).html( "<input class='form-control' type='text' readonly='' disabled='' value='" + $(this).attr('action')  + data.files[0].name + "' />");
             var element = $('.action-' + htmlspecialchars(data.files[0].name));
             element.removeClass("td-action");
             var URL = $('base').attr('href') + '/index.php?route=home/basecode';
