@@ -10,11 +10,12 @@ jQuery(function(){
         loadSearchFrefix(0);
     });
 
-    $('#btn-create-new-butket').click(function(){
+    $('#btn-create-new-bucket').click(function(){
         $("input[name=name-bucket]").removeAttr("disabled").val('');
         $("#save-bucket").removeAttr("disabled");
-        $('#create-new-folder').modal('show');
+        $('#create-new-bucket-popup').modal('show');
     });
+
     $('#save-bucket').click(function(){
         var element =  $("input[name=name-bucket]");
         element.css("border", "1px solid #DDE2E8");
@@ -65,11 +66,9 @@ jQuery(function(){
 
     $('#btn-create-new-folder').click(function(){
         $('.content-create-folder').slideDown();
-        $('.content-upload-file').hide();
-        $('.title-popup').html('Add new bucket folder');
-     //   $("#list-folder").css("border-right", '1px solid #fff');
         loadFolderNew('/');
     });
+    
     $('#upload-file').click(function(){
         $(".template-upload").remove();
         var bucket = $("select[name=bucket]").val();
@@ -455,6 +454,7 @@ function popup_detail(key, url){
 
             //Update Permissions
             $(".btn-save-permissions").click(function(){
+                Application.putLoadingState("#permissions");
                 var data = $("form[name=permission_form]").serialize();
                 var URL = $('base').attr('href') + '/index.php?route=home/update-permissions';
                 data += '&data[bucket]=' + $("select[name=bucket]").val();
@@ -462,14 +462,20 @@ function popup_detail(key, url){
                     type: "POST",
                     url: URL,
                     data: data,
-                    dataType: "html",
+                    dataType: "json",
                     success: function (data) {
-                        /* new PNotify({
-                            title: 'Success',
-                            text: 'Permissions Updated!',
-                            type: 'success'
-                        });
-                        */
+                        if (data.status) {
+                            new PNotify({
+                                title: 'Success',
+                                text: data.message,
+                                type: 'success',
+                                timer: 4,
+                            });
+                        }
+                        else {
+                            Application.errorPopup(data.message);
+                        }
+                        Application.removeLoadingState("#permissions");
                     }
                 });
             });

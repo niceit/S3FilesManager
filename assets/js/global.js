@@ -57,6 +57,31 @@ Application = function() {
         });
     }
 
+    /*
+    * Display error popup detail from server
+    * */
+    this.errorPopup = function(message) {
+        var jPopupElement = $("#error-popup");
+        jPopupElement.find("#content-detail").find(".alert-error").html(message);
+        jPopupElement.modal('show');
+    }
+
+    /*
+    * Put area disabled for loading state
+    * */
+    this.putLoadingState = function (areaElement) {
+        $(areaElement).attr("style", "position: relative;");
+        $(areaElement).append('<span class="loading"></span>');
+    };
+
+    /*
+    * Remove area loading state
+    * */
+    this.removeLoadingState = function (areaElement) {
+        $(areaElement).removeAttr("style");
+        $(areaElement).find(".loading").remove();
+    }
+
     //Remove item from array
     this.removeObjectItemByValue = function(array, item) {
         for(var i in array){

@@ -723,7 +723,6 @@ class Home extends Controller {
         header("Content-Type: application/json");
 
         if (!empty($_POST)) {
-            // (string: private | public-read | public-read-write | authenticated-read | bucket-owner-read | bucket-owner-full-control )
             $s3 = AppS3::S3();
             $data = $_POST['data'];
             if (isset($data['permission'])) {
@@ -738,36 +737,41 @@ class Home extends Controller {
                 foreach ($permissions as $grant => $permission) {
                     switch ($grant) {
                         case 'owner':
+                            //Get server object permission
+                            $s3_permission = $s3->getObjectAcl(array(
+                                'Bucket' => $this->bucket,
+                                'Key' => base64_decode($data['key'])
+                            ));
                             if (array_key_exists('full', $permission)) {
-                                $permission_update['full'] .= 'DisplayName="rr"';
+                                $permission_update['full'] .= 'ID="' . $s3_permission['Owner']['ID'] . '"';
                             }
                             if (array_key_exists('read', $permission)) {
-                                $permission_update['read'] .= 'DisplayName="rr"';
+                                $permission_update['read'] .= 'ID="' . $s3_permission['Owner']['ID'] . '"';
                             }
                             if (array_key_exists('write', $permission)) {
-                                $permission_update['write'] .= 'DisplayName="rr"';
+                                $permission_update['write'] .= 'ID="' . $s3_permission['Owner']['ID'] . '"';
                             }
                             break;
                         case 'authenticated':
                             if (array_key_exists('full', $permission)) {
-                                $permission_update['full'] .= ', uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"';
+                                $permission_update['full'] .= (!empty($permission_update['full']) ? ', ' : '') . 'uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"';
                             }
                             if (array_key_exists('read', $permission)) {
-                                $permission_update['read'] .= ', uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"';
+                                $permission_update['read'] .= (!empty($permission_update['read']) ? ', ' : '') . 'uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"';
                             }
                             if (array_key_exists('write', $permission)) {
-                                $permission_update['write'] .= ', uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"';
+                                $permission_update['write'] .= (!empty($permission_update['write']) ? ', ' : '') . 'uri="http://acs.amazonaws.com/groups/global/AuthenticatedUsers"';
                             }
                             break;
                         case 'all':
                             if (array_key_exists('full', $permission)) {
-                                $permission_update['full'] .= ', uri="http://acs.amazonaws.com/groups/global/AllUsers"';
+                                $permission_update['full'] .= (!empty($permission_update['full']) ? ', ' : '') . 'uri="http://acs.amazonaws.com/groups/global/AllUsers"';
                             }
                             if (array_key_exists('read', $permission)) {
-                                $permission_update['read'] .= ', uri="http://acs.amazonaws.com/groups/global/AllUsers"';
+                                $permission_update['read'] .= (!empty($permission_update['read']) ? ', ' : '') . 'uri="http://acs.amazonaws.com/groups/global/AllUsers"';
                             }
                             if (array_key_exists('write', $permission)) {
-                                $permission_update['write'] = ', uri="http://acs.amazonaws.com/groups/global/AllUsers"';
+                                $permission_update['write'] .= (!empty($permission_update['write']) ? ', ' : '') . 'uri="http://acs.amazonaws.com/groups/global/AllUsers"';
                             }
                             break;
                     }
@@ -775,7 +779,6 @@ class Home extends Controller {
 
                 //Update object ACL
                 $return = array('status' => 1);
-                AppException::debugVar($permission_update);
                 try {
                     $s3->putObjectAcl(array(
                         'Bucket' => $data['bucket'],
@@ -784,6 +787,7 @@ class Home extends Controller {
                         'GrantRead' => $permission_update['read'],
                         'GrantWrite' => $permission_update['write'],
                     ));
+                    $return['message'] = Languages::Text('UPDATED_FILE_PERMISSION');
                 }catch (S3\Exception\S3Exception $e) {
                     $message = $e->getMessage();
                     $return = array(
@@ -813,6 +817,28 @@ class Home extends Controller {
             echo $contentType;
         }
         die();
+    }
+
+    /*
+     * Get detail information of bucket
+     * */
+    public function getBucketInformation() {
+        $bucket = 'crgtesting';
+        $client = AppS3::S3();
+        /*
+        $result = $s3->getBucketLogging([
+            'Bucket' => $bucket, // REQUIRED
+        ]);
+
+        $result = $client->getBucketLocation([
+            'Bucket' => $bucket, // REQUIRED
+        ]);*/
+
+        $result = $client->getBucketLifecycle([
+            'Bucket' => $bucket, // REQUIRED
+        ]);
+
+        AppException::debugVar($result);
     }
 
     public function basecode(){

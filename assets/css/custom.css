@@ -1074,7 +1074,7 @@ h2 {
 }
 
 .x_title {
-    border-bottom: 2px solid #E6E9ED;
+    border-bottom: 1px solid #E6E9ED;
     padding: 1px 5px 6px;
     margin-bottom: 10px;
 }
@@ -6480,4 +6480,8 @@ span.act {
 .active_new .name-prefix{
     color: #1A82C3;
     font-weight: bold;
+}
+.search-files {
+    float: right;
+    padding-right: 0px;
 }

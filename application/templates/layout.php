@@ -539,6 +539,20 @@
 
 
     <!-- /footer content -->
+    <div id="error-popup" data-backdrop="static" data-keyboard="false" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+        <div style="width: 80%" class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title title-popup"  id="myModalLabel2">Oop! Something wrong. Error from server: </h4>
+                </div>
+                <div class="modal-body" id="content-detail">
+                    <div class="alert alert-error" style="word-wrap: break-word;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

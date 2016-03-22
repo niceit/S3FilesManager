@@ -53,23 +53,20 @@
 </div>
 
 <div class="row">
-
     <input type="hidden" name="region" value="<?php echo $region ?>">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h2>Buckets</h2>
-                <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                    </li>
-                </ul>
+                <h2>
+                    <i class="fa fa-bars"> </i>
+                    &nbsp;
+                    <?php echo Languages::Text('HEADER_BUCKET_TABLE') ?>
+                </h2>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
                 <div class="dashboard-widget-content">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 form-horizontal">
                         <div class="form-group">
                             <label class="control-label col-md-5 col-sm-5 col-xs-12">Choose available Buckets</label>
                             <div class="col-md-7 col-sm-7 col-xs-12 select_butket_div">
@@ -84,7 +81,7 @@
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <button id="btn-create-new-butket" type="button" class="btn btn-primary"><i class="fa fa-plus-square"></i> Create new bucket</button>
+                        <button id="btn-create-new-bucket" type="button" class="btn btn-primary"><i class="fa fa-plus-square"></i> Create new bucket</button>
                         <button id="btn-create-new-folder" type="button" class="btn btn-primary"><i class="fa fa-folder-open-o"></i> Create new folder</button>
                         <button id="upload-file" type="button" class="btn btn-primary"><i class="fa fa-cloud-upload"></i> Upload file</button>
                     </div>
@@ -97,22 +94,10 @@
     <div class="col-md-3 col-sm-3 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h2>Available Folders</h2>
-                <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Settings 1</a>
-                            </li>
-                            <li><a href="#">Settings 2</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                    </li>
-                </ul>
+                <h2>
+                    <i class="fa fa-bars"> </i>
+                    <?php echo Languages::Text('HEADER_FOLDER_TABLE') ?>
+                </h2>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -128,105 +113,137 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <h2 style="margin-right: 5px;">Search for files: </h2>
-                            <div class="input-group search">
-                                <input id="txt-name" type="text" class="form-control">
-                                <span class="input-group-btn">
-                                <button id="btn-search" type="button" class="btn btn-primary">Search</button>
-                            </span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <ul class="nav navbar-right panel_toolbox">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Settings 1</a>
-                                        </li>
-                                        <li><a href="#">Settings 2</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a class="close-link"><i class="fa fa-close"></i></a>
-                                </li>
-                            </ul>
-                        </div>
+                        <h2>
+                            <i class="fa fa-bars"> </i>
+                            &nbsp;
+                            <?php echo Languages::Text('HEADER_FILE_TABLE') ?>
+                        </h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-md-2 search-files">
+                                <a href="javascript:;" class="btn btn-info">
+                                    <i class="fa fa-eraser"> </i>
+                                    Clear search
+                                </a>
+                            </div>
+                            <div class="col-md-5 search-files">
+                                <div class="input-group search">
+                                    <input id="txt-name" type="text" class="form-control" placeholder="Input file name here">
+                                    <span class="input-group-btn">
+                                        <button id="btn-search" type="button" class="btn btn-primary">
+                                            <i class="fa fa-search"> </i>
+                                            Search
+                                        </button>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
                         <div class="dashboard-widget-content">
                             <div class="contentfrefix" id="contentfrefix"></div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-<div id="popup-image"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+<!-- POPUP PREVIEW IMAGE -->
+<div id="popup-image" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title"  id="myModalLabel2">Image</h4>
+                <h4 class="modal-title"  id="myModalLabel2">
+                    <i class="fa fa-spotify"> </i>
+                    <?php echo Languages::Text('HEADER_IMAGE_POPUP') ?>
+                </h4>
             </div>
             <div class="modal-body">
                 <div class="content-image"></div>
             </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
+<!-- END POPUP PREVIEW IMAGE -->
 
-<div id="create-new-folder"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+<!-- CREATE BUCKET POPUP -->
+<div id="create-new-bucket-popup" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title"  id="myModalLabel2">Create new bucket</h4>
+                <h4 class="modal-title" id="myModalLabel2">
+                    <i class="fa fa-bars"> </i>
+                    <?php echo Languages::Text('HEADER_CREATE_BUCKET_POPUP') ?>
+                </h4>
             </div>
             <div class="modal-body">
-               <div class="content-create-bucket">
-                   <div class="form-group">
-                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Name bucket:(*)</label>
-                       <div class="col-md-9 col-sm-9 col-xs-12">
-                           <input name="name-bucket" type="text" class="form-control" placeholder="Name bucket">
-                       </div>
-                   </div>
-                   <div class="clearfix"></div>
-                   <div class="ln_solid"></div>
-                   <div class="form-group">
-                       <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-                           <button type="button" id="save-bucket" class="btn btn-success">Submit</button>
-                           <button type="button" data-dismiss="modal" class="btn btn-primary">Cancel</button>
-                       </div>
-                   </div>
-                   <div class="clearfix"></div>
-               </div>
+                <div class="content-create-bucket form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Bucket name: </label>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            <input name="name-bucket" type="text" class="form-control" placeholder="Fill your bucket name here">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <p style="font-size: 12px;">
+                                <b>Note</b> : You are not charged for creating a bucket; you are charged only for storing objects in the bucket and for transferring objects in and out of the bucket. The charges you will incur through following the examples in this guide are minimal (less than $1). For more information, go to <a href="http://aws.amazon.com/s3/pricing/" target="_blank">Amazon S3 Pricing</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="modal-footer">
+                <button type="button" id="save-bucket" class="btn btn-success" style="margin-top: 5px;">
+                    <i class="fa fa-check"> </i>
+                    Create
+                </button>
+                <button type="button" data-dismiss="modal" class="btn btn-primary">
+                    <i class="fa fa-close"> </i>
+                    Cancel
+                </button>
             </div>
         </div>
     </div>
 </div>
+<!-- END CREATE BUCKET POPUP -->
 
-<div id="detail-file"data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+<!-- OBJECT PROPERTIES POPUP -->
+<div id="detail-file" data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div style="width: 80%" class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title"  id="myModalLabel2">Detail file</h4>
+                <h4 class="modal-title"  id="myModalLabel2">
+                    <i class="fa fa-file"> </i>
+                    <?php echo Languages::Text("HEADER_OBJECT_PROPERTIES")?>
+                </h4>
             </div>
-            <div class="modal-body" id="content-detail">
+            <div class="modal-body" id="content-detail"></div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-close"> </i>
+                    Close
+                </button>
             </div>
         </div>
     </div>
 </div>
+<!-- END OBJECT PROPERTIES POPUP -->
 
 <div id="edit-header"data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div style="width: 80%" class="modal-dialog modal-lg">
@@ -242,31 +259,67 @@
     </div>
 </div>
 
-<div id="create-folder"data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+<!-- CREATE FOLDER POPUP -->
+<div id="create-folder" data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
     <div style="width: 85%" class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
-                </button>
-                <h4 class="modal-title title-popup"  id="myModalLabel2"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title title-popup" id="myModalLabel2">
+                    <i class="fa fa-bars"> </i>
+                    <?php echo Languages::Text('HEADER_CREATE_FOLDER_POPUP') ?>
+                </h4>
             </div>
             <div class="modal-body">
                 <div class="col-md-4" id="list-folder"></div>
-
                 <div class="content-create-folder col-md-8" >
-                    <div  class="input-group">
-                        <span>Upload directory: </span><span class="selected-folder">/</span>
+                    <div class="form-group">
+                        <div  class="input-group">
+                            <span>Will create folder under: </span><span class="selected-folder">/</span>
+                        </div>
+                        <div class="bucket-select-path col-md-6">
+                            <input type="hidden" name="select_folder_path" value="/">
+                            <input class="form-control" type="text" name="folder_name" value="" placeholder="Input new folder name without /">
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" id="save-folders" class="btn btn-primary">
+                                <i class="fa fa-check"> </i>
+                                Save
+                            </button>
+                        </div>
                     </div>
-                    <div class="bucket-select-path col-md-6">
-                        <input type="hidden" name="select_folder_path" value="/">
-                        <input class="form-control" type="text" name="folder_name" value="" placeholder="Input new folder name without /">
-                    </div>
-                    <div class="col-md-6">
-                        <button type="button" id="save-folders" class="btn btn-primary">Save</button>
+                    <div class="form-group">
+                        <br>
+                        <p style="font-size: 12px">
+                            <b>Note:</b> Choose available folder on the left panel to specify the target path where your new folder will be created.
+                            Each folder you choose, it's meant a new sub folder will be created under the path you selected.
+                        </p>
                     </div>
                     <div class="clearfix"></div>
                 </div>
+                <div class="clearfix"></div>
+                <div class="modal-footer ">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END CREATE FOLDER POPUP -->
 
+<!-- UPLOAD FILE POPUP -->
+<div id="upload-file" data-backdrop="static" data-keyboard="false"  class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+    <div style="width: 85%" class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title title-popup" id="myModalLabel2">
+                    <i class="fa fa-bars"> </i>
+                    <?php echo Languages::Text('HEADER_CREATE_FOLDER_POPUP') ?>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-4" id="list-folder"></div>
                 <div class="content-upload-file col-md-8" >
                     <div class="input-group">
                         <span>Upload directory: </span><span class="selected-folder">/</span>
@@ -306,7 +359,6 @@
                         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
                     </form>
                 </div>
-
                 <div class="clearfix"></div>
                 <div class="modal-footer ">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -315,6 +367,7 @@
         </div>
     </div>
 </div>
+<!-- END UPLOAD FILE POPUP -->
 
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">

@@ -9,7 +9,7 @@ class AppConfig {
     private $AppRootDir = '';
 
     //S3 configuration
-    private $s3AppKey = 'AKIAJIZTTG3KIQZCKILQ'; //Application ID Key
+    private $s3AppKey = ''; //Application ID Key
     private $s3AppScr = ''; //Application Secret Key
     private $s3DefaultBucket = ''; //Default Bucket
     private $s3Region = ''; //Main Region
@@ -46,7 +46,7 @@ class AppConfig {
                 foreach ($action as $key => $value) {
                     if ($key > 0) {
                         $first_letter = substr($value, 0, 1);
-                        $action[0] .= strtoupper($first_letter) . str_replace($first_letter, '', $value);
+                        $action[0] .= strtoupper($first_letter) . ltrim ($value, $first_letter);
                     }
                 }
                 $action = $action[0];
