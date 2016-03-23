@@ -28,6 +28,19 @@ class AppS3{
         }
     }
 
+    public static function formatTotalSize($size)
+    {
+       if (($size / 1024) < 1){
+           return $size . " bytes";
+       } elseif (($size / (1024 * 1024)) < 1){
+           return number_format($size/1024, 1, ',', '.') . " Kb";
+       } elseif (($size / (1024 * 1024* 1024)) < 1){
+           return number_format($size/(1024 * 1024), 1, ',', '.') . " M";
+       } else {
+           return number_format($size/(1024 * 1024 * 1024), 1, ',', '.') . " G";
+       }
+    }
+
     public static function isFileImage($filename, $url_image){
         $is_value = false;
         $ext = explode(".", $filename);

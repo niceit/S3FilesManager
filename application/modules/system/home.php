@@ -3,7 +3,9 @@ use Aws\S3;
 class Home extends Controller {
 
     private $array = array();
-
+    private $total_size = 0;
+    private $total_folder = 0;
+    private $total_object = 0;
     public function login(){
         $mgs = array();
         if (!empty($_POST)) {
@@ -157,11 +159,49 @@ class Home extends Controller {
         ));
     }
 
+
+    public function count(){
+        $s3 = AppS3::S3();
+        if ($_POST) {
+            $bucket =  $_POST['bucket'];
+            $prefix = '';
+            $this->recursive_bucket($s3, $bucket, $prefix);
+            return json_encode(
+                array(
+                    'total_size' => AppS3::formatTotalSize($this->total_size),
+                    'total_folder' => $this->total_folder
+                )
+            );
+        }
+    }
+
+    function recursive_bucket($s3, $bucket, $prefix){
+        $result = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $prefix, 'Delimiter' => '/'));
+
+        if (!empty($result['Contents'])) {
+            foreach ($result['Contents'] as $row) {
+                if ($row['Key'] != $prefix){
+                    $this->total_size += $row['Size'];
+                    $this->total_object += 1;
+                }
+            }
+        }
+
+        if (!empty($result['CommonPrefixes'])){
+            $this->total_folder += count($result['CommonPrefixes']) - 1;
+            $this->total_object += count($result['CommonPrefixes']) - 1;
+        }
+        if (!empty($result['CommonPrefixes'])) {
+            foreach ($result['CommonPrefixes'] as $row) {
+                $this->recursive_bucket($s3, $bucket,  $row['Prefix']);
+            }
+        }
+    }
+
     public function index() {
         $s3 = AppS3::S3();
         $buckets = $s3->listBuckets();
         $app = new AppConfig();
-
         return $this->render('index', array(
             'buckets' => $buckets,
             'region' => $app->params('s3Region'),

@@ -7,6 +7,7 @@ jQuery(function(){
     //loadFrefix("/", 0);
     //loadFolder('/');
     loadFolderFrefix('/');
+    load_total();
     $('#btn-search').click(function(){
         loadSearchFrefix(0);
     });
@@ -114,6 +115,7 @@ jQuery(function(){
             loadFolderFrefix('/');
             //loadFolder('/');
             //loadFrefix("/", 0);
+            load_total();
         }
     });
 
@@ -129,6 +131,26 @@ jQuery(function(){
     });
 
 });
+
+function load_total(){
+    var bucket = $("select[name=bucket]").val();
+    var URL = $('base').attr('href') + '/index.php?route=home/count';
+    $(".total-size").addClass("loading").html('');
+    $(".total-folder").addClass("loading").html('');
+    $.ajax({
+        type: "post",
+        url: URL,
+        data: {'bucket': bucket},
+        dataType: "json",
+        success: function (data) {
+            $(".total-size").removeClass("loading");
+            $(".total-folder").removeClass("loading");
+            $(".total-size").html(data['total_size']);
+            $(".total-folder").html(data['total_folder']);
+        }
+
+    });
+}
 
 function refresh_butket(){
     $('#txt-name').val('');

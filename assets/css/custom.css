@@ -6485,3 +6485,11 @@ span.act {
     float: right;
     padding-right: 0px;
 }
+.count.loading{
+    background: #fff url("../images/loaders/5.gif") no-repeat center center;
+    opacity: 0.75;
+    top: 27%;
+    width: 90%;
+    margin-left: 5%;
+    height: 73%;
+}
