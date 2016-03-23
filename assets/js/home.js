@@ -4,8 +4,9 @@ jQuery(function(){
     var region = $("input[name=region]").val();
     var bucket = $("select[name=bucket]").val();
     Application.generateFormS3Signature(".cloud-upload-form", bucket, region);
-    loadFrefix("/", 0);
-    loadFolder('/');
+    //loadFrefix("/", 0);
+    //loadFolder('/');
+    loadFolderFrefix('/');
     $('#btn-search').click(function(){
         loadSearchFrefix(0);
     });
@@ -66,7 +67,15 @@ jQuery(function(){
 
     $('#btn-create-new-folder').click(function(){
         $('.content-create-folder').slideDown();
-        loadFolderNew('/');
+        var bucket = $("select[name=bucket]").val();
+        var  bucket_old = $('#old_bucket').val();
+        if (bucket_old == '' || bucket != bucket_old ){
+            loadFolderNew('/');
+            $('#old_bucket').val(bucket);
+        } else {
+            $('#create-folder').modal('show');
+        }
+
     });
     
     $('#upload-file').click(function(){
@@ -78,7 +87,14 @@ jQuery(function(){
             $('.content-upload-file').slideDown();
            // $('.title-popup').html('Upload file');
           //  $("#list-folder").css("border-right", '1px solid #ddd');
-            loadFolderUpload('/');
+            var bucket = $("select[name=bucket]").val();
+            var  bucket_old = $('#old_bucket_upload').val();
+            if (bucket_old == '' || bucket != bucket_old ){
+                loadFolderUpload('/');
+                $('#old_bucket_upload').val(bucket);
+            } else {
+                $('#upload-file-modal').modal('show');
+            }
         }
 
     });
@@ -95,8 +111,9 @@ jQuery(function(){
         if (bucket != '') {
             var region = $("input[name=region]").val();
             Application.generateFormS3Signature(".cloud-upload-form", bucket, region);
-            loadFolder('/');
-            loadFrefix("/", 0);
+            loadFolderFrefix('/');
+            //loadFolder('/');
+            //loadFrefix("/", 0);
         }
     });
 
@@ -115,8 +132,9 @@ jQuery(function(){
 
 function refresh_butket(){
     $('#txt-name').val('');
-    loadFolder('/');
-    loadFrefix("/", 0);
+    //loadFolder('/');
+    ///loadFrefix("/", 0);
+    loadFolderFrefix('/');
 }
 
 function is_check(){
@@ -298,6 +316,38 @@ function setFolderSelectedPath(path) {
         $("span.selected-folder").html('<b>/</b>');
 }
 
+function loadFolderFrefix(frefix) {
+    $('#contentFolder').prepend('<span class="loading"></span>');
+    $('#contentfrefix').prepend('<span class="loading"></span>');
+    var bucket = $("select[name=bucket]").val();
+    var URL = $('base').attr('href') + '/index.php?route=home/ajax-load-folder-prefix';
+    $.ajax({
+        type: "post",
+        url: URL,
+        data: {'frefix': frefix , 'bucket' : bucket},
+        dataType: "json",
+        success: function (data) {
+            $('.contentFolder .loading').remove();
+            $('#contentfrefix .loading').remove();
+            $('#contentFolder').html(data['folder']);
+            $('#contentfrefix').html(data['frefix']);
+            clickFonder();
+            $(".tree-file-content li .li-custom").hover(function(){
+                $(this).find(".act").show();
+            }, function(){
+                $(this).find(".act").hide();
+            });
+
+            $('input.flat').iCheck({
+                checkboxClass: 'icheckbox_flat-green',
+                radioClass: 'iradio_flat-green'
+            });
+
+        }
+
+    });
+}
+
 function loadFolder(frefix) {
     $('#contentFolder').prepend('<span class="loading"></span>');
     var bucket = $("select[name=bucket]").val();
@@ -306,7 +356,7 @@ function loadFolder(frefix) {
         type: "post",
         url: URL,
         data: {'frefix': frefix , 'bucket' : bucket},
-        dataType: "html",
+        dataType: "json",
         success: function (data) {
             $('.contentFolder .loading').remove();
             $('#contentFolder').html(data);

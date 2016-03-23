@@ -14,6 +14,23 @@ class Home extends Controller {
                 if (trim(strtolower($member['username'])) == trim(strtolower($user_name))
                     && md5(trim($password)) == ($member['password'])) {
                     $_SESSION['member'] = $member['username'];
+
+                    $results = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/last_login.inc')), true);
+                    if (empty($results)){
+                        $total_login = 1;
+                    } else {
+                        $total_login = $results['total_login'] + 1;
+                    }
+                    $_SESSION['last_login'] = $results;
+                    $time = time();
+                    $last_login = array(
+                        'total_login' => $total_login,
+                        'date_last_login' => $time
+                    );
+                    $last_login = base64_encode(json_encode($last_login));
+                    $config_file = fopen(dirname(__FILE__) . '/../../data/last_login.inc', 'w');
+                    fwrite($config_file, $last_login, strlen($last_login));
+                    fclose($config_file);
                     header("location: index.php");
                 } else {
                     $mgs = array(
@@ -235,6 +252,119 @@ class Home extends Controller {
         }
     }
 
+    public function ajaxLoadFolderPrefix() {
+        $this->enableLayout = false;
+
+        if (!empty($_POST)) {
+            $prefix = $_POST['frefix'];
+            $bucket = $_POST['bucket'];
+            $limit = 50;
+            $page = 0;
+
+            if ($prefix == '/') {
+                $prefix = '';
+            }
+
+            $s3 = AppS3::S3();
+            $result = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $prefix, 'Delimiter' => '/'));
+
+            $prefix_old = explode('/', $prefix);
+
+            if(!empty($prefix_old) && count($prefix_old) > 2) {
+                unset($prefix_old[count($prefix_old)]);
+                unset($prefix_old[count($prefix_old) - 1]);
+                $old_fix = implode("/", $prefix_old);
+            } else {
+                $old_fix = '/';
+            }
+
+            if ($prefix == '') {
+                $old_fix = '';
+            }
+
+            if (isset($result['Contents'][0])) {
+                unset($result['Contents'][0]);
+            }
+
+            $total = (int)round(count($result['Contents']) / $limit);
+            $arrayBucket = array();
+            if (!empty($result['Contents'])) {
+                $result['Contents'] = array_slice($result['Contents'], $page*$limit  , $limit);
+                foreach ($result['Contents'] as $object) {
+
+                    $filename = $object['Key'];
+                    $image_name_arr = explode('/', $filename);
+                    $image_name = end($image_name_arr);
+                    $format_arr = explode('.', $image_name);
+                    $url = $s3->getObjectUrl($bucket, $object['Key']);
+
+                    $arrayBucket[] = array(
+                        'key' => $object['Key'],
+                        'date' => strtotime($object['LastModified']),
+                        'name' => $image_name,
+                        'format' => "." . end($format_arr),
+                        'url' => $url,
+                        'size' => AppS3::formatBytes($object['Size'], 0),
+                        'is_file' => AppS3::isFileImage($image_name, $url),
+                        'icon' => AppS3::getFileSmallIcon(end($format_arr))
+                    );
+                }
+            }
+
+            if ($page < $total) {
+                $load_more = $page + 1;
+            } else {
+                $load_more = 0;
+            }
+
+            $arr['frefix'] = $this->render("ajax/load_prefix" , array(
+                'listObjects' => $arrayBucket ,
+                'files' => $result['CommonPrefixes'] ,
+                'old_fix' => $old_fix,
+                'frefix' => $prefix,
+                'sst' => $page*$limit + 1,
+                'load_more' => $load_more,
+                'search' => 0
+            ));
+
+            if ($prefix == '') {
+                unset($result['CommonPrefixes'][0]);
+            }
+
+            $arrFolder = array();
+            if (!empty($result['CommonPrefixes'])) {
+                foreach ($result['CommonPrefixes'] as $file) {
+                    $result_sub = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $file['Prefix'], 'Delimiter' => '/'));
+                    if (!empty($result_sub['CommonPrefixes'])) {
+                        $sub = true;
+                    } else {
+                        $sub = false;
+                    }
+
+                    $arrName = explode('/', $file['Prefix']);
+                    $arrFolder[] = array(
+                        'name' => $arrName[count($arrName) - 2],
+                        'prefix' => $file['Prefix'],
+                        'isSub' => $sub
+                    );
+                }
+            }
+
+            if (empty($arrFolder)) {
+                $arr['folder'] = $this->render('ajax/load_folder', array(
+                    'message' => 'There is no folder in this bucket'
+                ));
+            }
+
+            $arr['folder'] =  $this->render('ajax/load_folder', array(
+                'files' => $arrFolder,
+                'prefix' => $_POST['frefix']
+            ));
+            echo json_encode($arr);
+            die();
+        }
+    }
+
     /*
      * Load file on prefix
      */
@@ -244,6 +374,7 @@ class Home extends Controller {
         if (!empty($_POST)) {
             $limit = 50;
             $page = $_POST['page'];
+            $bucket = $_POST['bucket'];
             $prefix = $_POST['frefix'];
 
             if ($prefix == '/') {
@@ -251,7 +382,7 @@ class Home extends Controller {
             }
 
             $s3 = AppS3::S3();
-            $result = $s3->listObjects(array('Bucket' => $this->bucket,  'Prefix' => $prefix , 'Delimiter' => '/'));
+            $result = $s3->listObjects(array('Bucket' => $bucket,  'Prefix' => $prefix , 'Delimiter' => '/'));
             $prefix_old = explode('/', $prefix);
 
             if(!empty($prefix_old) && count($prefix_old) > 2) {
@@ -281,7 +412,7 @@ class Home extends Controller {
                     $image_name_arr = explode('/', $filename);
                     $image_name = end($image_name_arr);
                     $format_arr = explode('.', $image_name);
-                    $url = $s3->getObjectUrl($this->bucket, $object['Key']);
+                    $url = $s3->getObjectUrl($bucket, $object['Key']);
 
                     $arrayBucket[] = array(
                         'key' => $object['Key'],

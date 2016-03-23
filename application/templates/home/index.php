@@ -4,9 +4,9 @@
     <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
         <div class="left"></div>
         <div class="right">
-            <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
-            <div class="count">2500</div>
-            <span class="count_bottom"><i class="green">4% </i> From last Week</span>
+            <span class="count_top"><i class="fa fa-user"></i> Last login</span>
+            <div class="count"><?php echo $_SESSION['last_login']['total_login']; ?></div>
+            <span class="count_bottom"><i class="fa fa-clock-o"></i> <?php echo  date("d-m-Y H:s:i", $_SESSION['last_login']['date_last_login']); ?></span>
         </div>
     </div>
     <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
@@ -67,6 +67,8 @@
             <div class="x_content">
                 <div class="dashboard-widget-content">
                     <div class="col-md-6 col-sm-6 col-xs-12 form-horizontal">
+                        <input type="hidden" id="old_bucket" value="<?php //echo $bucket_default; ?>" />
+                        <input type="hidden" id="old_bucket_upload" value="<?php //echo $bucket_default; ?>" />
                         <div class="form-group">
                             <label class="control-label col-md-5 col-sm-5 col-xs-12">Choose available Buckets</label>
                             <div class="col-md-7 col-sm-7 col-xs-12 select_butket_div">
