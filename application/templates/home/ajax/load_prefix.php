@@ -1,10 +1,10 @@
-<?php if ($search == 0): ?>
+<?php /* if ($search == 0): ?>
     <ul class="tree-file-content">
         <?php  if($old_fix != ''): ?>
             <li onclick="loadFrefix('<?php echo $old_fix; ?>', 0);"><i class="fa fa-folder-open-o"></i> ...</li>
         <?php endif;  ?>
     </ul>
-<?php  endif;  ?>
+<?php  endif; */ ?>
 <table class="table table-striped responsive-utilities jambo_table bulk_action">
     <thead>
         <tr class="headings">

@@ -380,7 +380,7 @@ function loadFolder(frefix) {
         dataType: "json",
         success: function (data) {
             $('.contentFolder .loading').remove();
-            $('#contentFolder').html(data);
+            $('#contentFolder').html(data['folder']);
             clickFonder();
         }
 
@@ -420,15 +420,21 @@ function loadSubFolder(frefix, id) {
         type: "post",
         url: URL,
         data: {'frefix': frefix , 'bucket' : bucket},
-        dataType: "html",
+        dataType: "json",
         success: function (data) {
             $('.contentFolder .loading').remove();
-            $(sub).html(data);
+            $(sub).html(data['folder']);
             //$(sub).fadeIn(500);
             clickFonder();
         }
 
     });
+}
+
+function loadFrefix_bread(frefix, page, name) {
+    $(".name-prefix").removeClass("active");
+    $(".name-" + name).addClass("active");
+    loadFrefix(frefix, page);
 }
 
 function loadFrefix(frefix, page) {
@@ -450,14 +456,16 @@ function loadFrefix(frefix, page) {
         type: "post",
         url: URL,
         data: {'frefix': frefix , 'page' : page , 'bucket' : bucket},
-        dataType: "html",
+        dataType: "json",
         success: function (data) {
             load.parent().parent().remove();
             $('#contentfrefix .loading').remove();
             if (page == 0)
-                $('#contentfrefix').html(data);
+                $('#contentfrefix').html(data['prefix']);
             else
-                $('.content-file').append(data);
+                $('.content-file').append(data['prefix']);
+
+                $('.breadcrumbs').html(data['folder']);
 
             $(".tree-file-content li .li-custom").hover(function(){
                 $(this).find(".act").show();

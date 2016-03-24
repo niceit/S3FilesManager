@@ -238,16 +238,20 @@ class Home extends Controller {
                 }
             }
 
+            $arr = array();
             if (empty($arrFolder)) {
-                return $this->render('ajax/load_folder', array(
+                $arr['folder'] = $this->render('ajax/load_folder', array(
                     'message' => 'There is no folder in this bucket'
+                ));
+            } else {
+                $arr['folder'] = $this->render('ajax/load_folder', array(
+                    'files' => $arrFolder,
+                    'prefix' => $_POST['frefix']
                 ));
             }
 
-            return $this->render('ajax/load_folder', array(
-                'files' => $arrFolder,
-                'prefix' => $_POST['frefix']
-            ));
+            return json_encode($arr);
+
         }
     }
 
@@ -439,7 +443,7 @@ class Home extends Controller {
                 $file = 'ajax/load_more_prefix';
             }
 
-            return $this->render($file , array(
+            $data['prefix'] =  $this->render($file , array(
                     'listObjects' => $arrayBucket ,
                     'files' => $result['CommonPrefixes'] ,
                     'old_fix' => $old_fix,
@@ -448,6 +452,15 @@ class Home extends Controller {
                      'load_more' => $load_more,
                     'search' => 0
             ));
+
+            $arr_folder = explode("/", $_POST['frefix']);
+            unset($arr_folder[count($arr_folder) - 1 ]);
+            $data['folder'] = $this->render("ajax/load_breadcrumb" , array(
+                'folder' => $arr_folder
+            ));
+
+            return json_encode($data);
+
         }
     }
 

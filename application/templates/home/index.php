@@ -96,6 +96,8 @@
                             </div>
                         </div>
                         <div class="clearfix"></div>
+                        <div class="col-md-12 breadcrumbs" >
+                        </div>
                         <div class="dashboard-widget-content">
                             <div class="contentfrefix" id="contentfrefix"></div>
                         </div>

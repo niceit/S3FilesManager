@@ -18,7 +18,7 @@
                     <?php else : ?>
                         <span class="no-sub" ></span>
                     <?php endif; ?>
-                    <i class="fa fa-folder-open-o"></i>  <a href="javascript:;" onclick="loadFrefix('<?php echo $file['prefix']; ?>', 0)" ><span class="name-prefix" ><?php echo $file['name']; ?></span></a>
+                    <i class="fa fa-folder-open-o"></i>  <a href="javascript:;" onclick="loadFrefix('<?php echo $file['prefix']; ?>', 0)" ><span class="name-prefix name-<?php echo md5($file['prefix']); ?>" ><?php echo $file['name']; ?></span></a>
                   <span class="create-sub-folder" ><a onclick="popup_detail('<?php echo base64_encode($file['prefix']); ?>', '<?php echo $file['prefix']; ?>')" href="#"><i class="fa fa-eye"></i>  </a>&nbsp;&nbsp;<a onclick="loadFolderNewLeft('<?php echo $file['prefix']; ?>');" title="Create sub folder"  href="javascript:;"><i class="fa fa-plus-circle"></i></a></span>
                 </span>
                 <span class="sub"></span>

@@ -6493,3 +6493,14 @@ span.act {
     margin-left: 5%;
     height: 73%;
 }
+.breadcrumbs ul {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 10px;
+}
+.breadcrumbs li {
+    float: left;
+    margin: 0px;
+    margin-right: 9px;
+    list-style: none;
+}
