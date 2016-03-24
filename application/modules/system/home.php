@@ -3,9 +3,7 @@ use Aws\S3;
 class Home extends Controller {
 
     private $array = array();
-    private $total_size = 0;
-    private $total_folder = 0;
-    private $total_object = 0;
+
     public function login(){
         $mgs = array();
         if (!empty($_POST)) {
@@ -82,13 +80,13 @@ class Home extends Controller {
             } else {
                 $mgs = array(
                     'status' => 'Error',
-                    'mgs' => 'Unable to update information, please try again later'
+                    'mgs' => 'Your old password does not match!'
                 );
             }
         }
 
         $member = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/database.inc')), true);
-        return $this->render('changePassword', array('message' => $mgs , 'member' => $member));
+        return $this->render('change_password', array('message' => $mgs , 'member' => $member));
     }
 
     public function setting(){
@@ -96,7 +94,6 @@ class Home extends Controller {
         $config_file = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/configuration.inc')), true);
 
         if (!empty($_POST) && isset($_POST['bucket'])) {
-
             $config_file['s3']['bucket'] = $_POST['bucket'];
             $config = base64_encode(json_encode($config_file));
             $config_file = fopen(dirname(__FILE__) . '/../../data/configuration.inc', 'w');
@@ -107,22 +104,22 @@ class Home extends Controller {
                 'status' => 'Success',
                 'mgs' => 'Bucket setting has been updated'
             );
-        } elseif($_POST){
+        } elseif (!empty($_POST)){
             if (!empty($_POST['siteUrl']) && !empty($_POST['appId'])
-                && !empty($_POST['appSecret']) && !empty($_POST['bucket'])) {
+                && !empty($_POST['appSecret'])) {
 
                 $config = array(
                     'siteUrl' =>  $_POST['siteUrl'],
                     'email' => $_POST['email'],
-                    'maintenance' => $_POST['maintenance'],
                     's3' => array(
                         'appId' =>  $_POST['appId'],
                         'appSecret' =>  $_POST['appSecret'],
                         'bucket' =>  $config_file['s3']['bucket'],
-                        'scheme' =>  $_POST['scheme'],
                         'region' =>  $_POST['region'],
-                        'version' =>  $_POST['version'],
-                        'limit' =>  $_POST['limit']
+
+                        'scheme' =>  "http",
+                        'version' =>  'latest',
+                        'limit' =>  30
                     ),
                 );
 
@@ -133,69 +130,31 @@ class Home extends Controller {
 
                 $mgs = array(
                     'status' => 'Success',
-                    'mgs' => 'Setting information updated'
+                    'mgs' => 'Setting information updated.'
                 );
             } else {
                 $mgs = array(
                     'status' => 'Error',
-                    'mgs' => 'Failed change setting'
+                    'mgs' => 'An error occurred, unable to update settings.'
                 );
             }
         }
 
         $config_file = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/configuration.inc')), true);
-        $buckets = array();
         try {
             $s3 = AppS3::S3();
             $buckets = $s3->listBuckets();
         } catch (Exception $e){
-
+            $buckets = null;
         }
 
+        $regions = AppS3::getAvailableRegions();
         return $this->render('setting', array(
             'message' => $mgs ,
             'buckets' =>  $buckets,
-            'config_file' => $config_file
+            'config_file' => $config_file,
+            'regions' => $regions,
         ));
-    }
-
-
-    public function count(){
-        $s3 = AppS3::S3();
-        if ($_POST) {
-            $bucket =  $_POST['bucket'];
-            $prefix = '';
-            $this->recursive_bucket($s3, $bucket, $prefix);
-            return json_encode(
-                array(
-                    'total_size' => AppS3::formatTotalSize($this->total_size),
-                    'total_folder' => $this->total_folder
-                )
-            );
-        }
-    }
-
-    function recursive_bucket($s3, $bucket, $prefix){
-        $result = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $prefix, 'Delimiter' => '/'));
-
-        if (!empty($result['Contents'])) {
-            foreach ($result['Contents'] as $row) {
-                if ($row['Key'] != $prefix){
-                    $this->total_size += $row['Size'];
-                    $this->total_object += 1;
-                }
-            }
-        }
-
-        if (!empty($result['CommonPrefixes'])){
-            $this->total_folder += count($result['CommonPrefixes']) - 1;
-            $this->total_object += count($result['CommonPrefixes']) - 1;
-        }
-        if (!empty($result['CommonPrefixes'])) {
-            foreach ($result['CommonPrefixes'] as $row) {
-                $this->recursive_bucket($s3, $bucket,  $row['Prefix']);
-            }
-        }
     }
 
     public function index() {

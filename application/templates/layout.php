@@ -8,7 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="<?php echo $this->baseUrl;  ?>" />
-    <title>Gentallela Alela! | </title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+    <title>Pretty S3 File Managers</title>
 
     <!-- Bootstrap core CSS -->
 
@@ -33,10 +34,9 @@
     <script src="<?php echo $this->assetsUrl ?>/js/global.js"></script>
 
 
-
-    <script src="<?php echo $this->assetsUrl ?>/js/home.js"></script>
-
-
+    <?php if ($this->action == 'index') : ?>
+        <script src="<?php echo $this->assetsUrl ?>/js/home.js"></script>
+    <?php endif ?>
     <script>
         NProgress.start();
     </script>
@@ -55,24 +55,20 @@
 
 
 <body class="nav-md">
-
     <div class="container body">
-
-
         <div class="main_container">
-
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
 
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="<?php echo $this->baseUrl;  ?>" class="site_title"><i class="fa fa-paw"></i> <span>Administrator</span></a>
+                        <a href="<?php echo $this->baseUrl;  ?>" class="site_title"><i class="fa fa-paw"></i> <span>Dashboard</span></a>
                     </div>
                     <div class="clearfix"></div>
 
                     <!-- menu prile quick info -->
                     <div class="profile">
                         <div class="profile_pic">
-                            <img src="<?php echo $this->assetsUrl ?>/images/img.jpg" alt="..." class="img-circle profile_img">
+                            <img src="<?php echo $this->assetsUrl ?>/images/user.png" alt="..." class="img-circle profile_img">
                         </div>
                         <div class="profile_info">
                             <span>Welcome, <?php echo $this->username ; ?></span>
@@ -92,7 +88,7 @@
                                     <a href="<?php echo $this->baseUrl ?>/index.php?route=home/setting"><i class="fa fa-wrench"></i>Setting</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo $this->baseUrl ?>/index.php?route=home/changepassword"><i class="fa fa-exchange"></i>
+                                    <a href="<?php echo $this->baseUrl ?>/index.php?route=home/change-password"><i class="fa fa-exchange"></i>
                                         <span>Change password</span>
                                     </a>
                                 </li>
@@ -136,7 +132,7 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="<?php echo $this->assetsUrl ?>/images/img.jpg" alt="">Admin
+                                    <img src="<?php echo $this->assetsUrl ?>/images/user.png" alt="">Administrator
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
@@ -144,7 +140,7 @@
                                         <a href="<?php echo $this->baseUrl ?>/index.php?route=home/setting"><i class="fa fa-wrench pull-right"></i>Setting</a>
                                     </li>
                                     <li>
-                                        <a href="<?php echo $this->baseUrl ?>/index.php?route=home/changepassword"><i class="fa fa-exchange pull-right"></i>
+                                        <a href="<?php echo $this->baseUrl ?>/index.php?route=home/change-password"><i class="fa fa-exchange pull-right"></i>
                                             <span>Change password</span>
                                         </a>
                                     </li>

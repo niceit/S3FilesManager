@@ -7,7 +7,7 @@ jQuery(function(){
     //loadFrefix("/", 0);
     //loadFolder('/');
     loadFolderFrefix('/');
-    load_total();
+    //load_total();
     $('#btn-search').click(function(){
         loadSearchFrefix(0);
     });
@@ -174,12 +174,11 @@ function multiple_delete(){
         alert("Please check file to remove!");
         return false;
     }
-    var confirmBox = confirm('Are you sure you want to delete this multiple file?');
+    var confirmBox = confirm('Are you sure want to delete them?');
     if (!confirmBox) return false;
 
     var bucket = $("select[name=bucket]").val();
     $( ".content-file .icheckbox_flat-green" ).each(function( index ) {
-
         var row = $(this).find("input").data("id");
         if ($(this).hasClass("checked")) {
             var URL = $('base').attr('href') + '/index.php?route=home/delete-file';
@@ -191,13 +190,13 @@ function multiple_delete(){
                 success: function (data) {
                     $(".row-" + row).remove();
                 }
-
             });
         }
     });
+
     new PNotify({
         title: 'Success',
-        text: 'You deleted successfully!',
+        text: 'Object(s) has been deleted!',
         type: 'success'
     });
 

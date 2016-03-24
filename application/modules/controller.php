@@ -49,6 +49,7 @@ class Controller {
 
         ${"this"}->baseUrl = $this->siteConfig->params('siteUrl');
         ${"this"}->assetsUrl = $this->siteConfig->params('siteUrl') . $this->siteConfig->params('URL_Root');
+        ${"this"}->action = $this->siteConfig->params('action');
 
         ob_start();
         include $this->siteConfig->params('AppRootDir') .  'templates/' . $this->siteConfig->params('controller') . '/' . $view . '.php';

@@ -3,7 +3,7 @@
 class AppConfig {
 
     //Site configurations
-    private $siteUrl = 'http://local.s3filemanagerv2/';
+    private $siteUrl = 'http://127.0.1.93';
     private $URL_Root = "/assets/";
     private $maintenance = false; //Will disable site and appear UnderConstruction Mode
     private $AppRootDir = '';
@@ -26,7 +26,6 @@ class AppConfig {
         }
 
         $config = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/data/configuration.inc')), true);
-        $this->maintenance = $config['maintenance'];
         $this->s3AppKey = $config['s3']['appId'];
         $this->s3AppScr = $config['s3']['appSecret'];
         $this->s3DefaultBucket = $config['s3']['bucket'];

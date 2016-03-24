@@ -5,6 +5,7 @@ class Languages {
     private static $INVALID_CONFIGURATION = 'Configuration file is not existed or site was not installed properly';
     private static $UPDATED_FILE_PERMISSION = 'File permission updated successfully';
 
+    private static $SITE_SETTING_TITLE = 'Site Configurations';
     /*
      * Popup stuffs
      * */

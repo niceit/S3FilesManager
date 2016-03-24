@@ -1,57 +1,4 @@
 <div class="clearfix"></div>
-
-<div class="row tile_count">
-    <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-        <div class="left"></div>
-        <div class="right">
-            <span class="count_top"><i class="fa fa-user"></i> Last login</span>
-            <div class="count"><?php echo $_SESSION['last_login']['total_login']; ?></div>
-            <span class="count_bottom"><i class="fa fa-clock-o"></i> <?php echo  date("d-m-Y H:s:i", $_SESSION['last_login']['date_last_login']); ?></span>
-        </div>
-    </div>
-    <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-        <div class="left"></div>
-        <div class="right">
-            <span class="count_top"><i class="fa fa-bar-chart-o"></i> Total Size</span>
-            <div class="count total-size"></div>
-            <span class="count_bottom"><i class="green"></i></span>
-        </div>
-    </div>
-    <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-        <div class="left"></div>
-        <div class="right">
-            <span class="count_top"><i class="fa fa-file"></i> Total Folder</span>
-            <div class="count total-folder"></div>
-            <span class="count_bottom"></span>
-        </div>
-    </div>
-    <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-        <div class="left"></div>
-        <div class="right">
-            <span class="count_top"><i class="fa fa-user"></i> Total Females</span>
-            <div class="count">4,567</div>
-            <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>
-        </div>
-    </div>
-    <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-        <div class="left"></div>
-        <div class="right">
-            <span class="count_top"><i class="fa fa-user"></i> Total Collections</span>
-            <div class="count">2,315</div>
-            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
-        </div>
-    </div>
-    <div class="animated flipInY col-md-2 col-sm-4 col-xs-4 tile_stats_count">
-        <div class="left"></div>
-        <div class="right">
-            <span class="count_top"><i class="fa fa-user"></i> Total Connections</span>
-            <div class="count">7,325</div>
-            <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
-        </div>
-    </div>
-
-</div>
-
 <div class="row">
     <input type="hidden" name="region" value="<?php echo $region ?>">
     <div class="col-md-12 col-sm-12 col-xs-12">
@@ -108,6 +55,11 @@
                 </div>
             </div>
         </div>
+        <button id="" type="button" class="btn btn-info"><i class="fa fa-refresh"></i> Reload</button>
+        <button id="btn-create-new-folder" type="button" class="btn btn-info">
+            <i class="fa fa-folder-open-o"></i>
+            Create folder
+        </button>
     </div>
 
     <div class="col-md-9 col-sm-9 col-xs-12">

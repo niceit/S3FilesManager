@@ -3,22 +3,10 @@
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h2>Change settings</h2>
-                <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Settings 1</a>
-                            </li>
-                            <li><a href="#">Settings 2</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                    </li>
-                </ul>
+                <h2>
+                    <i class="fa fa-bars"> </i>
+                    <?php echo Languages::Text("SITE_SETTING_TITLE") ?>
+                </h2>
                 <div class="clearfix"></div>
             </div>
             <div class="x_content">
@@ -43,6 +31,9 @@
                 <form  action="" method="post" id="setting" data-parsley-validate class="form-horizontal form-label-left">
 
                     <div class="form-group">
+                        <h4>Common Settings:</h4>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="site_url">Site url<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -56,14 +47,10 @@
                             <input value="<?php echo $config_file['email'] ?>" name="email" type="email" id="email" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="maintenance">Mainte nance<span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input value="<?php echo $config_file['maintenance'] ?>"  name="maintenance" type="text" id="maintenance" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
 
+                    <div class="form-group">
+                        <h4>Amazon S3 Settings:</h4>
+                    </div>
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="appId">AppId<span class="required">*</span>
                         </label>
@@ -79,69 +66,73 @@
                             <input value="<?php echo $config_file['s3']['appSecret'] ?>"  name="appSecret" type="text" id="appSecret" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="scheme">Scheme<span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input value="<?php echo $config_file['s3']['scheme'] ?>"  name="scheme" type="text" id="scheme" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="region">Region<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input value="<?php echo $config_file['s3']['region'] ?>"  name="region" type="text" id="region" required="required" class="form-control col-md-7 col-xs-12">
+                            <select name="region" class="region form-control" tabindex="-1">
+                                <option value="">Choose Region</option>
+                                <?php foreach ($regions as $key => $region) : ?>
+                                    <option value="<?php echo $key ?>"
+                                        <?php if ($key == $config_file['s3']['region']) : ?>
+                                            selected="selected"
+                                        <?php endif ?>
+                                    ><?php echo '(' . $key . ') ' . $region ?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <br>
+                            <p>
+                                <b>Important:</b> Please choose the correct region which you registered at Amazon S3 Service.
+                                If you use a region other than the US East (N. Virginia) endpoint to create a bucket, you must set the LocationConstraint bucket parameter to the same region.
+                            </p>
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="version">Version<span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input value="<?php echo $config_file['s3']['version'] ?>"  name="version" type="text" id="version" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="version">Limit<span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input value="<?php echo $config_file['s3']['limit'] ?>"  name="limit" type="text" id="limit" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
-
-                    <div class="ln_solid"></div>
                     <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                            <button type="submit" class="btn btn-success">Save</button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa fa-check"> </i>
+                                Save Changes
+                            </button>
                         </div>
                     </div>
 
                 </form>
-
                 <form  action="" method="post" id="setting" data-parsley-validate class="form-horizontal form-label-left">
+                    <div class="form-group">
+                        <h4>Amazon S3 Bucket Settings:</h4>
+                    </div>
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bucket">Bucket default<span class="required">*</span>
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <select name="bucket" class="select_butket form-control" tabindex="-1">
-                                <option value="">Choose Bucket</option>
-                                <?php if (!empty($buckets)) : ?>
+                            <?php if (!empty($buckets)) : ?>
+                                <select name="bucket" class="select_butket form-control" tabindex="-1">
+                                    <option value="">Choose Bucket</option>
                                     <?php foreach ($buckets['Buckets'] as $bucket) : ?>
                                         <option <?php if($config_file['s3']['bucket'] == $bucket['Name']) echo 'selected="selected"'; ?> value="<?php echo $bucket['Name'] ?>"><?php echo $bucket['Name'] ?></option>
                                     <?php endforeach ?>
-                                <?php endif ?>
-                            </select>
+                                </select>
+                            <?php else : ?>
+                                <b style="color: red;">Amazon S3 Key and Secret configurations failed! Please double check information above.</b>
+                            <?php endif ?>
                        </div>
                     </div>
                     <div class="ln_solid"></div>
                     <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                            <button type="submit" class="btn btn-success">Save butket</button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa fa-check"> </i>
+                                Set default bucket
+                            </button>
                         </div>
                     </div>
                 </form>
             </div>
+            <a href="<?php echo $this->baseUrl ?>" class="btn btn-primary">
+                <i class="fa fa-backward"> </i>
+                Back to dashboard
+            </a>
         </div>
     </div>
 </div>

@@ -14,8 +14,8 @@ global $AppConfig;
 $AppConfig = new AppConfig();
 
 $controller = $AppConfig->params('controller');
-require_once $AppConfig->params('AppRootDir') . 'modules/system/' . $controller . '.php';
 $action = $AppConfig->params('action');
-$route = new $controller();
+$route = AppException::preCheckRouteRequest($AppConfig);
 
+//Run the application
 print $route->{$action}();
