@@ -289,7 +289,7 @@
                         <input type="hidden" name="Content-Type" value="">
                         <input type="hidden" name="policy" value="">
                         <input type="hidden" name="signature" value="">
-                        <input type="hidden" name="key" value="/">
+                        <input type="hidden" name="key" value="${filename}">
 
 
                         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->

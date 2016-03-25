@@ -2,13 +2,21 @@
 
 class Controller {
 
-    public $layout = 'layout';
+    //Will handle for enable/disable layout render
     public $enableLayout = true;
+
+    //Default layout name
+    public $layout = 'layout';
     public $view;
+
+    //Some global view configuration params
     private $siteConfig;
     private $baseUrl;
     private $assetsUrl;
     public  $username = '';
+
+    //Action with no render layout(name of list actions will be listed here)
+    public $actionDisableLayoutRender = array();
     
     public function __construct() {
         session_start();
@@ -56,8 +64,27 @@ class Controller {
         $content = ob_get_contents();
         ob_end_clean();
 
+        if (in_array($this->siteConfig->params('action'), $this->actionDisableLayoutRender)) {
+            $this->enableLayout = false;
+        }
+
         $content = str_replace('[[Content]]', $content, $this->renderLayout());
 
         return $content;
+    }
+
+    public function renderContent($content, $content_type = 'plain') {
+        switch ($content_type) {
+            case 'plain':
+                print $content;
+                break;
+            case 'html':
+                header('ContentType: text/html');
+                break;
+            case 'json':
+                header('Content-Type: application/json');
+                print json_encode($content);
+                break;
+        }
     }
 }

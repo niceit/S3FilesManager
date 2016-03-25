@@ -3,7 +3,7 @@ use Aws\S3;
 
 class AppS3{
 
-    public static function S3() {
+    public static function initialize() {
         $app = new AppConfig();
         return \Aws\S3\S3Client::factory(array(
             'version' => $app->params('s3Version'),

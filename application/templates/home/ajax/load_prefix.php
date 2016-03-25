@@ -67,7 +67,7 @@
             <tr><td colspan="8">
                     <a class="load-more"
                       <?php if ($search ==0): ?>
-                            onclick="loadFrefix('<?php echo $frefix;  ?>', <?php echo $load_more; ?>);"
+                            onclick="PrettyS3FilesManager.Bucket.loadObjects('<?php echo $frefix;  ?>', <?php echo $load_more; ?>);"
                         <?php else:   ?>
                           onclick="loadSearchFrefix( <?php echo $load_more; ?>);"
                         <?php endif;  ?>
@@ -79,7 +79,7 @@
         <tfoot>
         <tr>
             <td colspan="7">
-                <a class="btn btn-danger" onclick="multiple_delete()" id="delete-multiple" href="javascript:;">
+                <a class="btn btn-danger" onclick="PrettyS3FilesManager.File.deleteMultiple()" id="delete-multiple" href="javascript:;">
                     <i class="fa fa-trash"> </i>
                     Delete
                 </a>

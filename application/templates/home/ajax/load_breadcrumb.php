@@ -1,5 +1,5 @@
 <ul>
-    <li><i class="fa fa-folder-open-o"></i> <a onclick="loadFrefix('/', 0)" href="javascript:;">/</a></li>
+    <li><i class="fa fa-folder-open-o"></i> <a onclick="PrettyS3FilesManager.Bucket.loadObjects('/', 0)" href="javascript:;">/</a></li>
     <?php
     if(!empty($folder)):
             foreach ($folder as $row): $name .= $row . "/";  ?>

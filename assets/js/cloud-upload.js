@@ -16,7 +16,7 @@ $(function(){
             $(".cloud-upload-area .file-rows").html('');
             $(".add-file-btn").trigger('click');
             var region = $("input[name=region]").val();
-            Application.generateFormS3Signature(".cloud-upload-form", bucket, region);
+            PrettyS3FilesManager.S3Upload.generateFormS3Signature(".cloud-upload-form", bucket, region);
         }
     });
 
@@ -28,18 +28,19 @@ $(function(){
         buttons: {
             "Save": function() {
                 var object = "#modal-add-bucket";
-                Application.hideElementMessage(object, 'nSuccess');
-                Application.hideElementMessage(object, 'nWarning');
+                PrettyS3FilesManager.Application.hideElementMessage(object, 'nSuccess');
+                PrettyS3FilesManager.Application.hideElementMessage(object, 'nWarning');
                 var name = $(object).find('input[name=bucket_name]').val();
-                Application.displayLoadingField(object);
+
+                PrettyS3FilesManager.Application.displayLoadingField(object);
                 $.post("/application/create-bucket", {name:name}, function(response){
                     response = JSON.parse(response);
-                    Application.hideLoadingField(object);
+                    PrettyS3FilesManager.Application.hideLoadingField(object);
                     if (response.status) {
-                        Application.displayElementMessage(object, 'nSuccess', response.message);
+                        PrettyS3FilesManager.Application.displayElementMessage(object, 'nSuccess', response.message);
                     }
                     else {
-                        Application.displayElementMessage(object, 'nWarning', response.message);
+                        PrettyS3FilesManager.Application.displayElementMessage(object, 'nWarning', response.message);
                     }
                 });
             },
@@ -183,7 +184,7 @@ $(function(){
         var bucket = $("select[name=bucket]").val();
         if (bucket != '') {
             var region = $("input[name=region]").val();
-            Application.generateFormS3Signature(".cloud-upload-form", bucket, region);
+            PrettyS3FilesManager.S3Upload.generateFormS3Signature(".cloud-upload-form", bucket, region);
         }
 
         doomFormUpload("#cloud-upload-frm-" + next_element_id);
@@ -206,7 +207,7 @@ $(function(){
                 if (instance_files.hasOwnProperty(key)) {
                     instance_files[key].context.find(".progress-upload").children(".file-upload-loading").show();
                     instance_files[key].submit();
-                    Application.removeObjectItemByKey(instance_files, key);
+                    PrettyS3FilesManager.Application.removeObjectItemByKey(instance_files, key);
                 }
             }
         }
@@ -275,7 +276,7 @@ function trigger_file_select(element) {
 function remove_file(element) {
     var index = $(element).parents('.file-row').find('form.cloud-upload-form').attr('data-id');
     if (instance_files.hasOwnProperty(index)) {
-        Application.removeObjectItemByKey(instance_files, index);
+        PrettyS3FilesManager.Application.removeObjectItemByKey(instance_files, index);
     }
     $(element).parents('.file-row').find('.cloud-upload-form').unbind('fileupload');
     $(element).parents('.file-row').remove();

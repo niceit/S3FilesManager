@@ -3,6 +3,16 @@ use Aws\S3;
 class Home extends Controller {
 
     private $array = array();
+    
+    public function __construct () {
+        parent::__construct();
+        //Disable layout for some actions
+        $this->actionDisableLayoutRender = array(
+            'ajaxLoadFolder', 'createBucket', 'login', 'ajaxLoadFolderPrefix',
+            'ajaxLoadPrefix', 'ajaxLoadSearchObjects', 'createFolder', 'listBucketFolders',
+            'deleteFile', 'ajaxDetailFile', 'updatePermissions', 'updateHeaderContentType',
+        );
+    }
 
     public function login(){
         $mgs = array();
@@ -41,7 +51,6 @@ class Home extends Controller {
             }
         }
 
-        $this->enableLayout = false;
         return $this->render('login', array('message' => $mgs));
     }
 
@@ -142,8 +151,8 @@ class Home extends Controller {
 
         $config_file = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/configuration.inc')), true);
         try {
-            $s3 = AppS3::S3();
-            $buckets = $s3->listBuckets();
+            $amazonS3 = AppS3::initialize();
+            $buckets = $amazonS3->listBuckets();
         } catch (Exception $e){
             $buckets = null;
         }
@@ -158,8 +167,8 @@ class Home extends Controller {
     }
 
     public function index() {
-        $s3 = AppS3::S3();
-        $buckets = $s3->listBuckets();
+        $amazonS3 = AppS3::initialize();
+        $buckets = $amazonS3->listBuckets();
         $app = new AppConfig();
         return $this->render('index', array(
             'buckets' => $buckets,
@@ -169,20 +178,16 @@ class Home extends Controller {
     }
 
     public function createBucket() {
-        header ("Content-Type: application/json");
-        $this->enableLayout = false;
-
         if (!empty($_POST)) {
             $name = $_POST['name'];
             if (empty($name)) {
                 $response = array('status' => 0, 'message' => 'Bucket name can not be blank');
             }
             else {
-                $s3 = AppS3::S3();
+                $amazonS3 = AppS3::initialize();
                 try{
-                    $s3->createBucket(array('Bucket' => $name));
-                    $s3 = AppS3::S3();
-                    $buckets = $s3->listBuckets();
+                    $amazonS3->createBucket(array('Bucket' => $name));
+                    $buckets = $amazonS3->listBuckets();
                     $response = array('status' => 1, 'buckets' => $buckets['Buckets'], 'message' => 'Bucket created successfully');
                 }
                 catch (\Aws\S3\Exception\S3Exception $e) {
@@ -194,7 +199,7 @@ class Home extends Controller {
             $response = array('status' => 0, 'message' => 'Invalid request');
         }
 
-        echo json_encode($response);
+        return $this->renderContent($response, 'json');
     }
 
     /*
@@ -202,8 +207,6 @@ class Home extends Controller {
     */
 
     public function ajaxLoadFolder() {
-        $this->enableLayout = false;
-
         if (!empty($_POST)) {
             $prefix = $_POST['frefix'];
             $bucket = $_POST['bucket'];
@@ -212,8 +215,8 @@ class Home extends Controller {
                 $prefix = '';
             }
 
-            $s3 = AppS3::S3();
-            $result = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $prefix, 'Delimiter' => '/'));
+            $amazonS3 = AppS3::initialize();
+            $result = $amazonS3->listObjects(array('Bucket' => $bucket, 'Prefix' => $prefix, 'Delimiter' => '/'));
 
             if ($prefix == '') {
                 unset($result['CommonPrefixes'][0]);
@@ -222,7 +225,7 @@ class Home extends Controller {
             $arrFolder = array();
             if (!empty($result['CommonPrefixes'])) {
                 foreach ($result['CommonPrefixes'] as $file) {
-                    $result_sub = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $file['Prefix'], 'Delimiter' => '/'));
+                    $result_sub = $amazonS3->listObjects(array('Bucket' => $bucket, 'Prefix' => $file['Prefix'], 'Delimiter' => '/'));
                     if (!empty($result_sub['CommonPrefixes'])) {
                         $sub = true;
                     } else {
@@ -256,8 +259,6 @@ class Home extends Controller {
     }
 
     public function ajaxLoadFolderPrefix() {
-        $this->enableLayout = false;
-
         if (!empty($_POST)) {
             $prefix = $_POST['frefix'];
             $bucket = $_POST['bucket'];
@@ -268,8 +269,8 @@ class Home extends Controller {
                 $prefix = '';
             }
 
-            $s3 = AppS3::S3();
-            $result = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $prefix, 'Delimiter' => '/'));
+            $amazonS3 = AppS3::initialize();
+            $result = $amazonS3->listObjects(array('Bucket' => $bucket, 'Prefix' => $prefix, 'Delimiter' => '/'));
 
             $prefix_old = explode('/', $prefix);
 
@@ -299,7 +300,7 @@ class Home extends Controller {
                     $image_name_arr = explode('/', $filename);
                     $image_name = end($image_name_arr);
                     $format_arr = explode('.', $image_name);
-                    $url = $s3->getObjectUrl($bucket, $object['Key']);
+                    $url = $amazonS3->getObjectUrl($bucket, $object['Key']);
 
                     $arrayBucket[] = array(
                         'key' => $object['Key'],
@@ -337,7 +338,7 @@ class Home extends Controller {
             $arrFolder = array();
             if (!empty($result['CommonPrefixes'])) {
                 foreach ($result['CommonPrefixes'] as $file) {
-                    $result_sub = $s3->listObjects(array('Bucket' => $bucket, 'Prefix' => $file['Prefix'], 'Delimiter' => '/'));
+                    $result_sub = $amazonS3->listObjects(array('Bucket' => $bucket, 'Prefix' => $file['Prefix'], 'Delimiter' => '/'));
                     if (!empty($result_sub['CommonPrefixes'])) {
                         $sub = true;
                     } else {
@@ -363,8 +364,8 @@ class Home extends Controller {
                 'files' => $arrFolder,
                 'prefix' => $_POST['frefix']
             ));
-            echo json_encode($arr);
-            die();
+
+            return $this->renderContent($arr, 'json');
         }
     }
 
@@ -372,8 +373,6 @@ class Home extends Controller {
      * Load file on prefix
      */
     public function ajaxLoadPrefix(){
-        $this->enableLayout = false;
-
         if (!empty($_POST)) {
             $limit = 50;
             $page = $_POST['page'];
@@ -384,8 +383,8 @@ class Home extends Controller {
                 $prefix = '';
             }
 
-            $s3 = AppS3::S3();
-            $result = $s3->listObjects(array('Bucket' => $bucket,  'Prefix' => $prefix , 'Delimiter' => '/'));
+            $amazonS3 = AppS3::initialize();
+            $result = $amazonS3->listObjects(array('Bucket' => $bucket,  'Prefix' => $prefix , 'Delimiter' => '/'));
             $prefix_old = explode('/', $prefix);
 
             if(!empty($prefix_old) && count($prefix_old) > 2) {
@@ -415,7 +414,7 @@ class Home extends Controller {
                     $image_name_arr = explode('/', $filename);
                     $image_name = end($image_name_arr);
                     $format_arr = explode('.', $image_name);
-                    $url = $s3->getObjectUrl($bucket, $object['Key']);
+                    $url = $amazonS3->getObjectUrl($bucket, $object['Key']);
 
                     $arrayBucket[] = array(
                         'key' => $object['Key'],
@@ -456,7 +455,8 @@ class Home extends Controller {
             $arr_folder = explode("/", $_POST['frefix']);
             unset($arr_folder[count($arr_folder) - 1 ]);
             $data['folder'] = $this->render("ajax/load_breadcrumb" , array(
-                'folder' => $arr_folder
+                'folder' => $arr_folder,
+                'name' => '',
             ));
 
             return json_encode($data);
@@ -468,15 +468,14 @@ class Home extends Controller {
      * Search-----
      */
     public function ajaxLoadSearchObjects() {
-        $this->enableLayout = false;
 
         if (!empty($_POST)) {
             $page = $_POST['page'];
             $key = trim($_POST['name']);
             $limit =  50;
 
-            $s3 = AppS3::S3();
-            $result = $s3->listObjects(array('Bucket' => $this->bucket));
+            $amazonS3 = AppS3::initialize();
+            $result = $amazonS3->listObjects(array('Bucket' => $this->bucket));
             $arrayBucket = array();
 
             foreach ($result['Contents'] as $object) {
@@ -486,7 +485,7 @@ class Home extends Controller {
 
                 if (preg_match('#^.*' . $key . '.*$#', $image_name)) {
                     $format_arr = explode('.', $image_name);
-                    $url = $s3->getObjectUrl($this->bucket, $object['Key']);
+                    $url = $amazonS3->getObjectUrl($this->bucket, $object['Key']);
 
                     $arrayBucket[] = array(
                         'key' => $object['Key'],
@@ -530,8 +529,8 @@ class Home extends Controller {
     * Upload files to Cloud page
     * */
     public function upload() {
-        $s3 = AppS3::S3();
-        $buckets = $s3->listBuckets();
+        $amazonS3 = AppS3::initialize();
+        $buckets = $amazonS3->listBuckets();
         $app = new AppConfig();
 
         return $this->render('upload', ['buckets' => $buckets, 'region' => $app->params('s3Region')]);
@@ -541,9 +540,6 @@ class Home extends Controller {
     * Create new folder
     * */
     public function createFolder() {
-        $this->enableLayout = false;
-        header("Content-Type: application/json");
-
         if (!empty($_POST)) {
             $bucket = $this->bucket;
             $path = $_POST['path'];
@@ -554,9 +550,9 @@ class Home extends Controller {
             }
 
             $key = $path . $name . '/';
-            $s3 = AppS3::S3();
+            $amazonS3 = AppS3::initialize();
             try {
-                $s3->putObject(array(
+                $amazonS3->putObject(array(
                     'Bucket' => $bucket,
                     'Key'    => $key,
                     'Body'   => "",
@@ -566,23 +562,24 @@ class Home extends Controller {
                 $response = array('status' => 1, 'key' => md5($path));
             }
             catch (\Aws\S3\Exception\S3Exception $e) {
-                $response = array('status' => 0, 'message' => 'There is an error while creating new folder, please try with a different name');
+                $response = array(
+                    'status' => 0,
+                    'message' => 'There is an error while creating new folder, please try with a different name. Error: <br>' .
+                        $e->getMessage()
+                );
             }
         }
         else {
             $response = array('status' => 0, 'message' => 'Invalid request');
         }
-        echo json_encode($response);
-        die();
+
+        return $this->renderContent($response, 'json');
     }
 
     /*
      * List available bucket folders for user can choose path
      * */
     public function listBucketFolders() {
-        $this->enableLayout = false;
-        header("Content-Type: application/html");
-
         if (!empty($_POST)) {
             $bucket = $_POST['bucket'];
             $root = $_POST['frefix'];
@@ -595,8 +592,8 @@ class Home extends Controller {
                 $root = '';
             }
 
-            $s3 = AppS3::S3();
-            $result = $s3->listObjects(array('Bucket' => $bucket,  'Prefix' => $root , 'Delimiter' => '/'));
+            $amazonS3 = AppS3::initialize();
+            $result = $amazonS3->listObjects(array('Bucket' => $bucket,  'Prefix' => $root , 'Delimiter' => '/'));
 
             if( $root == '') {
                 if (isset($result['CommonPrefixes'])) {
@@ -607,7 +604,7 @@ class Home extends Controller {
             $arrayFolder = array();
             if (!empty($result['CommonPrefixes'])){
                 foreach ($result['CommonPrefixes'] as $file){
-                    $result_sub = $s3->listObjects(array('Bucket' => $bucket ,  'Prefix' => $file['Prefix'] , 'Delimiter' => '/'));
+                    $result_sub = $amazonS3->listObjects(array('Bucket' => $bucket ,  'Prefix' => $file['Prefix'] , 'Delimiter' => '/'));
                     if (!empty($result_sub['CommonPrefixes'])){
                         $sub = 1;
                     } else $sub = 0;
@@ -640,8 +637,7 @@ class Home extends Controller {
    * S3 signature and policy
    * */
     public function generateS3Signature(){
-        header("Content-Type: application/json");
-        if ($_POST) {
+        if (!empty($_POST)) {
             $app = new AppConfig();
             $bucket = $_POST['bucket'];
             $s3_app_id = $app->params('s3AppKey');
@@ -660,8 +656,7 @@ class Home extends Controller {
             $response = array('status' => 0, 'message' => 'Invalid request');
         }
 
-        echo json_encode($response);
-        die();
+        return $this->renderContent($response, 'json');
     }
 
     private function getS3Policy($bucket)
@@ -736,8 +731,8 @@ class Home extends Controller {
     public function fix() {
 
         $test = '123123';
-        $s3 = AppS3::S3();
-        $result = $s3->listObjects(array('Bucket' => $this->bucket,  'Prefix' => 'products/' , 'Delimiter' => '/'));
+        $amazonS3 = AppS3::initialize();
+        $result = $amazonS3->listObjects(array('Bucket' => $this->bucket,  'Prefix' => 'products/' , 'Delimiter' => '/'));
         $aryBucket = array();
         if (!empty($result['Contents'])) {
             foreach ($result['Contents'] as $object) {
@@ -750,7 +745,7 @@ class Home extends Controller {
                     'date' => strtotime($object['LastModified']),
                     'name' => $image_name,
                     'format' => "." . end($format_arr),
-                    'url' => $s3->getObjectUrl($this->bucket, $object['Key']),
+                    'url' => $amazonS3->getObjectUrl($this->bucket, $object['Key']),
                     'size' => AppS3::formatBytes($object['Size'], 0)
                 );
             }
@@ -761,41 +756,42 @@ class Home extends Controller {
         ));
     }
 
-
     public function deleteFile(){
         if (!empty($_POST)) {
             $key = base64_decode($_POST['key']);
+            $return = json_encode(array('status' => 1));
             try {
-                $s3 = AppS3::S3();
-                $s3->deleteObject(array(
+                $amazonS3 = AppS3::initialize();
+                $amazonS3->deleteObject(array(
                     'Bucket' => $this->bucket,
                     'Key'    => $key
                 ));
             } catch(Aws\S3\Exception\S3Exception $e){
-                echo $e->getAwsErrorCode();
-                die();
+                $message = $e->message();
+                $return = json_encode(array('status' => 0, 'message' => $message));
             }
-            echo "0";
-            die();
         }
+        else {
+            $return = json_encode(array('status' => 0, 'message' => 'Invalid request'));
+        }
+
+        return $this->renderContent($return, 'json');
     }
 
     public function ajaxDetailFile(){
-        $this->enableLayout = false;
-        header("Content-Type: application/html");
         if ($_POST) {
             $key = base64_decode($_POST['key']);
             $url = $_POST['url'];
-            $s3 = AppS3::S3();
+            $amazonS3 = AppS3::initialize();
 
-            $result = $s3->getObjectAcl(array(
+            $result = $amazonS3->getObjectAcl(array(
                 'Bucket' => $this->bucket,
                 'Key' => $key
             ));
 
             $permission = AppS3::parsePermissions($result);
 
-            $property = $s3->getObject(array(
+            $property = $amazonS3->getObject(array(
                 'Bucket' => $this->bucket,
                 'Key' => $key
             ));
@@ -811,12 +807,12 @@ class Home extends Controller {
         }
     }
 
-    function recursiveObject($array, $s3, $Prefix){
-        $object = $s3->getObject(array(
+    function recursiveObject($array, $amazonS3, $Prefix){
+        $object = $amazonS3->getObject(array(
             'Bucket' => $this->bucket,
             'Key'    => $Prefix
         ));
-        $owner = $s3->getObjectAcl(array(
+        $owner = $amazonS3->getObjectAcl(array(
             'Bucket' => $this->bucket,
             'Key' => $Prefix
         ));
@@ -831,7 +827,7 @@ class Home extends Controller {
             'Owner' => $owner['Owner']
         );
 
-        $result_verssion = $s3->listObjectVersions(array(
+        $result_verssion = $amazonS3->listObjectVersions(array(
             // Bucket is required
             'Bucket' => $this->bucket,
             'Delimiter' => '/',
@@ -856,7 +852,7 @@ class Home extends Controller {
 
         if (!empty($result_verssion['CommonPrefixes'])) {
             foreach ($result_verssion['CommonPrefixes'] as $row) {
-                $this->recursiveObject($array, $s3, $row['Prefix']);
+                $this->recursiveObject($array, $amazonS3, $row['Prefix']);
             }
         }
 
@@ -864,11 +860,8 @@ class Home extends Controller {
     }
 
     public function updatePermissions(){
-        $this->enableLayout = false;
-        header("Content-Type: application/json");
-
         if (!empty($_POST)) {
-            $s3 = AppS3::S3();
+            $amazonS3 = AppS3::initialize();
             $data = $_POST['data'];
             if (isset($data['permission'])) {
                 $permissions = $data['permission'];
@@ -883,7 +876,7 @@ class Home extends Controller {
                     switch ($grant) {
                         case 'owner':
                             //Get server object permission
-                            $s3_permission = $s3->getObjectAcl(array(
+                            $s3_permission = $amazonS3->getObjectAcl(array(
                                 'Bucket' => $this->bucket,
                                 'Key' => base64_decode($data['key'])
                             ));
@@ -925,7 +918,7 @@ class Home extends Controller {
                 //Update object ACL
                 $return = array('status' => 1);
                 try {
-                    $s3->putObjectAcl(array(
+                    $amazonS3->putObjectAcl(array(
                         'Bucket' => $data['bucket'],
                         'Key' => base64_decode($data['key']),
                         'GrantFullControl' => $permission_update['full'],
@@ -943,25 +936,24 @@ class Home extends Controller {
             }
         }
 
-        echo json_encode($return);
+        return $this->renderContent($return, 'json');
     }
 
     public function updateHeaderContentType(){
-        $this->enableLayout = false;
-        header("Content-Type: application/html");
-
         if (!empty($_POST)) {
             $key = base64_decode($_POST['key']);
             $contentType  = $_POST['contentType'];
-            $s3 = AppS3::S3();
-            $s3->putObject(array(
+            $amazonS3 = AppS3::initialize();
+            $amazonS3->putObject(array(
                 'Bucket' => $this->bucket,
                 'Key'    => $key,
                 'ContentType' => $contentType
             ));
-            echo $contentType;
+            return $this->renderContent($contentType, 'html');
         }
-        die();
+        else {
+            return $this->renderContent('Invalid request', 'html');
+        }
     }
 
     /*
@@ -969,7 +961,7 @@ class Home extends Controller {
      * */
     public function getBucketInformation() {
         $bucket = 'crgtesting';
-        $client = AppS3::S3();
+        $client = AppS3::initialize();
         /*
         $result = $s3->getBucketLogging([
             'Bucket' => $bucket, // REQUIRED
@@ -988,15 +980,17 @@ class Home extends Controller {
 
     public function basecode(){
         if ($_POST) {
-            echo json_encode(array("key" => base64_encode($_POST['key']), "id" => $_POST['id']));
-            die();
+            return $this->renderContent(array("key" => base64_encode($_POST['key']), "id" => $_POST['id']), 'json');
+        }
+        else {
+            return $this->renderContent(array('status' => 0, 'message' => 'Invalid request'));
         }
     }
 
     public function TEST() {
 
         // (string: private | public-read | public-read-write | authenticated-read | bucket-owner-read | bucket-owner-full-control )
-        $s3 = AppS3::S3();
+        $s3 = AppS3::initialize();
 
         echo '<pre>';
         $result = $s3->getBucketCors(array('Bucket' => $this->bucket));

@@ -42,7 +42,7 @@ if ($listObjects):
     <?php if ($load_more != 0):  ?>
         <tr><td colspan="8"><a class="load-more"
                                 <?php if ($search ==0): ?>
-                                    onclick="loadFrefix('<?php echo $frefix;  ?>', <?php echo $load_more; ?>);"
+                                    onclick="PrettyS3FilesManager.Bucket.loadObjects('<?php echo $frefix;  ?>', <?php echo $load_more; ?>);"
                                 <?php else:   ?>
                                     onclick="loadSearchFrefix( <?php echo $load_more; ?>);"
                                 <?php endif;  ?>
