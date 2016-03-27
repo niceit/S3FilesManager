@@ -272,15 +272,6 @@ function countChecked() {
         if (check_state == 'uncheck_all') {
             $(".bulk_action input[name='table_records']").iCheck('uncheck');
         }
-        var n = $(".bulk_action input[name='table_records']:checked").length;
-        if (n > 0) {
-            $('.column-title').hide();
-            $('.bulk-actions').show();
-            $('.action-cnt').html(n + ' Records Selected');
-        } else {
-            $('.column-title').show();
-            $('.bulk-actions').hide();
-        }
     }
     /** ******  /table  *********************** **/
     /** ******    *********************** **/

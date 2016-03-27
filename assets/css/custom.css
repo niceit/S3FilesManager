@@ -6496,11 +6496,23 @@ span.act {
 .breadcrumbs ul {
     margin: 0;
     padding: 0;
-    padding-bottom: 10px;
+    padding-bottom: 25px;
 }
 .breadcrumbs li {
     float: left;
     margin: 0px;
     margin-right: 9px;
     list-style: none;
+}
+.folder-breadcrumb li {
+    margin-right: 5px;
+}
+.folder-breadcrumb li a {
+    border: 1px solid #1A82C3;
+    background: #347BA7;
+    color: #FFF;
+    padding: 2px 6px;
+}
+.folder-breadcrumb li.active a {
+
 }

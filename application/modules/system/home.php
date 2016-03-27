@@ -365,6 +365,13 @@ class Home extends Controller {
                 'prefix' => $_POST['frefix']
             ));
 
+            $arrFolder = explode("/", $_POST['frefix']);
+            unset($arrFolder[count($arrFolder) - 1 ]);
+            $arr['folder_breadcrumb'] = $this->render("ajax/load_breadcrumb" , array(
+                'folder' => $arrFolder,
+                'name' => '',
+            ));
+
             return $this->renderContent($arr, 'json');
         }
     }
@@ -460,7 +467,6 @@ class Home extends Controller {
             ));
 
             return json_encode($data);
-
         }
     }
 
@@ -581,6 +587,7 @@ class Home extends Controller {
      * */
     public function listBucketFolders() {
         if (!empty($_POST)) {
+            $popup_type = $_POST['popup_type'];
             $bucket = $_POST['bucket'];
             $root = $_POST['frefix'];
             $add_folder_option = isset($_POST['add-folder']) ? $_POST['add-folder'] : '';
@@ -625,7 +632,8 @@ class Home extends Controller {
             return $this->render('load-bucket-folders', array(
                 'files' => $arrayFolder,
                 'add_folder_option' => $add_folder_option,
-                'path'=> $root
+                'path'=> $root,
+                'popup_type' => $popup_type,
             ));
         }
         else {

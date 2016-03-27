@@ -72,7 +72,7 @@ jQuery(function(){
         var bucket = $("select[name=bucket]").val();
         var  bucket_old = $('#old_bucket').val();
         if (bucket_old == '' || bucket != bucket_old ){
-            PrettyS3FilesManager.S3Upload.loadAvailableFolderForUploads('/');
+            PrettyS3FilesManager.Bucket.loadAvailableFolderForCreatingFolder('/');
             $('#old_bucket').val(bucket);
         } else {
             $('#create-folder').modal('show');
@@ -131,11 +131,6 @@ jQuery(function(){
     });
 
 });
-
-function refresh_butket(){
-    $('#txt-name').val('');
-    PrettyS3FilesManager.Bucket.loadBucketObjects('/');
-}
 
 function loadFolderNewLeft(frefix){
     setFolderSelectedPath(frefix);

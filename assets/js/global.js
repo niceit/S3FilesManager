@@ -105,12 +105,42 @@ PrettyS3FilesManager = {
             $.ajax({
                 type: "post",
                 url: URL,
-                data: {'frefix': prefix , 'bucket' : bucket},
+                data: {'frefix': prefix , 'bucket' : bucket, 'popup_type': 'upload_file', 'add_folder': 0},
                 dataType: "html",
                 success: function (data) {
                     $('.list-folder-upload-file .loading').remove();
                     $('.list-folder-upload-file').html(data);
                     PrettyS3FilesManager.S3Upload.doomFolderClickHandleForUploads();
+                }
+            });
+        },
+        setPopupUploadFileSelectPath: function (path) {
+            var key = path  + '${filename}';
+            $('#fileupload').find('input[name=key]').val(key);
+
+            if (path != "/")
+                $("span.file-upload-selected-folder").html('<b>/'+ path + '</b>');
+            else
+                $("span.file-upload-selected-folder").html('<b>/</b>');
+        },
+        loadPopupUploadFileSubFolder: function (element) {
+            var id = $(element).attr('data-id');
+            var sub = $('.sub-' + id + ' .sub');
+            var item = $('.sub-' + id + ' .item');
+            var frefix = $(element).attr('data-prefix');
+            item.find('.fa-caret-right')
+                .removeClass('fa-caret-right')
+                .addClass('fa-caret-down');
+
+            var URL = $('base').attr('href') + '/index.php?route=home/list-bucket-folders';
+            var bucket = $("select[name=bucket]").val();
+            $.ajax({
+                type: "post",
+                url: URL,
+                data: {'frefix': frefix , 'bucket' : bucket, 'popup_type': 'upload_file', 'add_folder': 0},
+                dataType: "html",
+                success: function (data) {
+                    $(sub).html(data);
                 }
             });
         },
@@ -121,7 +151,6 @@ PrettyS3FilesManager = {
 
                 var key = prefix  + '${filename}';
                 $('#fileupload').find('input[name=key]').val(key);
-                loadSubFolderNew(prefix, id);
             });
 
             $(".tree-file-row").click(function(){
@@ -138,6 +167,7 @@ PrettyS3FilesManager = {
     * @function createFolder create new folder/sub-folder under bucket
     * */
     Bucket: {
+        currentDirectory: '/',
         loadBucketObjects: function(prefix) {
             $('#contentFolder').prepend('<span class="loading"></span>');
             $('#contentfrefix').prepend('<span class="loading"></span>');
@@ -152,6 +182,7 @@ PrettyS3FilesManager = {
                     $('.contentFolder .loading').remove();
                     $('#contentfrefix .loading').remove();
                     $('#contentFolder').html(data['folder']);
+                    $('.breadcrumbs').html(data['folder_breadcrumb']);
                     $('#contentfrefix').html(data['frefix']);
                     clickFonder();
                     $(".tree-file-content li .li-custom").hover(function(){
@@ -182,6 +213,8 @@ PrettyS3FilesManager = {
             load.html('Loading...');
             var URL = $('base').attr('href') + '/index.php?route=home/ajax-load-prefix';
             var bucket = $("select[name=bucket]").val();
+            PrettyS3FilesManager.Bucket.currentDirectory = prefix;
+            PrettyS3FilesManager.Application.putLoadingState("#contentfrefix");
             $.ajax({
                 type: "post",
                 url: URL,
@@ -207,6 +240,75 @@ PrettyS3FilesManager = {
                         checkboxClass: 'icheckbox_flat-green',
                         radioClass: 'iradio_flat-green'
                     });
+
+                    PrettyS3FilesManager.Application.removeLoadingState("#contentfrefix");
+                }
+            });
+        },
+        reloadObjects: function(){
+            PrettyS3FilesManager.Bucket.loadObjects(PrettyS3FilesManager.Bucket.currentDirectory, 0);
+        },
+        reloadFolders: function(){
+            var prefix = "/";
+            PrettyS3FilesManager.Application.putLoadingState('#contentFolder');
+            var URL = $('base').attr('href') + '/index.php?route=home/ajax-load-folder';
+            var bucket = $("select[name=bucket]").val();
+            $.ajax({
+                type: "post",
+                url: URL,
+                data: {'frefix': prefix , 'bucket' : bucket},
+                dataType: "json",
+                success: function (data) {
+                    $('#contentFolder').html(data['folder']);
+                    PrettyS3FilesManager.Application.removeLoadingState('#contentFolder');
+                    clickFonder();
+                }
+
+            });
+        },
+        loadAvailableFolderForCreatingFolder: function(prefix) {
+            $('#create-folder').modal('show');
+            $("input[name=folder_name]").val('');
+            $('.list-folder').prepend('<span class="loading"></span>');
+            var bucket = $("select[name=bucket]").val();
+            var URL = $('base').attr('href') + '/index.php?route=home/list-bucket-folders';
+            $.ajax({
+                type: "post",
+                url: URL,
+                data: {'frefix': prefix , 'bucket' : bucket, 'popup_type': 'create_folder'},
+                dataType: "html",
+                success: function (data) {
+                    $('.list-folder .loading').remove();
+                    $('.list-folder').html(data);
+                }
+            });
+        },
+        setPopupCreateFolderSelectPath: function (path) {
+
+            $('input[name=select_folder_path]').val(path);
+            if (path != "/")
+                $("span.create-folder-selected-folder").html('<b>/'+ path + '</b>');
+            else
+                $("span.create-folder-selected-folder").html('<b>/</b>');
+        },
+        loadPopupCreateFolderSubFolder: function(element) {
+            var id = $(element).attr('data-id');
+            var sub = $('.sub-' + id + ' .sub');
+            var item = $('.sub-' + id + ' .item');
+            var frefix = $(element).attr('data-prefix');
+            item.find('.fa-caret-right')
+                .removeClass('fa-caret-right')
+                .addClass('fa-caret-down');
+
+            var URL = $('base').attr('href') + '/index.php?route=home/list-bucket-folders';
+            var bucket = $("select[name=bucket]").val();
+            $.ajax({
+                type: "post",
+                url: URL,
+                data: {'frefix': frefix , 'bucket' : bucket, 'popup_type': 'create_folder'},
+                dataType: "html",
+                success: function (data) {
+                    $(sub).html(data);
                 }
             });
         },
@@ -308,6 +410,6 @@ PrettyS3FilesManager = {
                     });
                 }
             });
-        }
-    }   
+        },
+    } ,
 };

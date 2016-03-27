@@ -1,16 +1,9 @@
-<?php /* if ($search == 0): ?>
-    <ul class="tree-file-content">
-        <?php  if($old_fix != ''): ?>
-            <li onclick="loadFrefix('<?php echo $old_fix; ?>', 0);"><i class="fa fa-folder-open-o"></i> ...</li>
-        <?php endif;  ?>
-    </ul>
-<?php  endif; */ ?>
 <table class="table table-striped responsive-utilities jambo_table bulk_action">
     <thead>
         <tr class="headings">
             <th>#</th>
             <th>
-                <input value="" type="checkbox" class="flat" name="multiple_checkbox">
+                <input id="check-all" value="" type="checkbox" class="flat" name="multiple_checkbox">
             </th>
             <th class="column-title"> </th>
             <th class="column-title">Name</th>
@@ -24,12 +17,13 @@
         <tbody class="content-file" >
             <?php
                 $i = 1;
+                $row_even = 'even';
                 foreach ($listObjects as $object):
                     ?>
-                     <tr class="row-<?php echo $i; ?>">
+                     <tr class="row-<?php echo $i; ?> <?php echo $row_even; if ($row_even == 'even') { $row_even = 'odd'; } else { $row_even = 'even'; }  ?> pointer">
                          <td><?php echo $i; ?></td>
                          <td class="a-center ">
-                             <input data-id="<?php echo $i; ?>" value="<?php echo base64_encode($object['key']); ?>" type="checkbox" class="flat" name="table_records">
+                             <input data-id="<?php echo $i; ?>" value="<?php echo base64_encode($object['key']); ?>" type="checkbox" class="flat file-checkbox" name="table_records">
                          </td>
                          <td>
                              <?php if ($object['is_file']): ?>
@@ -83,7 +77,7 @@
                     <i class="fa fa-trash"> </i>
                     Delete
                 </a>
-                <a onclick="refresh_butket();"  href="javascript:;" class="btn btn-info">
+                <a onclick="PrettyS3FilesManager.Bucket.reloadObjects();"  href="javascript:;" class="btn btn-info">
                     <i class="fa fa-refresh"> </i>
                     Refresh
                 </a>
@@ -94,4 +88,15 @@
         <tr><td colspan="7">There is no file in this folder</td></tr>
     <?php endif ?>
 </table>
-
+<script type="text/javascript">
+    $(function () {
+        $('.bulk_action input#check-all').on('ifChecked', function () {
+            check_state = 'check_all';
+            countChecked();
+        });
+        $('.bulk_action input#check-all').on('ifUnchecked', function () {
+            check_state = 'uncheck_all';
+            countChecked();
+        });
+    })
+</script>

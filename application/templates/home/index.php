@@ -55,7 +55,7 @@
                 </div>
             </div>
         </div>
-        <button id="" type="button" class="btn btn-info"><i class="fa fa-refresh"></i> Reload</button>
+        <button onclick="PrettyS3FilesManager.Bucket.reloadFolders();" type="button" class="btn btn-info"><i class="fa fa-refresh"></i> Reload</button>
         <button id="btn-create-new-folder" type="button" class="btn btn-info">
             <i class="fa fa-folder-open-o"></i>
             Create folder
@@ -227,11 +227,11 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <div class="col-md-4" id="list-folder"></div>
+                <div class="col-md-4 list-folder" id="list-folder"></div>
                 <div class="content-create-folder col-md-8" >
                     <div class="form-group">
                         <div  class="input-group">
-                            <span>Will create folder under: </span><span class="selected-folder">/</span>
+                            <span>Will create folder under: </span><span class="create-folder-selected-folder">/</span>
                         </div>
                         <div class="bucket-select-path col-md-6">
                             <input type="hidden" name="select_folder_path" value="/">
@@ -278,7 +278,7 @@
                 <div class="col-md-4 list-folder-upload-file" ></div>
                 <div class="content-upload-file col-md-8" >
                     <div class="input-group">
-                        <span>Upload directory: </span><span class="selected-folder">/</span>
+                        <span>Upload directory: </span><span class="file-upload-selected-folder">/</span>
                     </div>
                     <!-- The file upload form used as target for the file upload widget -->
                     <form id="fileupload" class="cloud-upload-form"  method="POST" data-id="1" enctype="multipart/form-data">
