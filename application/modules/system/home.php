@@ -14,6 +14,10 @@ class Home extends Controller {
         );
     }
 
+    public function installation() {
+        return $this->renderInstallation();
+    }
+
     public function login(){
         $mgs = array();
         if (!empty($_POST)) {

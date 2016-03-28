@@ -21,4 +21,11 @@ class Data {
         fwrite($config_file, $args, strlen($args));
         fclose($config_file);
     }
+
+    public static function checkInstallationStatus() {
+        if (!file_exists(dirname(__FILE__) . '/../data/configuration.inc') || !file_exists(dirname(__FILE__) . '/../data/database.inc')) {
+            return false;
+        }
+        else return true;
+    }
 }

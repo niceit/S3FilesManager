@@ -22,18 +22,25 @@ class Controller {
         session_start();
         global $AppConfig;
 
-        $config = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../data/configuration.inc')), true);
-        $this->bucket = $config['s3']['bucket'];
+        if (!Data::checkInstallationStatus() && $AppConfig->params('action') != 'installation') {
+            return header("Location: index.php?route=home/installation");
+        }
+        else {
+            if ($AppConfig->params('action') != 'installation') {
+                $config = Data::getConfiguration();
+                $this->bucket = $config['s3']['bucket'];
 
-        $member = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../data/database.inc')), true);
-        $this->username = $member['username'];
-        $this->siteConfig = $AppConfig;
+                $member = Data::getUserData();
+                $this->username = $member['username'];
+                $this->siteConfig = $AppConfig;
 
-        if (!isset($_SESSION) || !isset($_SESSION['member']) || $_SESSION['member'] == ''){
-            if ($_GET['route'] != "home/login")
-            header("location: index.php?route=home/login");
-        } else {
-           // header("location: index.php");
+                if (!isset($_SESSION) || !isset($_SESSION['member']) || $_SESSION['member'] == ''){
+                    if ($_GET['route'] != "home/login")
+                    header("Location: index.php?route=home/login");
+                } else {
+                   // header("location: index.php");
+                }
+            }
         }
     }
 
@@ -87,5 +94,15 @@ class Controller {
                 print json_encode($content);
                 break;
         }
+    }
+    
+    public function renderInstallation() {
+        $this->assetsUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . str_replace('index.php?route=home/installation', '', $_SERVER['REQUEST_URI']) . 'assets/';
+        ob_start();
+        include dirname(dirname(__FILE__)) .  '/templates/home/installation.php';
+        $content = ob_get_contents();
+        ob_end_clean();
+
+        return $content;
     }
 }

@@ -21,17 +21,17 @@ class AppConfig {
     private $action;
 
     public function __construct() {
-        if (!file_exists(dirname(__FILE__) . '/data/configuration.inc')) {
-            AppException::throwExceptionMessage(Languages::Text('INVALID_CONFIGURATION'));
+
+        if (Data::checkInstallationStatus()) {
+            $config = Data::getConfiguration();
+            $this->s3AppKey = $config['s3']['appId'];
+            $this->s3AppScr = $config['s3']['appSecret'];
+            $this->s3DefaultBucket = $config['s3']['bucket'];
+            $this->s3Region = $config['s3']['region'];
+            $this->s3Scheme = $config['s3']['scheme'];
+            $this->s3Version = $config['s3']['version'];
         }
 
-        $config = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/data/configuration.inc')), true);
-        $this->s3AppKey = $config['s3']['appId'];
-        $this->s3AppScr = $config['s3']['appSecret'];
-        $this->s3DefaultBucket = $config['s3']['bucket'];
-        $this->s3Region = $config['s3']['region'];
-        $this->s3Scheme = $config['s3']['scheme'];
-        $this->s3Version = $config['s3']['version'];
         $this->AppRootDir = dirname(__FILE__) . '/';
 
         if (isset($_GET['route'])) {
