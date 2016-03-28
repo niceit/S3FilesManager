@@ -61,14 +61,14 @@
                 <div class="left_col scroll-view">
 
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="<?php echo $this->baseUrl;  ?>" class="site_title"><i class="fa fa-paw"></i> <span>Dashboard</span></a>
+                        <a href="<?php echo $this->baseUrl;  ?>" class="site_title"><i class="fa fa-home"></i> <span>Dashboard</span></a>
                     </div>
                     <div class="clearfix"></div>
 
                     <!-- menu prile quick info -->
                     <div class="profile">
                         <div class="profile_pic">
-                            <img src="<?php echo $this->assetsUrl ?>/images/user.png" alt="..." class="img-circle profile_img">
+                            <img src="<?php echo $this->assetsUrl ?>/images/1459167985_users-13.png" alt="..." class="img-circle profile_img">
                         </div>
                         <div class="profile_info">
                             <span>Welcome, <?php echo $this->username ; ?></span>
@@ -103,16 +103,16 @@
 
                     <!-- /menu footer buttons -->
                     <div class="sidebar-footer hidden-small">
-                        <a data-toggle="tooltip" data-placement="top" title="Settings">
+                        <a href="<?php echo $this->baseUrl ?>" data-toggle="tooltip" data-placement="top" title="Dashboard">
+                            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+                        </a>
+                        <a href="<?php echo $this->baseUrl ?>/index.php?route=home/setting" data-toggle="tooltip" data-placement="top" title="Settings">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                         </a>
-                        <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+                        <a href="<?php echo $this->baseUrl ?>/index.php?route=home/change-password" data-toggle="tooltip" data-placement="top" title="Update Password">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                         </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Lock">
-                            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-                        </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Logout">
+                        <a href="<?php echo $this->baseUrl ?>/index.php?route=home/logout" data-toggle="tooltip" data-placement="top" title="Logout">
                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                         </a>
                     </div>
@@ -132,7 +132,7 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="<?php echo $this->assetsUrl ?>/images/user.png" alt="">
+                                    <img src="<?php echo $this->assetsUrl ?>/images/1459167985_users-13.png" alt="">
                                     Menu
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
@@ -236,11 +236,9 @@
                 <!-- footer content -->
 
                 <footer>
-                    <div class="">
-                        <p class="pull-right">Gentelella Alela! a Bootstrap 3 template by <a>Kimlabs</a>. |
-                            <span class="lead"> <i class="fa fa-paw"></i> Gentelella Alela!</span>
-                        </p>
-                    </div>
+                    <p align="center">
+                        Copyright &copy; 2106 | <b>Pretty S3 Files Manager</b> script.
+                    </p>
                     <div class="clearfix"></div>
                 </footer>
                 <!-- /footer content -->

@@ -20,27 +20,10 @@ class Home extends Controller {
             $user_name = $_POST['username'];
             $password = $_POST['password'];
             if (trim($user_name) != '' && trim($password) != "") {
-                $member = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/database.inc')), true);
+                $member = Data::getUserData();
                 if (trim(strtolower($member['username'])) == trim(strtolower($user_name))
                     && md5(trim($password)) == ($member['password'])) {
                     $_SESSION['member'] = $member['username'];
-
-                    $results = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/last_login.inc')), true);
-                    if (empty($results)){
-                        $total_login = 1;
-                    } else {
-                        $total_login = $results['total_login'] + 1;
-                    }
-                    $_SESSION['last_login'] = $results;
-                    $time = time();
-                    $last_login = array(
-                        'total_login' => $total_login,
-                        'date_last_login' => $time
-                    );
-                    $last_login = base64_encode(json_encode($last_login));
-                    $config_file = fopen(dirname(__FILE__) . '/../../data/last_login.inc', 'w');
-                    fwrite($config_file, $last_login, strlen($last_login));
-                    fclose($config_file);
                     header("location: index.php");
                 } else {
                     $mgs = array(
@@ -63,7 +46,7 @@ class Home extends Controller {
 
     public function changePassword() {
         $mgs = array();
-        $members = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/database.inc')), true);
+        $members = Data::getUserData();
 
         if (!empty($_POST)) {
             $username = $_POST['username'];
@@ -76,11 +59,7 @@ class Home extends Controller {
                     'password' => md5(trim(($password_new)))
                 );
                 $member = base64_encode(json_encode($member));
-
-                $config_file = fopen(dirname(__FILE__) . '/../../data/database.inc', 'w');
-
-                fwrite($config_file, $member, strlen($member));
-                fclose($config_file);
+                Data::saveUserData($member);
                 $mgs = array(
                     'status' => 'Success',
                     'mgs' => 'Information updated'
@@ -94,20 +73,18 @@ class Home extends Controller {
             }
         }
 
-        $member = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/database.inc')), true);
+        $member = Data::getUserData();
         return $this->render('change_password', array('message' => $mgs , 'member' => $member));
     }
 
     public function setting(){
         $mgs = array();
-        $config_file = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/configuration.inc')), true);
+        $config_file = Data::getConfiguration();
 
         if (!empty($_POST) && isset($_POST['bucket'])) {
             $config_file['s3']['bucket'] = $_POST['bucket'];
             $config = base64_encode(json_encode($config_file));
-            $config_file = fopen(dirname(__FILE__) . '/../../data/configuration.inc', 'w');
-            fwrite($config_file, $config, strlen($config));
-            fclose($config_file);
+            Data::saveConfiguration($config);
 
             $mgs = array(
                 'status' => 'Success',
@@ -133,9 +110,7 @@ class Home extends Controller {
                 );
 
                 $config = base64_encode(json_encode($config));
-                $config_file = fopen(dirname(__FILE__) . '/../../data/configuration.inc', 'w');
-                fwrite($config_file, $config, strlen($config));
-                fclose($config_file);
+                Data::saveConfiguration($config);
 
                 $mgs = array(
                     'status' => 'Success',
@@ -149,11 +124,11 @@ class Home extends Controller {
             }
         }
 
-        $config_file = json_decode(base64_decode(file_get_contents(dirname(__FILE__) . '/../../data/configuration.inc')), true);
+        $config_file = Data::getConfiguration();
         try {
             $amazonS3 = AppS3::initialize();
             $buckets = $amazonS3->listBuckets();
-        } catch (Exception $e){
+        } catch (Exception $e) {
             $buckets = null;
         }
 
@@ -454,7 +429,7 @@ class Home extends Controller {
                     'files' => $result['CommonPrefixes'] ,
                     'old_fix' => $old_fix,
                     'frefix' => $prefix,
-                    'sst' => $page*$limit + 1,
+                    'sst' => $page * $limit + 1,
                      'load_more' => $load_more,
                     'search' => 0
             ));

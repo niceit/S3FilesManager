@@ -885,9 +885,8 @@ li.current-page a {
 
 footer {
     background: #fff;
-    padding: 5px 20px 0;
-    height: 45px;
-    margin: 0 -17px;
+    padding: 15px 20px 0;
+    margin: 10px 0;
 }
 
 .tile-stats.sparkline {

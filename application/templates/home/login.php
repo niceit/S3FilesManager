@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Login </title>
+    <title>Login | Pretty S3 Files Manager</title>
 
     <!-- Bootstrap core CSS -->
 
@@ -43,16 +43,20 @@
 
         <div id="wrapper">
             <div id="login" class="animate form">
-                <?php if (!empty($message)): ?>
-                    <div class="alert alert-danger alert-dismissible fade in" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span>
-                        </button>
-                        <strong><?php echo $message['status'] ?>!</strong> <?php echo $message['mgs'] ?>
-                    </div>
-                <?php endif; ?>
                 <section class="login_content">
                     <form method="post"  id="login" data-parsley-validate class="form-horizontal form-label-left">
-                        <h1>Login Form</h1>
+                        <h1>Welcome You Back</h1>
+                        <p class="small">
+                            <i class="fa fa-lock"> </i>
+                            Please login to continue
+                        </p>
+                        <?php if (!empty($message)): ?>
+                            <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span>
+                                </button>
+                                <strong><?php echo $message['status'] ?>!</strong> <?php echo $message['mgs'] ?>
+                            </div>
+                        <?php endif; ?>
                         <div>
                             <input required="required" type="text" name="username" class="form-control" placeholder="Username" required="" />
                         </div>
@@ -60,15 +64,17 @@
                             <input required="required" name="password" type="password" class="form-control" placeholder="Password" required="" />
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-success">Submit</button>
-                            <a class="reset_pass" href="#">Lost your password?</a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa fa-forward"> </i>
+                                Login me in
+                            </button>
                         </div>
                         <div class="clearfix"></div>
                         <div class="separator">
                             <div class="clearfix"></div>
                             <br />
                             <div>
-                                <p>©2015 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                                <p>2016 All Rights Reserved. <b>Pretty S3 Files Manager</b> script.</p>
                             </div>
                         </div>
                     </form>
