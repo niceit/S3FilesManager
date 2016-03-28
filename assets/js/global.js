@@ -470,6 +470,46 @@ PrettyS3FilesManager = {
                 }
             }
         },
+        deleteFolder: function(key, object_sub, id) {
+            $(".sub-" + id).append('<span class="loading subloading"></span>');
+            var URL = $('base').attr('href') + '/index.php?route=home/delete-folder';
+            var bucket = $("select[name=bucket]").val();
+            $.ajax({
+                type: "post",
+                url: URL,
+                data: {'key': key , 'bucket' : bucket , 'object_sub' : object_sub},
+                dataType: "json",
+                success: function (data) {
+                    $(".sub-" + id).find(".loading").remove();
+                    data = JSON.parse(data);
+                    if (data.status == 2){
+                        $(".content-confirm").html("Are you sure you want to delete this folder? <br/> ");
+                        $("#confirm-delete").modal('show');
+                        $(".btn-delete-all").attr("onclick", "PrettyS3FilesManager.Bucket.deleteFolder('" + key + "', '1' , '" + id + "');");
+                        return false;
+                    }
+
+                    if (data.status){
+                        $(".sub-" + data.curent_id).remove();
+                        PrettyS3FilesManager.Bucket.handleBrowseSubFolder(data.parent_key, data.id);
+                        var prefix_curent = $("#prefix_curent").val();
+                        if (data.curent_id == prefix_curent){
+                            PrettyS3FilesManager.Bucket.loadObjects(data.parent_key, 0);
+                            $(".name-" +  data.id).addClass("active");
+                        }
+                        new PNotify({
+                            title: 'Success',
+                            text: 'File had been removed!',
+                            type: 'success'
+                        });
+                        $("#confirm-delete").modal('hide');
+                    } else {
+                        PrettyS3FilesManager.Application.errorPopup(data.message);
+                    }
+
+                }
+            });
+        },
     },
     /*
     * Handle for file functionally

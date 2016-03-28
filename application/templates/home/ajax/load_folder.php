@@ -19,7 +19,7 @@
                             <span class="no-sub" ></span>
                         <?php endif; ?>
                         <i class="fa fa-folder-open-o"></i>  <a href="javascript:;" onclick="PrettyS3FilesManager.Bucket.loadObjects('<?php echo $file['prefix']; ?>', 0)" ><span class="name-prefix name-<?php echo md5($file['prefix']); ?>" ><?php echo $file['name']; ?></span></a>
-                        <span class="create-sub-folder" ><a onclick="PrettyS3FilesManager.File.fileProperties('<?php echo base64_encode($file['prefix']); ?>', '<?php echo $file['prefix']; ?>')" href="#"><i class="fa fa-eye"></i>  </a></span>
+                        <span class="create-sub-folder" ><a onclick="PrettyS3FilesManager.File.fileProperties('<?php echo base64_encode($file['prefix']); ?>', '<?php echo $file['prefix']; ?>')" href="#"><i class="fa fa-eye"></i>  </a><a onclick="PrettyS3FilesManager.Bucket.deleteFolder('<?php echo base64_encode($file['prefix']); ?>', '0', '<?php echo md5($file['prefix']); ?>')" href="javascript:;"><i class="fa fa-remove"></i>  </a></span>
                     </span>
                     <span class="sub"></span>
                 </li>

@@ -2,8 +2,9 @@
     <li><i class="fa fa-folder-open-o"></i> <b>Current path :</b>  </li>
     <li><a onclick="PrettyS3FilesManager.Bucket.loadObjects('/', 0)" href="javascript:;">/</a></li>
     <?php
+    $prefix = '';
     if(!empty($folder)):
-            foreach ($folder as $row): $name .= $row . "/";  ?>
+            foreach ($folder as $row): $name .= $row . "/";  $prefix = $name; ?>
             <?php if ($row == end($folder)) : ?>
                 <li class="active"><?php echo $row; ?></li>
             <?php else: ?>
@@ -14,3 +15,4 @@
         endif;
     ?>
 </ul>
+<input type="hidden" id="prefix_curent" value="<?php echo md5($prefix); ?>" />

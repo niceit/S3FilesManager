@@ -761,6 +761,47 @@ class Home extends Controller {
         return $this->renderContent($return, 'json');
     }
 
+
+    public function deleteFolder(){
+        if (!empty($_POST)) {
+            $key = base64_decode($_POST['key']);
+            $bucket = $_POST['bucket'];
+            $parent_key = explode("/", $key);
+            unset($parent_key[count($parent_key) - 2]);
+            $parent_key = implode("/", $parent_key);
+            $amazonS3 = AppS3::initialize();
+            $is_object = true;
+            if ($_POST['object_sub'] == 0) {
+                $result = $amazonS3->listObjects(array('Bucket' => $bucket, 'Prefix' => $key, 'Delimiter' => '/'));
+                if (isset($result['Contents'][0])) {
+                    unset($result['Contents'][0]);
+                }
+                if (!empty($result['Contents']) || !empty($result['CommonPrefixes'])) {
+                    $is_object = false;
+                }
+
+            }
+
+            if ($is_object){
+                $return = json_encode(array('status' => 1, 'parent_key' => $parent_key, 'id' => md5($parent_key), 'curent_id' => md5($key)));
+                try {
+                    $amazonS3->deleteMatchingObjects($bucket,$key);
+                } catch (Aws\S3\Exception\S3Exception $e) {
+                    $message = $e->message();
+                    $return = json_encode(array('status' => 0, 'message' => $message));
+                }
+            } else {
+                $return = json_encode(array('status' => 2));
+            }
+        }
+        else {
+            $return = json_encode(array('status' => 0, 'message' => 'Invalid request'));
+        }
+
+        return $this->renderContent($return, 'json');
+    }
+
+
     public function ajaxDetailFile(){
         if ($_POST) {
             $key = base64_decode($_POST['key']);
