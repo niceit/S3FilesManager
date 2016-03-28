@@ -11,10 +11,10 @@ if ($listObjects):
             </td>
             <td>
                 <?php if ($object['is_file']): ?>
-                    <a href="javascript:;" class="img-popup" onclick="click_popup('<?php echo $object['url'] ?>');" data-toggle="modal" data-target="#popup-image"><img class="img-file" src="<?php echo $object['url'] ?>" /></a>
+                    <a href="javascript:;" class="img-popup" onclick="PrettyS3FilesManager.File.previewImage('<?php echo $object['url'] ?>');" data-toggle="modal" data-target="#popup-image"><img class="img-file" src="<?php echo $object['url'] ?>" /></a>
                 <?php  endif; ?>
             </td>
-            <td class=" "><?php echo $object['icon'] ?> <a href="#" onclick="popup_detail('<?php echo base64_encode($object['key']); ?>', '<?php echo $object['url'] ?>')"  title=""><?php echo  $object['name'] ?></a></td>
+            <td class=" "><?php echo $object['icon'] ?> <a href="#" onclick="PrettyS3FilesManager.File.fileProperties('<?php echo base64_encode($object['key']); ?>', '<?php echo $object['url'] ?>')"  title=""><?php echo  $object['name'] ?></a></td>
             <td class=" "><?php echo date('M m,Y. H:m',$object['date']); ?></td>
             <td class=" ">
                 <span><?php echo  $object['size'] ?> Kb</span>
@@ -28,8 +28,8 @@ if ($listObjects):
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="<?php echo $object['url'];  ?>"><i class="fa fa-cloud-download"></i> Download</a></li>
-                        <li><a href="#" onclick="popup_detail('<?php echo base64_encode($object['key']); ?>', '<?php echo $object['url'] ?>')" ><i class="fa fa-eye"></i> View</a></li>
-                        <li><a onclick="delete_file('<?php echo base64_encode($object['key']); ?>', <?php echo $i; ?>);" href="javascript:;"  ><i class="fa fa-remove"></i> Delete</a></li>
+                        <li><a href="javascript:;" onclick="PrettyS3FilesManager.File.fileProperties('<?php echo base64_encode($object['key']); ?>', '<?php echo $object['url'] ?>')" ><i class="fa fa-eye"></i> View</a></li>
+                        <li><a onclick="PrettyS3FilesManager.File.delete('<?php echo base64_encode($object['key']); ?>', <?php echo $i; ?>);" href="javascript:;"  ><i class="fa fa-remove"></i> Delete</a></li>
                     </ul>
                 </div>
             </td>
@@ -51,3 +51,15 @@ if ($listObjects):
     <?php
 endif;
 ?>
+<script type="text/javascript">
+    $(function () {
+        $('.bulk_action input#check-all').on('ifChecked', function () {
+            check_state = 'check_all';
+            countChecked();
+        });
+        $('.bulk_action input#check-all').on('ifUnchecked', function () {
+            check_state = 'uncheck_all';
+            countChecked();
+        });
+    })
+</script>

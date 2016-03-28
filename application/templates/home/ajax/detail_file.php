@@ -3,8 +3,6 @@
     <li><a data-toggle="tab" href="#http-headers">Http Headers</a></li>
     <li><a data-toggle="tab" href="#properties">Properties</a></li>
     <li><a data-toggle="tab" href="#preview">Preview</a></li>
-    <!--<li><a data-toggle="tab" href="#versions">Versions</a></li>
-    <li><a data-toggle="tab" href="#eventLog">EventLog</a></li>-->
 </ul>
 
 <div style="min-height: 400px" class="tab-content">
@@ -77,21 +75,6 @@
             <div class="x_panel">
                 <div class="x_title">
                     <h2><?php echo $key; ?></h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Settings 1</a>
-                                </li>
-                                <li><a href="#">Settings 2</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a class="close-link"><i class="fa fa-close"></i></a>
-                        </li>
-                    </ul>
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
@@ -133,7 +116,7 @@
                             <tr>
                                 <td>Content-type</td>
                                 <td class="row-type"><span class="name-contenttype"><?php echo $header['content-type']; ?></span></td>
-                                <td><a class="edit-type btn btn-warning" href="javascript:;" onclick="edit_header()" ><i class="fa fa-edit"></i> Edit</a></td>
+                                <td><a class="edit-type btn btn-warning" href="javascript:;" onclick="PrettyS3FilesManager.File.editHeader()" ><i class="fa fa-edit"></i> Edit</a></td>
                             </tr>
                             <tr>
                                 <td>Date</td>
@@ -167,21 +150,6 @@
             <div class="x_panel">
                 <div class="x_title">
                     <h2><?php echo $key; ?></h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Settings 1</a>
-                                </li>
-                                <li><a href="#">Settings 2</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a class="close-link"><i class="fa fa-close"></i></a>
-                        </li>
-                    </ul>
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
@@ -219,7 +187,7 @@
                             </tr>
                             <tr>
                                 <td>Size</td>
-                                <td><?php echo $header['content-length']; ?></td>
+                                <td><?php echo AppS3::formatTotalSize($property['ContentLength']) . ' (' . $property['ContentLength'] . ' bytes)'; ?></td>
                             </tr>
                             <tr>
                                 <td>Storage class</td>
@@ -229,7 +197,6 @@
                                 <td>Server-side encrypted</td>
                                 <td><?php if ( $property['ServerSideEncryption'] != '') echo $property['StorageClass'];?></td>
                             </tr>
-
                         </tbody>
                      </table>
                 </div>
@@ -242,21 +209,6 @@
             <div class="x_panel">
                 <div class="x_title">
                     <h2><?php echo $key; ?></h2>
-                    <ul class="nav navbar-right panel_toolbox">
-                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Settings 1</a>
-                                </li>
-                                <li><a href="#">Settings 2</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a class="close-link"><i class="fa fa-close"></i></a>
-                        </li>
-                    </ul>
                     <div class="clearfix"></div>
                 </div>
                 <div class="x_content">

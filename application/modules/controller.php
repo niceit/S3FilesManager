@@ -80,6 +80,7 @@ class Controller {
                 break;
             case 'html':
                 header('ContentType: text/html');
+                print $content;
                 break;
             case 'json':
                 header('Content-Type: application/json');

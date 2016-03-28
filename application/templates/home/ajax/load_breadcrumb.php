@@ -5,10 +5,10 @@
     if(!empty($folder)):
             foreach ($folder as $row): $name .= $row . "/";  ?>
             <?php if ($row == end($folder)) : ?>
-                    <li class="active"><?php echo $row; ?></li>
+                <li class="active"><?php echo $row; ?></li>
             <?php else: ?>
-                    <li><a onclick="loadFrefix_bread('<?php echo $name; ?>', 0, '<?php echo md5($name); ?>')" href="javascript:;"><?php echo $row; ?></a></li>
-                    <li>/</li>
+                <li><a onclick="PrettyS3FilesManager.File.breadCrumbNavigator('<?php echo $name; ?>', 0, '<?php echo md5($name); ?>')" href="javascript:;"><?php echo $row; ?></a></li>
+                <li>/</li>
              <?php endif; ?>
         <?php endforeach;
         endif;

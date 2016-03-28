@@ -16,7 +16,7 @@ class Languages {
     private static $HEADER_IMAGE_POPUP = 'Photo Preview';
     private static $HEADER_CREATE_BUCKET_POPUP = 'Create a new bucket';
     private static $HEADER_CREATE_FOLDER_POPUP = 'Create a new folder';
-    private static $HEADER_UPLOAD_POPUP = 'Upload file';
+    private static $HEADER_UPLOAD_POPUP = 'Upload file(s) to server';
 
     public static function Text ($ERROR_CODE) {
         return self::${$ERROR_CODE};

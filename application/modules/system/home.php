@@ -191,7 +191,7 @@ class Home extends Controller {
                     $response = array('status' => 1, 'buckets' => $buckets['Buckets'], 'message' => 'Bucket created successfully');
                 }
                 catch (\Aws\S3\Exception\S3Exception $e) {
-                    $response = array('status' => 0, 'message' => 'An error while creating new bucket. Please try with a different name!');
+                    $response = array('status' => 0, 'message' => 'An error while creating new bucket. Error : ' . $e->getMessage());
                 }
             }
         }
@@ -308,7 +308,7 @@ class Home extends Controller {
                         'name' => $image_name,
                         'format' => "." . end($format_arr),
                         'url' => $url,
-                        'size' => AppS3::formatBytes($object['Size'], 0),
+                        'size' => AppS3::formatTotalSize($object['Size']),
                         'is_file' => AppS3::isFileImage($image_name, $url),
                         'icon' => AppS3::getFileSmallIcon(end($format_arr))
                     );
@@ -331,7 +331,7 @@ class Home extends Controller {
                 'search' => 0
             ));
 
-            if ($prefix == '') {
+            if ($prefix == '' && isset($result['CommonPrefixes'][0])) {
                 unset($result['CommonPrefixes'][0]);
             }
 
@@ -429,7 +429,7 @@ class Home extends Controller {
                         'name' => $image_name,
                         'format' => "." . end($format_arr),
                         'url' => $url,
-                        'size' => AppS3::formatBytes($object['Size'], 0),
+                        'size' => AppS3::formatTotalSize($object['Size']),
                         'is_file' => AppS3::isFileImage($image_name, $url),
                         'icon' => AppS3::getFileSmallIcon(end($format_arr))
                     );
@@ -499,7 +499,7 @@ class Home extends Controller {
                         'name' => $image_name,
                         'format' => "." . end($format_arr),
                         'url' => $url,
-                        'size' => AppS3::formatBytes($object['Size'], 0),
+                        'size' => AppS3::formatTotalSize($object['Size']),
                         'is_file' => AppS3::isFileImage($image_name, $url),
                         'icon' => AppS3::getFileSmallIcon(end($format_arr))
                     );
@@ -754,7 +754,7 @@ class Home extends Controller {
                     'name' => $image_name,
                     'format' => "." . end($format_arr),
                     'url' => $amazonS3->getObjectUrl($this->bucket, $object['Key']),
-                    'size' => AppS3::formatBytes($object['Size'], 0)
+                    'size' => AppS3::formatTotalSize($object['Size'])
                 );
             }
         }

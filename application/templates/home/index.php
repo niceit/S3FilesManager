@@ -143,7 +143,7 @@
                     <?php echo Languages::Text('HEADER_CREATE_BUCKET_POPUP') ?>
                 </h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body creating-bucket-content">
                 <div class="content-create-bucket form-horizontal">
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Bucket name: </label>
@@ -240,7 +240,7 @@
                         <div class="col-md-6">
                             <button type="button" id="save-folders" class="btn btn-primary">
                                 <i class="fa fa-check"> </i>
-                                Save
+                                Create
                             </button>
                         </div>
                     </div>
@@ -329,7 +329,7 @@
 <script id="template-upload" type="text/x-tmpl">
 
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-upload fade  row-{%=htmlspecialchars(file.name)%}">
+    <tr class="template-upload fade  row-{%=PrettyS3FilesManager.Application.htmlspecialchars(file.name)%}">
         <td>
             <span class="preview"></span>
         </td>
@@ -337,11 +337,11 @@
             <p class="name">{%=file.name%}</p>
             <strong class="error text-danger"></strong>
         </td>
-        <td class="processing-{%=htmlspecialchars(file.name)%}">
+        <td class="processing-{%=PrettyS3FilesManager.Application.htmlspecialchars(file.name)%}">
             <p class="size">Processing...</p>
             <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
         </td>
-        <td  class="td-action action-{%=htmlspecialchars(file.name)%}">
+        <td  class="td-action action-{%=PrettyS3FilesManager.Application.htmlspecialchars(file.name)%}">
             {% if (!i && !o.options.autoUpload) { %}
                 <button class="btn btn-primary start" disabled>
                     <i class="glyphicon glyphicon-upload"></i>

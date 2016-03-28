@@ -21,27 +21,26 @@ $(function () {
         forceIframeTransport: true,
         url: $(this).attr('action'),
         done: function (event, data) {
-            var destination_path = $(".selected-folder").text();
+            var destination_path = $(".file-upload-selected-folder").text();
             if (destination_path == '/') {
                 destination_path = '';
             } else {
                 destination_path = destination_path.substr(1, destination_path.length);
             }
-             $('.processing-' + htmlspecialchars(data.files[0].name)).html( "<input class='form-control' type='text' readonly='' disabled='' value='" + $(this).attr('action')  + data.files[0].name + "' />");
-            var element = $('.action-' + htmlspecialchars(data.files[0].name));
+            $('.processing-' + PrettyS3FilesManager.Application.htmlspecialchars(data.files[0].name)).html( "<input class='form-control' type='text' readonly='' value='" + $(this).attr('action') + destination_path + data.files[0].name + "' />");
+            var element = $('.action-' + PrettyS3FilesManager.Application.htmlspecialchars(data.files[0].name));
             element.removeClass("td-action");
             var URL = $('base').attr('href') + '/index.php?route=home/basecode';
             $.ajax({
                 type: "post",
                 url: URL,
-                data: {'key': data.files[0].name , 'id' :  htmlspecialchars(data.files[0].name)},
+                data: {'key': data.files[0].name, 'id' : PrettyS3FilesManager.Application.htmlspecialchars(data.files[0].name)},
                 dataType: "json",
                 success: function (data) {
                     var element = $('.action-' + data['id']);
                     var link = "'"+ data['key'] + "','"+ data['id'] +"'";
-                    element.html('<button onclick="delete_file(' + link +')" class="btn btn-danger delete" ><i class="glyphicon glyphicon-trash"></i> <span>Delete</span> </button> ');
+                    element.html('<button onclick="PrettyS3FilesManager.File.delete(' + link +')" class="btn btn-danger delete" ><i class="glyphicon glyphicon-trash"></i> <span>Delete</span> </button> ');
                 }
-
             });
 
         },
@@ -92,5 +91,4 @@ $(function () {
                 .call(this, $.Event('done'), {result: result});
         });
     }
-
 });
