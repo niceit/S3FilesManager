@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -48,8 +48,8 @@
     <![endif]-->
 
 </head>
-    a
 <body class="nav-md">
+    <input type="hidden" name="site_url" value="<?php echo str_replace('/assets/', '', $this->assetsUrl) ?>">
     <div class="container body">
         <div class="main_container">
             <div class="col-md-3 left_col">
@@ -80,31 +80,31 @@
                         <div class="menu_section">
                             <ul class="nav side-menu">
                                 <li>
-                                    <a href="<?php echo $this->baseUrl ?>/index.php?route=home/setting">
+                                    <a class="left-installation-steps step1 active" href="javascript:;">
                                         <i class="fa fa-step-forward"></i>
                                         1. License agreement
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo $this->baseUrl ?>/index.php?route=home/change-password">
+                                    <a class="left-installation-steps step2" href="javascript:;">
                                         <i class="fa fa-step-forward"></i>
                                         2. Requirement checking
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo $this->baseUrl ?>/index.php?route=home/logout">
+                                    <a class="left-installation-steps step3" href="javascript:;">
                                         <i class="fa fa-step-forward"></i>
                                         3. Application settings
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo $this->baseUrl ?>/index.php?route=home/logout">
+                                    <a class="left-installation-steps step4" href="javascript:;">
                                         <i class="fa fa-step-forward"></i>
                                         4. Finish
                                     </a>
                                 </li>
                             </ul>
-                        </div>a
+                        </div>
                     </div>
                     <!-- /sidebar menu -->
                 </div>
@@ -206,35 +206,164 @@
                                                 Administrative login security
                                             </li>
                                         </ul>
-
+                                        <p>&nbsp;</p>
+                                        <h4>License agreement</h4>
+                                        <div class="license-agreement" ">
+                                            <p>
+                                                <b>Pretty S3 Files Manager</b> is developed under Amazon S3 API V3 and GNU license, by
+                                                purchasing this software you are allowed to copy and install it into your system and using it according to your purpose. You are not
+                                                allowed to re-public it under another purpose by modifying code and rename it to your own, we will remove all supporting services if system
+                                                detects that you do an unauthorized stuff.
+                                            </p>
+                                            <p>As our customers we will do the best to support you. Thanks you!</p>
+                                            <p class="form-horizontal">
+                                                <div class="form-group">
+                                                    <input class="flat" type="checkbox" name="license_checkbox" value="1">
+                                                    <label class="control-label">I have read and agree with software's license</label>
+                                                </div>
+                                            </p>
+                                        </div>
                                     </div>
                                     <div id="step-2">
-                                        <h2 class="StepTitle">Step 2 Content</h2>
-                                        <p>
-                                            do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </p>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </p>
+                                        <h3 class="StepTitle">
+                                            <i class="fa fa-question-circle"> </i>
+                                            System requirement check
+                                        </h3>
+                                        <div class="requirement-checking-content">
+                                        </div>
                                     </div>
-                                    <div id="step-3">
-                                        <h2 class="StepTitle">Step 3 Content</h2>
-                                        <p>
-                                            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </p>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </p>
+                                    <div id="step-3" style="overflow: hidden;">
+                                        <h3 class="StepTitle">
+                                            <i class="fa fa-cog"> </i>
+                                            Configuration
+                                        </h3>
+                                        <form class="form-horizontal form-label-left setting-form" name="setting_form">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Site URL</label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input class="form-control col-md-7 col-xs-12" type="text" name="setting[url]" value="<?php echo str_replace('/assets/', '', $this->assetsUrl) ?>">
+                                                    <br>
+                                                    <p class="small">
+                                                        This Site URL is automatic detected by your request URI. By changing this maybe cause problems.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <h4>Amazon S3 Settings:</h4>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">App Key</label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input class="form-control col-md-7 col-xs-12" type="text" name="setting[app_id]" value="" placeholder="Put your S3 App Key Here">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Secret Key</label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input class="form-control col-md-7 col-xs-12" type="text" name="setting[app_secret]" value="" placeholder="Put your S3 Secret Key Here">
+                                                    <br>
+                                                    <p>&nbsp;</p>
+                                                    <p class="small">
+                                                        Don't know to obtain Amazon S3 Cloud App Key and Secret?
+                                                        <a class="btn btn-info btn-sm" href="#s3-key-instruction" data-toggle="modal" data-modal="#s3-key-instruction">
+                                                            <i class="fa fa-book"> </i>
+                                                            Follow this instruction
+                                                        </a>.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Region</label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <?php $regions = AppS3::getAvailableRegions() ?>
+                                                    <select name="setting[region]" class="region form-control" tabindex="-1">
+                                                        <option value="">Choose Region</option>
+                                                        <?php foreach ($regions as $key => $region) : ?>
+                                                            <option value="<?php echo $key ?>"><?php echo '(' . $key . ') ' . $region ?></option>
+                                                        <?php endforeach ?>
+                                                    </select>
+                                                    <br>
+                                                    <p>
+                                                        <b>Important:</b> Please choose the correct region which you registered at Amazon S3 Service.
+                                                        If you use a region other than the US East (N. Virginia) endpoint to create a bucket, you must set the LocationConstraint bucket parameter to the same region.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">&nbsp;</label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <a href="javascript:;" class="btn btn-primary btn-sm" id="btn-connect-cloud">
+                                                        <i class="fa fa-plug"> </i>
+                                                        Connect to S3 Cloud
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Default Bucket</label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <select name="setting[bucket]" class="region form-control" tabindex="-1">
+                                                        <option value="">Choose Bucket</option>
+                                                    </select>
+                                                    <br>
+                                                    <p class="small">
+                                                        Click connect button above to list available bucket.
+                                                        <br>
+                                                        Choose a bucket and set it for default launching at Dashboard. You can change it later too at setting page.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <h4>Account Login Settings:</h4>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Login name</label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input class="form-control col-md-7 col-xs-12" type="text" name="setting[username]" value="" placeholder="Your login username">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Password</label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input class="form-control col-md-7 col-xs-12" type="password" name="setting[password]" value="" placeholder="******">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Re-type Password</label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input class="form-control col-md-7 col-xs-12" type="password" name="setting[re_password]" value="" placeholder="******">
+                                                    <br>
+                                                    <p class="small">
+                                                        Keep this in safe place for future login session.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                     <div id="step-4">
-                                        <h2 class="StepTitle">Step 4 Content</h2>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </p>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                        </p>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                        <h2 class="StepTitle">
+                                            <i class="fa fa-check"> </i>
+                                            Finished!
+                                        </h2>
+                                        <p>Congratulation! All configurations had been set and ready to launch the application now.</p>
+                                        <p><b>Keep in safe your login information below: </b></p>
+                                        <p>&nbsp;</p>
+                                        <ul>
+                                            <li>
+                                                Username: <b id="login-username"></b>
+                                            </li>
+                                            <li>
+                                                Password: <b id="login-password"></b>
+                                            </li>
+                                        </ul>
+                                        <p align="center">
+                                            <a href="<?php echo str_replace('/assets/', '', $this->assetsUrl) ?>/" class="btn btn-success">
+                                                <i class="fa fa-forward"> </i>
+                                                Process to Dashboard
+                                            </a>
                                         </p>
                                     </div>
                                 </div>
@@ -297,14 +426,7 @@
     <script type="text/javascript" src="<?php echo $this->assetsUrl ?>/js/flot/curvedLines.js"></script>
     <script type="text/javascript" src="<?php echo $this->assetsUrl ?>/js/flot/jquery.flot.resize.js"></script>
     <script type="text/javascript" src="<?php echo $this->assetsUrl ?>/js/wizard/jquery.smartWizard.js"></script>
-    <script type="text/javascript">
-        $('#wizard').smartWizard();
-
-        function onFinishCallback() {
-            $('#wizard').smartWizard('showMessage', 'Finish Clicked');
-            //alert('Finish Clicked');
-        }
-    </script>
+    <script type="text/javascript" src="<?php echo $this->assetsUrl ?>/js/installation.js"></script>
     <script>
         $(document).ready(function () {
             // [17, 74, 6, 39, 20, 85, 7]
@@ -564,6 +686,77 @@
                 </div>
                 <div class="modal-body" id="content-detail">
                     <div class="alert alert-error" style="word-wrap: break-word;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="s3-key-instruction" data-backdrop="static" data-keyboard="false" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+        <div style="width: 80%" class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title title-popup"  id="myModalLabel2">
+                        How to manage S3 Key and Secret?
+                    </h4>
+                </div>
+                <div class="modal-body" id="content-detail">
+                    <p class="entry-content">
+                    <h2>How to Retrieve IAM Access Keys</h2>
+                    <div>
+                        1. Go to&nbsp;<strong><a href="https://www.amazon.com/ap/signin?openid.assoc_handle=aws&amp;openid.return_to=https%3A%2F%2Fsignin.aws.amazon.com%2Foauth%3Fresponse_type%3Dcode%26client_id%3Darn%253Aaws%253Aiam%253A%253A015428540659%253Auser%252Fhomepage%26redirect_uri%3Dhttps%253A%252F%252Fconsole.aws.amazon.com%252Fconsole%252Fhome%253Fstate%253DhashArgs%252523%2526isauthcode%253Dtrue%26noAuthCookie%3Dtrue&amp;openid.mode=checkid_setup&amp;openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&amp;openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&amp;openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&amp;action=&amp;disableCorpSignUp=&amp;clientContext=&amp;marketPlaceId=&amp;poolName=&amp;authCookies=&amp;pageId=aws.ssop&amp;siteState=registered%2Cen_US&amp;accountStatusPolicy=P1&amp;sso=&amp;openid.pape.preferred_auth_policies=MultifactorPhysical&amp;openid.pape.max_auth_age=120&amp;openid.ns.pape=http%3A%2F%2Fspecs.openid.net%2Fextensions%2Fpape%2F1.0&amp;server=%2Fap%2Fsignin%3Fie%3DUTF8&amp;accountPoolAlias=&amp;forceMobileApp=0&amp;language=en_US&amp;forceMobileLayout=0" target="_blank">Amazon Web Services</a></strong>
+                        console<strong>&nbsp;</strong>
+                        and&nbsp;click on the name of your account (it is located in the top right corner of the console).
+                        In the expanded drop-down list, select <strong>Security Credentials.</strong>&nbsp;
+                        <p align="center">
+                            <img src="<?php echo $this->assetsUrl ?>/images/s3/11.png" alt="1" width="421" height="242" >
+                        </p>
+                    </div>
+                    <div>
+                        2. Click the&nbsp;<strong>Get Started with IAM Users&nbsp;</strong>button.
+                        <p align="center">
+                            <img src="<?php echo $this->assetsUrl ?>/images/s3/2015-06-01-13_55_24-IAM-Management-Console.png" alt="2015-06-01 13_55_24-IAM Management Console" width="756" height="199">
+                        </p>
+                    </div>
+                    <div>
+                        3. This will bring you&nbsp;to the<strong> IAM Dashboard</strong>&nbsp;where you can manage IAM users and their&nbsp;permissions like creating new IAM users, adding IAM users to the custom groups, granting them a certain level of permissions,&nbsp;etc.
+                        <p align="center">
+                            <img src="<?php echo $this->assetsUrl ?>/images/s3/56.png" alt="56" width="808" height="258">
+                        </p>
+                    </div>
+                    <div>
+                        4. To review the IAM access keys, select a particular IAM user and go to&nbsp;<strong>User Actions</strong> &gt; <strong>Manage Access Keys</strong>
+                        <p align="center">
+                            <img src="<?php echo $this->assetsUrl ?>/images/s3/drop_down_menu_keys.png" alt="drop_down_menu_keys" width="394" height="288">
+                        </p>
+                    </div>
+                    <div>
+                        5. You will see a&nbsp;list of Access Keys for the IAM user.
+                        <p align="center">
+                            <img src="<?php echo $this->assetsUrl ?>/images/s3/note.png" alt="note!" width="616" height="361">
+                        </p>
+                        <strong>Note:</strong>&nbsp;
+                        You cannot retrieve the existing secret keys. You can see the secret key only once immediately after creating. So, in order to get&nbsp;a&nbsp;secret key, you will need to create a new one.</p>
+                    </div>
+                    <div>
+                        6. Click <strong>Create Access Key</strong> to create a new key
+                        <p align="center">
+                            <img src="<?php echo $this->assetsUrl ?>/images/s3/note_2.png" alt="note!_2" width="622" height="364">
+                        </p>
+                    </div>
+                    <div>
+                        7.&nbsp;The new access keys will be generated and displayed on the screen.&nbsp;
+                        <p align="center">
+                            <img src="<?php echo $this->assetsUrl ?>/images/s3/123457547.png" alt="123457547" width="751" height="345">
+                        </p>
+                        <span style="color: #ff0000;"><strong>Attention!</strong></span>&nbsp;
+                        If you do not write down the key or download&nbsp;the key file to your computer before you press "Close" or "Cancel" you will not be able to retrieve the secret key in future. Then you'll have to delete the keys which you created start to create new keys.
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="modal-footer ">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

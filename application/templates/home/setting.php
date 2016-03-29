@@ -40,13 +40,6 @@
                             <input value="<?php echo $config_file['siteUrl'] ?>" name="siteUrl" type="text" id="site_url" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email<span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input value="<?php echo $config_file['email'] ?>" name="email" type="email" id="email" required="required" class="form-control col-md-7 col-xs-12">
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         <h4>Amazon S3 Settings:</h4>

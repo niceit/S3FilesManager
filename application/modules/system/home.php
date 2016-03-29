@@ -15,6 +15,101 @@ class Home extends Controller {
     }
 
     public function installation() {
+        if (!empty($_POST)) {
+            $action = $_POST['action'];
+            $response = array('status' => 1);
+            switch ($action) {
+                case 'requirements':
+                    $response['html'] = '';
+                    //Checking PHP version
+                    $text = ' PHP Version is ' . phpversion() . ' (required version >= 5.4)<br>';
+                    if (version_compare(phpversion(), '5.4')) {
+                        $response['html'] .= '<i class="fa fa-check"> </i>';
+                        $response['html'] .= $text;
+                    }
+                    else {
+                        $response['html'] .= '<i class=fa fa-remove> </i>';
+                        $response['html'] .= '<b style="color: red;">' . $text . '</b>';
+                        $response['status'] = 0;
+                    }
+
+                    //Checking for writable configuration file
+                    $configuration_directory = dirname(dirname(dirname(__FILE__))) . '/data';
+                    $text = ' Make sure <b>' . $configuration_directory . '</b> is Writable';
+                    if (is_writable($configuration_directory)) {
+                        $response['html'] .= '<i class="fa fa-check"> </i>';
+                        $response['html'] .= $text;
+                    }
+                    else {
+                        $response['html'] .= '<i class="fa fa-remove"> </i>';
+                        $response['html'] .= '<b style="color: red;">' . $text . '</b>';
+                        $response['status'] = 0;
+                    }
+
+                    if (!$response['status']) {
+                        $response['html'] .= '<p align="right"><button class="btn btn-primary btn-sm" onclick="handle_target_step(2)"><i class="fa fa-refresh"> </i> Re-check</button></p>';
+                    }
+                    break;
+                case 'connect_cloud':
+                    $key = $_POST['key'];
+                    $secret = $_POST['secret'];
+                    $region = $_POST['region'];
+                    $amazonS3 = AppS3::connect($key, $secret, $region);
+                    try {
+                        $buckets = $amazonS3->listBuckets();
+                    } catch (S3\Exception\S3Exception $e) {
+                        $response['status'] = 0;
+                        $response['message'] = $e->getMessage();
+                    }
+                    
+                    if (isset($buckets) && !empty($buckets)) {
+                        $response['html'] = '<option value="">-Choose available bucket-</option>';
+                        foreach ($buckets['Buckets'] as $bucket) {
+                            $response['html'] .= '<option value="' . $bucket['Name'] . '">' . $bucket['Name'] . '</option>';
+                        }
+                    }
+                    break;
+                case 'save_settings':
+                    $settings = $_POST['setting'];
+
+                    //Save login information
+                    $member = array(
+                        'username' => $settings['username'],
+                        'password' => md5($settings['password'])
+                    );
+                    $member = base64_encode(json_encode($member));
+                    $configuration_directory = dirname(dirname(dirname(__FILE__))) . '/data';
+                    $config_file = fopen($configuration_directory . '/database.inc', 'w');
+                    fwrite($config_file, $member, strlen($member));
+                    fclose($config_file);
+
+                    //Save site configuration
+                    $config = array(
+                        'siteUrl' => $settings['url'],
+                        'maintenance' => 0,
+                        's3' => array(
+                            'appId' => $settings['app_id'],
+                            'appSecret' => $settings['app_secret'],
+                            'bucket' => $settings['bucket'],
+                            'scheme' => 'http',
+                            'region' => $settings['region'],
+                            'version' => "latest",
+                            'limit' => 30
+                        ),
+                    );
+                    $config = base64_encode(json_encode($config));
+
+                    $config_file = fopen($configuration_directory . '/configuration.inc', 'w');
+                    fwrite($config_file, $config, strlen($config));
+                    fclose($config_file);
+
+                    break;
+            }
+
+            header("Content-Type: application/json");
+            echo json_encode($response);
+            exit();
+        }
         return $this->renderInstallation();
     }
 
@@ -100,7 +195,6 @@ class Home extends Controller {
 
                 $config = array(
                     'siteUrl' =>  $_POST['siteUrl'],
-                    'email' => $_POST['email'],
                     's3' => array(
                         'appId' =>  $_POST['appId'],
                         'appSecret' =>  $_POST['appSecret'],

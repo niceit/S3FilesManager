@@ -3,6 +3,18 @@ use Aws\S3;
 
 class AppS3{
 
+    public static function connect($key, $secret, $region) {
+        return \Aws\S3\S3Client::factory(array(
+            'version' => 'latest',
+            'region' => $region,
+            'scheme' => 'http',
+            'credentials' => array(
+                'key' => $key,
+                'secret' => $secret
+            )
+        ));
+    }
+
     public static function initialize() {
         $app = new AppConfig();
         return \Aws\S3\S3Client::factory(array(
