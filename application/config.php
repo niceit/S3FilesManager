@@ -3,7 +3,7 @@
 class AppConfig {
 
     //Site configurations
-    private $siteUrl = 'http://local.s3filemanagerv2';
+    private $siteUrl = '';
     private $URL_Root = "/assets/";
     private $maintenance = false; //Will disable site and appear UnderConstruction Mode
     private $AppRootDir = '';
@@ -24,6 +24,7 @@ class AppConfig {
 
         if (Data::checkInstallationStatus()) {
             $config = Data::getConfiguration();
+            $this->siteUrl = $config['siteUrl'];
             $this->s3AppKey = $config['s3']['appId'];
             $this->s3AppScr = $config['s3']['appSecret'];
             $this->s3DefaultBucket = $config['s3']['bucket'];

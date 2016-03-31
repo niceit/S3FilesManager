@@ -56,7 +56,7 @@
             </div>
         </div>
         <button onclick="PrettyS3FilesManager.Bucket.reloadFolders();" type="button" class="btn btn-info"><i class="fa fa-refresh"></i> Reload</button>
-        <button id="btn-create-new-folder" type="button" class="btn btn-info">
+        <button id="btn-panel-create-new-folder" type="button" class="btn btn-info">
             <i class="fa fa-folder-open-o"></i>
             Create folder
         </button>
@@ -244,7 +244,7 @@
                     <?php echo Languages::Text('HEADER_CREATE_FOLDER_POPUP') ?>
                 </h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body create-folder-content">
                 <div class="col-md-4 list-folder" id="list-folder"></div>
                 <div class="content-create-folder col-md-8" >
                     <div class="form-group">

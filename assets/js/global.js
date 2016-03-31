@@ -20,6 +20,7 @@ PrettyS3FilesManager = {
     * */
     Application: {
         webRoot: '/',
+        requestTimeout: 300000, // 5 Mints
         htmlspecialchars: function(str) {
             if (typeof(str) == "string") {
                 str = str.replace(".", "-");
@@ -100,6 +101,19 @@ PrettyS3FilesManager = {
         removeObjectItemByKey: function(array, index) {
             array.splice(index,1);
         },
+        ajaxErrorHandler: function (response, textStatus, errorThrown, loadingElement, targetContentElement) {
+            if(textStatus === 'timeout')
+            {
+                PrettyS3FilesManager.Application.errorPopup("Request timeout! Please check your network connection and try again later!");
+                if (targetContentElement != '') {
+                    $(targetContentElement).html('Connect Timeout');
+                }
+            }
+            else {
+                PrettyS3FilesManager.Application.errorPopup("An error occurred: " + textStatus);
+            }
+            PrettyS3FilesManager.Application.removeLoadingState(loadingElement);
+        },
     },
     /*
     * Perform S3 upload popup functionally
@@ -124,19 +138,30 @@ PrettyS3FilesManager = {
         loadAvailableFolderForUploads: function(prefix) {
             $('#upload-file-modal').modal('show');
             $("input[name=folder_name]").val('');
-            $('.list-folder-upload-file').prepend('<span class="loading"></span>');
+            PrettyS3FilesManager.Application.putLoadingState(".list-folder-upload-file");
             var bucket = $("select[name=bucket]").val();
             var URL = $('base').attr('href') + '/index.php?route=home/list-bucket-folders';
             $.ajax({
                 type: "post",
                 url: URL,
                 data: {'frefix': prefix , 'bucket' : bucket, 'popup_type': 'upload_file', 'add_folder': 0},
-                dataType: "html",
-                success: function (data) {
+                dataType: "json",
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
+                success: function (response) {
+                    if (response.status) {
+                        var data = response.data;
+                        $('.list-folder-upload-file').html(data);
+                        PrettyS3FilesManager.S3Upload.doomFolderClickHandleForUploads();
+                    }
+                    else {
+                        PrettyS3FilesManager.Application.errorPopup(response.message);
+                    }
                     $('.list-folder-upload-file .loading').remove();
-                    $('.list-folder-upload-file').html(data);
-                    PrettyS3FilesManager.S3Upload.doomFolderClickHandleForUploads();
-                }
+                    PrettyS3FilesManager.Application.removeLoadingState(".list-folder-upload-file");
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(response, textStatus, errorThrown, ".list-folder-upload-file", ".list-folder-upload-file");
+                },
             });
         },
         setPopupUploadFileSelectPath: function (path) {
@@ -164,11 +189,21 @@ PrettyS3FilesManager = {
                 type: "post",
                 url: URL,
                 data: {'frefix': frefix , 'bucket' : bucket, 'popup_type': 'upload_file', 'add_folder': 0},
-                dataType: "html",
-                success: function (data) {
-                    $(sub).html(data);
+                dataType: "json",
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
+                success: function (response) {
+                    if (response.status) {
+                        var data = response.data;
+                        $(sub).html(data);
+                    }
+                    else {
+                        PrettyS3FilesManager.Application.errorPopup(response.message);
+                    }
                     PrettyS3FilesManager.Application.removeLoadingState('.list-folder-upload-file');
-                }
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(response, textStatus, errorThrown, '.list-folder-upload-file', '.list-folder-upload-file');
+                },
             });
         },
         doomFolderClickHandleForUploads: function() {
@@ -196,8 +231,8 @@ PrettyS3FilesManager = {
     Bucket: {
         currentDirectory: '/',
         loadBucketObjects: function(prefix) {
-            $('#contentFolder').prepend('<span class="loading"></span>');
-            $('#contentfrefix').prepend('<span class="loading"></span>');
+            PrettyS3FilesManager.Application.putLoadingState("#contentFolder");
+            PrettyS3FilesManager.Application.putLoadingState("#contentfrefix");
             var bucket = $("select[name=bucket]").val();
             var URL = $('base').attr('href') + '/index.php?route=home/ajax-load-folder-prefix';
             $.ajax({
@@ -205,24 +240,43 @@ PrettyS3FilesManager = {
                 url: URL,
                 data: {'frefix': prefix , 'bucket' : bucket},
                 dataType: "json",
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
                 success: function (data) {
-                    $('.contentFolder .loading').remove();
-                    $('#contentfrefix .loading').remove();
-                    $('#contentFolder').html(data['folder']);
-                    $('.breadcrumbs').html(data['folder_breadcrumb']);
-                    $('#contentfrefix').html(data['frefix']);
-                    PrettyS3FilesManager.Bucket.handleBucketFolderClick();
-                    $(".tree-file-content li .li-custom").hover(function(){
-                        $(this).find(".act").show();
-                    }, function(){
-                        $(this).find(".act").hide();
-                    });
+                    if (data.status) {
+                        data = data.data;
+                        $('.contentFolder .loading').remove();
+                        $('#contentfrefix .loading').remove();
+                        $('#contentFolder').html(data['folder']);
+                        $('.breadcrumbs').html(data['folder_breadcrumb']);
+                        $('#contentfrefix').html(data['frefix']);
 
-                    $('input.flat').iCheck({
-                        checkboxClass: 'icheckbox_flat-green',
-                        radioClass: 'iradio_flat-green'
-                    });
-                }
+                        PrettyS3FilesManager.Bucket.handleBucketFolderClick();
+
+                        $(".tree-file-content li .li-custom").hover(function(){
+                            $(this).find(".act").show();
+                        }, function(){
+                            $(this).find(".act").hide();
+                        });
+
+                        $('input.flat').iCheck({
+                            checkboxClass: 'icheckbox_flat-green',
+                            radioClass: 'iradio_flat-green'
+                        });
+                    }
+                    else {
+                        PrettyS3FilesManager.Application.errorPopup(data.message);
+                    }
+
+                    PrettyS3FilesManager.Application.removeLoadingState("#contentFolder");
+                    PrettyS3FilesManager.Application.removeLoadingState("#contentfrefix");
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(
+                        response, textStatus, errorThrown,
+                        '#contentFolder, #contentfrefix',
+                        '#contentFolder, #contentfrefix'
+                    );
+                },
             });
         },
         loadObjects: function(prefix, page) {
@@ -247,29 +301,41 @@ PrettyS3FilesManager = {
                 url: URL,
                 data: {'frefix': prefix , 'page' : page , 'bucket' : bucket},
                 dataType: "json",
-                success: function (data) {
-                    load.parent().parent().remove();
-                    $('#contentfrefix .loading').remove();
-                    if (page == 0)
-                        $('#contentfrefix').html(data['prefix']);
-                    else
-                        $('.content-file').append(data['prefix']);
-    
-                    $('.breadcrumbs').html(data['folder']);
-    
-                    $(".tree-file-content li .li-custom").hover(function(){
-                        $(this).find(".act").show();
-                    }, function(){
-                        $(this).find(".act").hide();
-                    });
-    
-                    $('input.flat').iCheck({
-                        checkboxClass: 'icheckbox_flat-green',
-                        radioClass: 'iradio_flat-green'
-                    });
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
+                success: function (response) {
+                    if (response.status) {
+                        var data = response.data;
+                        load.parent().parent().remove();
+                        if (page == 0)
+                            $('#contentfrefix').html(data['prefix']);
+                        else
+                            $('.content-file').append(data['prefix']);
+
+                        $('.breadcrumbs').html(data['folder']);
+
+                        $(".tree-file-content li .li-custom").hover(function(){
+                            $(this).find(".act").show();
+                        }, function(){
+                            $(this).find(".act").hide();
+                        });
+
+                        $('input.flat').iCheck({
+                            checkboxClass: 'icheckbox_flat-green',
+                            radioClass: 'iradio_flat-green'
+                        });
+                    }
+                    else {
+                        PrettyS3FilesManager.Application.errorPopup(response.message);
+                    }
 
                     PrettyS3FilesManager.Application.removeLoadingState("#contentfrefix");
-                }
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(
+                        response, textStatus, errorThrown,
+                        '#contentfrefix', '#contentfrefix'
+                    );
+                },
             });
         },
         handleBucketFolderClick: function() {
@@ -306,11 +372,24 @@ PrettyS3FilesManager = {
                 url: URL,
                 data: {'frefix': prefix , 'bucket' : bucket},
                 dataType: "json",
-                success: function (data) {
-                    $('.contentFolder .loading').remove();
-                    $(sub).html(data['folder']);
-                    PrettyS3FilesManager.Bucket.handleBucketFolderClick();
-                }
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
+                success: function (response) {
+                    if (response.status) {
+                        var data = response.data;
+                        $('.contentFolder .loading').remove();
+                        $(sub).html(data['folder']);
+                        PrettyS3FilesManager.Bucket.handleBucketFolderClick();
+                    }
+                    else {
+                        PrettyS3FilesManager.Application.errorPopup(response.message);
+                    }
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(
+                        response, textStatus, errorThrown,
+                        '#contentFolder', ''
+                    );
+                },
             });
         },
         reloadObjects: function(){
@@ -326,29 +405,55 @@ PrettyS3FilesManager = {
                 url: URL,
                 data: {'frefix': prefix , 'bucket' : bucket},
                 dataType: "json",
-                success: function (data) {
-                    $('#contentFolder').html(data['folder']);
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
+                success: function (response) {
+                    if (response.status) {
+                        var data = response.data;
+                        $('#contentFolder').html(data['folder']);
+                        PrettyS3FilesManager.Bucket.handleBucketFolderClick();
+                    }
+                    else {
+                        PrettyS3FilesManager.Application.errorPopup(response.message);
+                    }
                     PrettyS3FilesManager.Application.removeLoadingState('#contentFolder');
-                    PrettyS3FilesManager.Bucket.handleBucketFolderClick();
-                }
-
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(
+                        response, textStatus, errorThrown,
+                        '#contentFolder', '#contentFolder'
+                    );
+                },
             });
         },
         loadAvailableFolderForCreatingFolder: function(prefix) {
             $('#create-folder').modal('show');
             $("input[name=folder_name]").val('');
-            $('.list-folder').prepend('<span class="loading"></span>');
+            PrettyS3FilesManager.Application.putLoadingState('.list-folder');
             var bucket = $("select[name=bucket]").val();
             var URL = $('base').attr('href') + '/index.php?route=home/list-bucket-folders';
             $.ajax({
                 type: "post",
                 url: URL,
                 data: {'frefix': prefix , 'bucket' : bucket, 'popup_type': 'create_folder'},
-                dataType: "html",
-                success: function (data) {
+                dataType: "json",
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
+                success: function (response) {
+                    if (response.status) {
+                        var data = response.data;
+                        $('.list-folder').html(data);
+                    }
+                    else {
+                        PrettyS3FilesManager.Application.errorPopup(response.message);
+                    }
                     $('.list-folder .loading').remove();
-                    $('.list-folder').html(data);
-                }
+                    PrettyS3FilesManager.Application.removeLoadingState('.list-folder');
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(
+                        response, textStatus, errorThrown,
+                        '.list-folder', '.list-folder'
+                    );
+                },
             });
         },
         setPopupCreateFolderSelectPath: function (path) {
@@ -375,11 +480,23 @@ PrettyS3FilesManager = {
                 type: "post",
                 url: URL,
                 data: {'frefix': frefix , 'bucket' : bucket, 'popup_type': 'create_folder'},
-                dataType: "html",
-                success: function (data) {
-                    $(sub).html(data);
+                dataType: "json",
+                success: function (response) {
+                    if (response.status) {
+                        var data = response.data;
+                        $(sub).html(data);
+                    }
+                    else {
+                        PrettyS3FilesManager.Application.errorPopup(response.message);
+                    }
                     PrettyS3FilesManager.Application.removeLoadingState('.list-folder');
-                }
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(
+                        response, textStatus, errorThrown,
+                        '.list-folder', ''
+                    );
+                },
             });
         },
         createBucket: function(btnElement, inputFieldElement){
@@ -398,6 +515,7 @@ PrettyS3FilesManager = {
                     url: URL,
                     data: {'name': bucket},
                     dataType: "json",
+                    timeout: PrettyS3FilesManager.Application.requestTimeout,
                     success: function (data) {
                         if (data['status'] == 1) {
                             $('#create-new-bucket-popup').modal('hide');
@@ -423,7 +541,13 @@ PrettyS3FilesManager = {
                             PrettyS3FilesManager.Application.errorPopup(data.message);
                         }
                         PrettyS3FilesManager.Application.removeLoadingState('.creating-bucket-content');
-                    }
+                    },
+                    error: function (response, textStatus, errorThrown) {
+                        PrettyS3FilesManager.Application.ajaxErrorHandler(
+                            response, textStatus, errorThrown,
+                            '.create-bucket-content', ''
+                        );
+                    },
                 });
             }
         },
@@ -445,6 +569,7 @@ PrettyS3FilesManager = {
                     });
                 }
                 else{
+                    PrettyS3FilesManager.Application.putLoadingState('.create-folder-content');
                     var bucket = $("select[name=bucket]").val();
                     var URL = $('base').attr('href') + '/index.php?route=home/create-folder';
                     $.ajax({
@@ -452,6 +577,7 @@ PrettyS3FilesManager = {
                         url: URL,
                         data: {path:$('input[name=select_folder_path]').val(),name:folder_name , 'bucket': bucket},
                         dataType: "json",
+                        timeout: PrettyS3FilesManager.Application.requestTimeout,
                         success: function (response) {
                             if (response['status'] == 1) {
                                 new PNotify({
@@ -465,7 +591,14 @@ PrettyS3FilesManager = {
                             else {
                                 PrettyS3FilesManager.Application.errorPopup(data.message);
                             }
-                        }
+                            PrettyS3FilesManager.Application.removeLoadingState('.create-folder-content');
+                        },
+                        error: function (response, textStatus, errorThrown) {
+                            PrettyS3FilesManager.Application.ajaxErrorHandler(
+                                response, textStatus, errorThrown,
+                                '.create-folder-content', ''
+                            );
+                        },
                     });
                 }
             }
@@ -479,11 +612,12 @@ PrettyS3FilesManager = {
                 url: URL,
                 data: {'key': key , 'bucket' : bucket , 'object_sub' : object_sub},
                 dataType: "json",
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
                 success: function (data) {
                     $(".sub-" + id).find(".loading").remove();
                     data = JSON.parse(data);
                     if (data.status == 2){
-                        $(".content-confirm").html("Are you sure you want to delete this folder? <br/> ");
+                        $(".content-confirm").html("This folder has sub-folders/files under it. Are you sure want to remove all? <br/> ");
                         $("#confirm-delete").modal('show');
                         $(".btn-delete-all").attr("onclick", "PrettyS3FilesManager.Bucket.deleteFolder('" + key + "', '1' , '" + id + "');");
                         return false;
@@ -499,14 +633,13 @@ PrettyS3FilesManager = {
                         }
                         new PNotify({
                             title: 'Success',
-                            text: 'File had been removed!',
+                            text: 'Object had been removed!',
                             type: 'success'
                         });
                         $("#confirm-delete").modal('hide');
                     } else {
                         PrettyS3FilesManager.Application.errorPopup(data.message);
                     }
-
                 }
             });
         },
@@ -522,11 +655,13 @@ PrettyS3FilesManager = {
             if (!confirmBox) return false;
             var URL = $('base').attr('href') + '/index.php?route=home/delete-file';
             var bucket = $("select[name=bucket]").val();
+            PrettyS3FilesManager.Application.putLoadingState("#contentfrefix");
             $.ajax({
                 type: "post",
                 url: URL,
                 data: {'key': key , 'bucket' : bucket},
                 dataType: "json",
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
                 success: function (data) {
                     data = JSON.parse(data);
                     if (data.status){
@@ -539,8 +674,14 @@ PrettyS3FilesManager = {
                     } else {
                         PrettyS3FilesManager.Application.errorPopup(data.message);
                     }
-
-                }
+                    PrettyS3FilesManager.Application.removeLoadingState("#contentfrefix");
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(
+                        response, textStatus, errorThrown,
+                        '#contentfrefix', ''
+                    );
+                },
             });
         },
         deleteMultiple: function () {
@@ -574,6 +715,7 @@ PrettyS3FilesManager = {
                         url: URL,
                         data: {'key': $(this).find("input").val() , 'bucket': bucket},
                         dataType: "json",
+                        timeout: PrettyS3FilesManager.Application.requestTimeout,
                         success: function (data) {
                             data = JSON.parse(data);
                             PrettyS3FilesManager.Application.removeLoadingState('contentfrefix');
@@ -588,7 +730,13 @@ PrettyS3FilesManager = {
                             else {
                                 PrettyS3FilesManager.Application.errorPopup(data.message);
                             }
-                        }
+                        },
+                        error: function (response, textStatus, errorThrown) {
+                            PrettyS3FilesManager.Application.ajaxErrorHandler(
+                                response, textStatus, errorThrown,
+                                '#contentfrefix', ''
+                            );
+                        },
                     });
                 }
             });
@@ -602,43 +750,55 @@ PrettyS3FilesManager = {
                 type: "post",
                 url: URL,
                 data: {'key': key , 'url' : url , 'bucket' : bucket},
-                dataType: "html",
-                success: function (data) {
-                    $("#content-detail").html(data);
-                    $('input.flat').iCheck({
-                        checkboxClass: 'icheckbox_flat-green',
-                        radioClass: 'iradio_flat-green'
-                    });
-
-                    //Update Permissions
-                    $(".btn-save-permissions").click(function(){
-                        PrettyS3FilesManager.Application.putLoadingState("#permissions");
-                        var data = $("form[name=permission_form]").serialize();
-                        var URL = $('base').attr('href') + '/index.php?route=home/update-permissions';
-                        data += '&data[bucket]=' + $("select[name=bucket]").val();
-                        $.ajax({
-                            type: "POST",
-                            url: URL,
-                            data: data,
-                            dataType: "json",
-                            success: function (data) {
-                                if (data.status) {
-                                    new PNotify({
-                                        title: 'Success',
-                                        text: data.message,
-                                        type: 'success',
-                                        timer: 4,
-                                    });
-                                }
-                                else {
-                                    PrettyS3FilesManager.Application.errorPopup(data.message);
-                                }
-                                PrettyS3FilesManager.Application.removeLoadingState("#permissions");
-                            }
+                dataType: "json",
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
+                success: function (response) {
+                    if (response.status) {
+                        var data = response.data;
+                        $("#content-detail").html(data);
+                        $('input.flat').iCheck({
+                            checkboxClass: 'icheckbox_flat-green',
+                            radioClass: 'iradio_flat-green'
                         });
-                    });
 
-                }
+                        //Update Permissions
+                        $(".btn-save-permissions").click(function(){
+                            PrettyS3FilesManager.Application.putLoadingState("#permissions");
+                            var data = $("form[name=permission_form]").serialize();
+                            var URL = $('base').attr('href') + '/index.php?route=home/update-permissions';
+                            data += '&data[bucket]=' + $("select[name=bucket]").val();
+                            $.ajax({
+                                type: "POST",
+                                url: URL,
+                                data: data,
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data.status) {
+                                        new PNotify({
+                                            title: 'Success',
+                                            text: data.message,
+                                            type: 'success',
+                                            timer: 4,
+                                        });
+                                    }
+                                    else {
+                                        PrettyS3FilesManager.Application.errorPopup(data.message);
+                                    }
+                                    PrettyS3FilesManager.Application.removeLoadingState("#permissions");
+                                }
+                            });
+                        });
+                    }
+                    else {
+                        PrettyS3FilesManager.Application.errorPopup(response.message);
+                    }
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(
+                        response, textStatus, errorThrown,
+                        '#permissions', '#permissions'
+                    );
+                },
             });
         },
         previewImage: function (src) {
@@ -661,6 +821,7 @@ PrettyS3FilesManager = {
                     url: URL,
                     data: {'key': $("#key").val(), 'contentType': $('#txt-content-type').val() , 'bucket' :  bucket},
                     dataType: "html",
+                    timeout: PrettyS3FilesManager.Application.requestTimeout,
                     success: function (data) {
                         $(".name-contenttype").html(data);
                         $(".name-contenttype").show();
@@ -671,9 +832,14 @@ PrettyS3FilesManager = {
                             text: 'Update Content Type successfully!',
                             type: 'success'
                         });
-                    }
+                    },
+                    error: function (response, textStatus, errorThrown) {
+                        PrettyS3FilesManager.Application.ajaxErrorHandler(
+                            response, textStatus, errorThrown,
+                            '#permissions', ''
+                        );
+                    },
                 });
-
             });
         },
         search: function (page) {
@@ -696,19 +862,33 @@ PrettyS3FilesManager = {
                 type: "post",
                 url: URL,
                 data: {'name': object.val() , 'page' : page , 'bucket': bucket},
-                dataType: "html",
-                success: function (data) {
+                dataType: "json",
+                timeout: PrettyS3FilesManager.Application.requestTimeout,
+                success: function (response) {
+                    if (response.status) {
+                        var data = response.data;
+                        load.parent().parent().remove();
+                        if (page == 0)
+                            $('#contentfrefix').html(data);
+                        else
+                            $('.content-file').append(data);
+                        $('input.flat').iCheck({
+                            checkboxClass: 'icheckbox_flat-green',
+                            radioClass: 'iradio_flat-green'
+                        });
+                    }
+                    else {
+                        PrettyS3FilesManager.Application.errorPopup(response.message);
+                    }
+
                     $('#contentfrefix .loading').remove();
-                    load.parent().parent().remove();
-                    if (page == 0)
-                        $('#contentfrefix').html(data);
-                    else
-                        $('.content-file').append(data);
-                    $('input.flat').iCheck({
-                        checkboxClass: 'icheckbox_flat-green',
-                        radioClass: 'iradio_flat-green'
-                    });
-                }
+                },
+                error: function (response, textStatus, errorThrown) {
+                    PrettyS3FilesManager.Application.ajaxErrorHandler(
+                        response, textStatus, errorThrown,
+                        '.contentfrefix', ''
+                    );
+                },
             });
         },
         breadCrumbNavigator: function (frefix, page, name) {

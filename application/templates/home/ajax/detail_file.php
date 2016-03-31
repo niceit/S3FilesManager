@@ -60,10 +60,6 @@
                             <i class="fa fa-check"> </i>
                             Save Changes
                         </a>
-                        <a href="" class="btn btn-primary">
-                            <i class="fa fa-refresh"> </i>
-                            Reload
-                        </a>
                     </p>
                 </div>
             </div>

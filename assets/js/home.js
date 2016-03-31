@@ -22,7 +22,7 @@ jQuery(function(){
         PrettyS3FilesManager.Bucket.createBucket($(this), $("input[name=name-bucket]"));
     });
 
-    $('#btn-create-new-folder').click(function(){
+    $('#btn-create-new-folder, #btn-panel-create-new-folder').click(function(){
         $('.content-create-folder').slideDown();
         var bucket = $("select[name=bucket]").val();
         var  bucket_old = $('#old_bucket').val();
