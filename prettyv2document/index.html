@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+    <title>Pretty S3 File Managers</title>
+
+    <!-- Bootstrap core CSS -->
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="fonts/css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/animate.min.css" rel="stylesheet">
+    <!-- Custom styling plus plugins -->
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/floatexamples.css" rel="stylesheet" type="text/css" />
+
+    <script src="js/jquery.min.js"></script>
+</head>
+<body class="nav-md">
+    <input type="hidden" name="site_url" value="<?php echo str_replace('/assets/', '', $this->assetsUrl) ?>">
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+
+                    <div class="navbar nav_title" style="border: 0;">
+                        <a href="<?php echo $this->baseUrl;  ?>" class="site_title"><i class="fa fa-home"></i> <span>Documentation</span></a>
+                    </div>
+                    <div class="clearfix"></div>
+
+                    <br />
+                    <div class="clearfix"></div>
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+
+                        <div class="menu_section">
+                            <ul class="nav side-menu">
+                                <li>
+                                    <a class="left-installation-steps step1 active" href="javascript:;">
+                                        <i class="fa fa-step-forward"></i>
+                                        Welcome
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="left-installation-steps step2" href="javascript:;">
+                                        <i class="fa fa-step-forward"></i>
+                                        How to install
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="left-installation-steps step2" href="javascript:;">
+                                        <i class="fa fa-step-forward"></i>
+                                        Settings
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="left-installation-steps step4" href="javascript:;">
+                                        <i class="fa fa-step-forward"></i>
+                                        Manage Bucket / Folder
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="left-installation-steps step3" href="javascript:;">
+                                        <i class="fa fa-step-forward"></i>
+                                        Manage files
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="left-installation-steps step4" href="javascript:;">
+                                        <i class="fa fa-step-forward"></i>
+                                        Upload file(s)
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="left-installation-steps step4" href="javascript:;">
+                                        <i class="fa fa-step-forward"></i>
+                                        Object Properties
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="left-installation-steps step4" href="javascript:;">
+                                        <i class="fa fa-step-forward"></i>
+                                        Change Password
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="left-installation-steps step4" href="javascript:;">
+                                        <i class="fa fa-step-forward"></i>
+                                        Contact Us
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /sidebar menu -->
+                </div>
+            </div>
+
+            <!-- page content -->
+            <div class="right_col" role="main">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12" id="welcome">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <i class="fa fa-bars"> </i>
+                                    &nbsp;
+                                    Welcome to Pretty S3 Files Manager Documentation
+                                </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <h4>Release notes:</h4>
+                                <ul>
+                                    <li>
+                                        <b>Name:</b>
+                                        Pretty S3 File Manager
+                                    </li>
+                                    <li>
+                                        <b>Version:</b>
+                                        1.1.1
+                                    </li>
+                                    <li>
+                                        <b>By:</b>
+                                        Tran IT
+                                    </li>
+                                    <li>
+                                        <b>Email:</b>
+                                        support@phprockets.com
+                                    </li>
+                                </ul>
+                                <h4>Features:</h4>
+                                <ul>
+                                    <li>
+                                        <i class="fa fa-check-circle"> </i>
+                                        Fully Ajax Support
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"> </i>
+                                        Support multiple buckets, manage/create bucket
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"> </i>
+                                        Support multiple buckets, manage/create folder
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"> </i>
+                                        Support manage folders/sub-folder and permissions
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"> </i>
+                                        Ajax file upload directly to S3
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"> </i>
+                                        Manage/add/delete file also multiple file selection
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"> </i>
+                                        Manage object/file properties and permissions
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-check-circle"> </i>
+                                        Administrative secure login
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-question"> </i>
+                                        New features will be added / improved in next version ...
+                                    </li>
+                                </ul>
+                                Thanks you for purchasing my item, hope you love my child and help your life easier! If you have any questions that are beyond the scope of this help file, you can send me
+                                a message to <a href="mailto:support@phprockets.com">support@phprockets.com</a> or join forum community at <a href="http://www.phprockets.com">www.phprockets.com</a>.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12" id="how-to-install">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <i class="fa fa-lightbulb-o"> </i>
+                                    &nbsp;
+                                    How to install
+                                </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <p>
+                                    Extra the source <b>.zip</b> file into your <b>htdocs</b> folder (<i>Apache root folder</i>), you can create sub-folder
+                                    under it and point to the right path.
+                                </p>
+                                <div class="installation-steps">
+                                    Open browser and type http://your-host-name/install-path
+                                    <br>
+                                    (Depend on your destination path it should look like <b>http://localhost/prettys3filemanager</b>)
+                                    <p>&nbsp</p>
+                                    <div class="install-step-1">
+                                        <p><b>1. First installation screen will show</b></p>
+                                        <p>&nbsp</p>
+                                        <p align="center">
+                                            <img src="images/first-screen.png" alt="First Screen" width="800">
+                                        </p>
+                                        <p>&nbsp</p>
+                                        <p>
+                                            At this step please read the license agreement, check the agree checkbox and click next!
+                                        </p>
+                                    </div>
+                                    <div class="install-step-2">
+                                        <p><b>2. System Requirement</b></p>
+                                        <p>&nbsp</p>
+                                        <p align="center">
+                                            <img src="images/second-screen.png" alt="Second Screen" width="800">
+                                        </p>
+                                        <p>&nbsp</p>
+                                        <p>
+                                            To install script make sure your server is running PHP version at least 5.4, otherwise you have
+                                            to upgrade your server first.
+                                            <br>
+                                            Make sure the <b>data</b> folder is <b style="color: red;">writable</b>.
+                                            <br>
+                                            After all requirements are passed, click next and go to step 3.
+                                        </p>
+                                    </div>
+                                    <div class="install-step-3">
+                                        <p><b>3. System settings</b></p>
+                                        <p>&nbsp</p>
+                                        <p>This is most important step and please set up it correctly</p>
+                                        <p align="center">
+                                            <img src="images/third-screen-1.png" alt="Third Screen" width="800">
+                                        </p>
+                                        <p>&nbsp</p>
+                                        <p>
+                                            <b style="color: red;">Ignore the site URL section, that field system will auto detect it for you.</b>
+                                        </p>
+                                        <p>
+                                            Fill in your <b>App Key</b> and <b>Secret Key</b> and please copy and paste them
+                                            correctly. For instruction how to find them you click on button <b>Follow Instruction</b>
+                                            and follow those steps to find out keys.
+                                        </p>
+                                        <p>Choose your region (it must be same with your region when registering S3 service)</p>
+                                        <p>
+                                            After those steps above, click on button <b>Connect to S3 Cloud</b> to check connection
+                                            status and fetch available buckets, choose one default bucket for your setting.
+                                        </p>
+                                        <p align="center">
+                                            <img src="images/third-screen-2.png" alt="Third Screen" width="800">
+                                        </p>
+                                        <p>
+                                            Choose your login name and set password.
+                                            <br>
+                                            <b style="color: red;">Please keep these information in safe and remember it for next time login.</b>
+                                            <i>If you forget it, you have to reinstall again.</i>
+                                        </p>
+                                    </div>
+                                     <div class="install-step-3">
+                                        <p><b>4. Finish</b></p>
+                                        <p>&nbsp</p>
+                                        <p align="center">
+                                            <img src="images/fourth-screen.png" alt="Third Screen" width="800">
+                                        </p>
+                                        <p>
+                                            This step is actually a joke :). It's meant all things are ready!
+                                        </p>
+                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- footer content -->
+
+                <footer>
+                    <p align="center">
+                        Copyright &copy; 2106 | <b>Pretty S3 Files Manager</b> script. For more supports, feel free to contact us at <a href="mailto:support@phprocket.com">support@phprockets.com</a>
+                    </p>
+                    <div class="clearfix"></div>
+                </footer>
+            <!-- /footer content -->
+            </div>
+        <!-- /page content -->
+
+        </div>
+
+    </div>
+</body>
+
+</html>
