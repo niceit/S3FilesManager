@@ -6,7 +6,7 @@
                 <input id="check-all" value="" type="checkbox" class="flat" name="multiple_checkbox">
             </th>
             <th class="column-title"> </th>
-            <th class="column-title">Name</th>
+            <th class="column-title" width="250">Name</th>
             <th class="column-title">Date </th>
             <th class="column-title">Size</th>
             <th class="column-title no-link last"><span class="nobr">Action</span> </th>
