@@ -677,7 +677,7 @@ a:focus {
 }
 
 .nav.side-menu> li > a:hover {
-    color: #F2F5F7 !important;
+    color: #F7E50A !important;
 }
 
 .nav.side-menu>li>a:hover,
@@ -6515,7 +6515,7 @@ span.act {
 .folder-breadcrumb li.active a {
 
 }
-.left-installation-steps.active {
+.left-installation-steps:active {
     color: #F7E50A !important
 }
 .left_col {
