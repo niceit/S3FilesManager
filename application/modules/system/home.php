@@ -25,7 +25,7 @@ class Home extends Controller {
                     $response['html'] = '';
                     //Checking PHP version
                     $text = ' PHP Version is ' . phpversion() . ' (required version >= 5.5)<br>';
-                    if (version_compare(phpversion(), '5.5')) {
+                    if (version_compare(phpversion(), '5.5', '>=')) {
                         $response['html'] .= '<i class="fa fa-check"> </i>';
                         $response['html'] .= $text;
                     }

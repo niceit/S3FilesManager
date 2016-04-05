@@ -97,7 +97,7 @@ class Controller {
     }
     
     public function renderInstallation() {
-        $this->assetsUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'] . str_replace('index.php?route=home/installation', '', $_SERVER['REQUEST_URI']) . 'assets/';
+        $this->assetsUrl =  'http://' . $_SERVER['SERVER_NAME'] . str_replace('index.php?route=home/installation', '', $_SERVER['REQUEST_URI']) . 'assets';
         ob_start();
         include dirname(dirname(__FILE__)) .  '/templates/home/installation.php';
         $content = ob_get_contents();

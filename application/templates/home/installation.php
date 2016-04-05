@@ -49,7 +49,7 @@
 
 </head>
 <body class="nav-md">
-    <input type="hidden" name="site_url" value="<?php echo str_replace('/assets/', '', $this->assetsUrl) ?>">
+    <input type="hidden" name="site_url" value="<?php echo str_replace('/assets', '', $this->assetsUrl) ?>">
     <div class="container body">
         <div class="main_container">
             <div class="col-md-3 left_col">

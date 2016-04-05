@@ -12,8 +12,8 @@ $AppConfig = new AppConfig();
 require_once dirname(__FILE__) . '/modules/exception.php';
 if ($AppConfig->params('action') != 'installation') {
     require_once dirname(__FILE__) . '/modules/extensions/aws/aws-autoloader.php';
-    require_once dirname(__FILE__) . '/modules/AppS3.php';
 }
+require_once dirname(__FILE__) . '/modules/AppS3.php';
 require_once dirname(__FILE__) . '/modules/helpers.php';
 require_once dirname(__FILE__) . '/modules/controller.php';
 
