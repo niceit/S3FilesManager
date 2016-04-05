@@ -237,7 +237,7 @@
 
                 <footer>
                     <p align="center">
-                        Copyright &copy; 2106 | <b>Pretty S3 Files Manager</b> script. For more supports, feel free to contact us at <a href="mailto:support@phprocket.com">support@phprockets.com</a>
+                        Copyright &copy; 2106 | <b>Pretty S3 Files Manager</b> script. For more supports, feel free to contact us at <a href="mailto:support@phprocket.com">tranit1209@gmail.com</a>
                     </p>
                     <div class="clearfix"></div>
                 </footer>

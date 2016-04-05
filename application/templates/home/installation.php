@@ -183,7 +183,7 @@
                                             </li>
                                             <li>
                                                 <i class="fa fa-check-circle"> </i>
-                                                Support multiple buckets, manage/create folder
+                                                Manage/create folder
                                             </li>
                                             <li>
                                                 <i class="fa fa-check-circle"> </i>
@@ -377,7 +377,7 @@
 
                 <footer>
                     <p align="center">
-                        Copyright &copy; 2106 | <b>Pretty S3 Files Manager</b> script. For more supports, feel free to contact us at <a href="mailto:support@phprocket.com">support@phprockets.com</a>
+                        Copyright &copy; 2106 | <b>Pretty S3 Files Manager</b> script. For more supports, feel free to contact us at <a href="mailto:support@phprocket.com">tranit1209@gmail.com</a>
                     </p>
                     <div class="clearfix"></div>
                 </footer>

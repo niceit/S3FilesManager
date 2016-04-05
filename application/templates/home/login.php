@@ -74,7 +74,7 @@
                             <div class="clearfix"></div>
                             <br />
                             <div>
-                                <p>2016 All Rights Reserved. <b>Pretty S3 Files Manager</b> script. For more supports, feel free to contact us at <a href="mailto:support@phprocket.com">support@phprockets.com</a></p>
+                                <p>2016 All Rights Reserved. <b>Pretty S3 Files Manager</b> script. For more supports, feel free to contact us at <a href="mailto:support@phprocket.com">tranit1209@gmail.com</a></p>
                             </div>
                         </div>
                     </form>
