@@ -3,6 +3,7 @@
  * Pre-config all require parameters
  * */
 require_once dirname(__FILE__) . '/data/languages.php';
+require_once dirname(__FILE__) . '/modules/Data.php';
 require_once dirname(__FILE__) . '/config.php';
 
 global $AppConfig;
@@ -13,7 +14,6 @@ if ($AppConfig->params('action') != 'installation') {
     require_once dirname(__FILE__) . '/modules/extensions/aws/aws-autoloader.php';
     require_once dirname(__FILE__) . '/modules/AppS3.php';
 }
-require_once dirname(__FILE__) . '/modules/Data.php';
 require_once dirname(__FILE__) . '/modules/helpers.php';
 require_once dirname(__FILE__) . '/modules/controller.php';
 
