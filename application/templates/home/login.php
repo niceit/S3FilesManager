@@ -10,7 +10,7 @@
     <title>Login | Pretty S3 Files Manager</title>
 
     <!-- Bootstrap core CSS -->
-
+    <link rel="icon" href="<?php echo $this->baseUrl;  ?>/favicon.ico" type="image/x-icon"/>
     <link href="<?php echo $this->assetsUrl ?>/css/bootstrap.min.css" rel="stylesheet">
 
     <link href="<?php echo $this->assetsUrl ?>/fonts/css/font-awesome.min.css" rel="stylesheet">
