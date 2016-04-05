@@ -124,7 +124,7 @@ PrettyS3FilesManager = {
     * */
     S3Upload: {
         generateFormS3Signature: function (element, bucket, region) {
-            $.post('/index.php?route=home/generate-s3-signature', {bucket:bucket}, function(response){
+            $.post($('base').attr('href') + '/index.php?route=home/generate-s3-signature', {bucket:bucket}, function(response){
                 if (response['status']) {
                     $(element).each(function(){
                         $(this).attr('action', 'https://' + bucket + '.s3-' + region + '.amazonaws.com/')

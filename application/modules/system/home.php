@@ -53,6 +53,7 @@ class Home extends Controller {
                     }
                     break;
                 case 'connect_cloud':
+                    require_once dirname(dirname(__FILE__)) . '/extensions/aws/aws-autoloader.php';
                     $key = $_POST['key'];
                     $secret = $_POST['secret'];
                     $region = $_POST['region'];
@@ -816,8 +817,8 @@ class Home extends Controller {
 
     private function getS3Policy($bucket)
     {
-        $now = strtotime(date("Y-m-d\TG:i:s"));
-        $expire = date('Y-m-d\TG:i:s\Z', strtotime('+30 minutes', $now));
+        date_default_timezone_set("GMT");
+        $expire =  date('Y-m-d\TH:i:s.000\Z', strtotime('+30 minutes'));
         $policy='{
                     "expiration": "' . $expire . '",
                     "conditions": [

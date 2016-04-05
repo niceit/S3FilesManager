@@ -241,7 +241,7 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Site URL</label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <input class="form-control col-md-7 col-xs-12" type="text" name="setting[url]" value="<?php echo str_replace('/assets/', '', $this->assetsUrl) ?>">
+                                                    <input class="form-control col-md-7 col-xs-12" type="text" name="setting[url]" value="<?php echo str_replace('/assets', '', $this->assetsUrl) ?>">
                                                     <br>
                                                     <p class="small">
                                                         This Site URL is automatic detected by your request URI. By changing this maybe cause problems.
@@ -360,7 +360,7 @@
                                             </li>
                                         </ul>
                                         <p align="center">
-                                            <a href="<?php echo str_replace('/assets/', '', $this->assetsUrl) ?>/" class="btn btn-success">
+                                            <a href="<?php echo str_replace('/assets', '', $this->assetsUrl) ?>/" class="btn btn-success">
                                                 <i class="fa fa-forward"> </i>
                                                 Process to Dashboard
                                             </a>
