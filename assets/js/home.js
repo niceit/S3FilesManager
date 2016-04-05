@@ -26,9 +26,12 @@ jQuery(function(){
         $('.content-create-folder').slideDown();
         var bucket = $("select[name=bucket]").val();
         var  bucket_old = $('#old_bucket').val();
-        if (bucket_old == '' || bucket != bucket_old ){
+        var  status_create_folder = $('#status_create_folder').val();
+        if (bucket_old == '' || bucket != bucket_old  || status_create_folder == '1'){
             PrettyS3FilesManager.Bucket.loadAvailableFolderForCreatingFolder('/');
             $('#old_bucket').val(bucket);
+            $('#status_create_folder').val('');
+            $("span.create-folder-selected-folder").html('<b>/</b>');
         } else {
             $('#create-folder').modal('show');
         }
@@ -43,9 +46,12 @@ jQuery(function(){
             $('.content-upload-file').slideDown();
             var bucket = $("select[name=bucket]").val();
             var  bucket_old = $('#old_bucket_upload').val();
-            if (bucket_old == '' || bucket != bucket_old ){
+            var  status_upload = $('#status_upload').val();
+            if (bucket_old == '' || bucket != bucket_old ||  status_upload == '1'){
                 PrettyS3FilesManager.S3Upload.loadAvailableFolderForUploads('/');
                 $('#old_bucket_upload').val(bucket);
+                $('#status_upload').val('');
+                $("span.file-upload-selected-folder").html('/');
             } else {
                 $('#upload-file-modal').modal('show');
             }

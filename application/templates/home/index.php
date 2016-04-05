@@ -14,6 +14,8 @@
             <div class="x_content">
                 <div class="dashboard-widget-content">
                     <div class="col-md-6 col-sm-6 col-xs-12 form-horizontal">
+                        <input type="hidden" id="status_create_folder" value="<?php //echo $bucket_default; ?>" />
+                        <input type="hidden" id="status_upload" value="<?php //echo $bucket_default; ?>" />
                         <input type="hidden" id="old_bucket" value="<?php //echo $bucket_default; ?>" />
                         <input type="hidden" id="old_bucket_upload" value="<?php //echo $bucket_default; ?>" />
                         <div class="form-group">

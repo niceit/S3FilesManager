@@ -598,11 +598,12 @@ class Home extends Controller {
         if (!empty($_POST)) {
             $page = $_POST['page'];
             $key = trim($_POST['name']);
+            $bucket = trim($_POST['bucket']);
             $limit =  50;
 
             $amazonS3 = AppS3::initialize();
             try {
-                $result = $amazonS3->listObjects(array('Bucket' => $this->bucket));
+                $result = $amazonS3->listObjects(array('Bucket' => $bucket));
             }
             catch (S3\Exception\S3Exception $e) {
                 $response['message'] = $e->getMessage();
@@ -617,7 +618,7 @@ class Home extends Controller {
 
                 if (preg_match('#^.*' . $key . '.*$#', $image_name)) {
                     $format_arr = explode('.', $image_name);
-                    $url = $amazonS3->getObjectUrl($this->bucket, $object['Key']);
+                    $url = $amazonS3->getObjectUrl($bucket, $object['Key']);
 
                     $arrayBucket[] = array(
                         'key' => $object['Key'],
@@ -681,7 +682,7 @@ class Home extends Controller {
     public function createFolder() {
         set_time_limit($this->connectTimeout);
         if (!empty($_POST)) {
-            $bucket = $this->bucket;
+            $bucket = $_POST['bucket'];
             $path = $_POST['path'];
             $name = $_POST['name'];
 
@@ -699,7 +700,7 @@ class Home extends Controller {
                     'ACL'    => 'public-read',
                     'ContentLength' => 0
                 ));
-                $response = array('status' => 1, 'key' => md5($path));
+                $response = array('status' => 1, 'key' => md5($path), 'path' => $path);
             }
             catch (\Aws\S3\Exception\S3Exception $e) {
                 $response = array(
@@ -914,11 +915,12 @@ class Home extends Controller {
         set_time_limit($this->connectTimeout);
         if (!empty($_POST)) {
             $key = base64_decode($_POST['key']);
+            $bucket = $_POST['bucket'];
             $return = json_encode(array('status' => 1));
             $amazonS3 = AppS3::initialize();
             try {
                 $amazonS3->deleteObject(array(
-                    'Bucket' => $this->bucket,
+                    'Bucket' => $bucket,
                     'Key'    => $key
                 ));
             } catch(Aws\S3\Exception\S3Exception $e){
@@ -980,11 +982,12 @@ class Home extends Controller {
         if (!empty($_POST)) {
             $key = base64_decode($_POST['key']);
             $url = $_POST['url'];
+            $bucket = $_POST['bucket'];
             $amazonS3 = AppS3::initialize();
 
             try{
                 $result = $amazonS3->getObjectAcl(array(
-                    'Bucket' => $this->bucket,
+                    'Bucket' => $bucket,
                     'Key' => $key
                 ));    
             }
@@ -996,7 +999,7 @@ class Home extends Controller {
             $permission = AppS3::parsePermissions($result);
 
             $property = $amazonS3->getObject(array(
-                'Bucket' => $this->bucket,
+                'Bucket' => $bucket,
                 'Key' => $key
             ));
 
@@ -1079,7 +1082,7 @@ class Home extends Controller {
             $data = $_POST['data'];
             if (isset($data['permission'])) {
                 $permissions = $data['permission'];
-
+                $bucket = $data['bucket'];
                 $permission_update = array(
                     'full' => '',
                     'read' => '',
@@ -1092,7 +1095,7 @@ class Home extends Controller {
                             //Get server object permission
                             try {
                                 $s3_permission = $amazonS3->getObjectAcl(array(
-                                    'Bucket' => $this->bucket,
+                                    'Bucket' => $bucket,
                                     'Key' => base64_decode($data['key'])
                                 ));
                             } catch (S3\Exception\S3Exception $e) {
@@ -1171,9 +1174,10 @@ class Home extends Controller {
         if (!empty($_POST)) {
             $key = base64_decode($_POST['key']);
             $contentType  = $_POST['contentType'];
+            $bucket  = $_POST['bucket'];
             $amazonS3 = AppS3::initialize();
             $amazonS3->putObject(array(
-                'Bucket' => $this->bucket,
+                'Bucket' => $bucket,
                 'Key'    => $key,
                 'ContentType' => $contentType
             ));

@@ -586,7 +586,12 @@ PrettyS3FilesManager = {
                                     type: 'success'
                                 });
                                 $('#create-folder').modal('hide');
+                                $('#status_create_folder').val('1');
+                                $('#status_upload').val('1');
                                 $(".sub-" + response['key'] + " .arrow").trigger( "click" );
+                                if (response['path'] == ''){
+                                    PrettyS3FilesManager.Bucket.reloadFolders();
+                                }
                             }
                             else {
                                 PrettyS3FilesManager.Application.errorPopup(data.message);
